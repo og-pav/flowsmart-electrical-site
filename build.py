@@ -96,13 +96,9 @@ def wordmark(depth, reversed_=False):
 
 def header(page, depth):
     p = rel_prefix(depth)
-    if page.get("landing"):
-        links = [("#services", "Services"), ("#how", "How it works"),
-                 ("#reviews", "Reviews"), ("#faq", "FAQ")]
-    else:
-        links = [(p + "services.html", "Services"), (p + "case-studies.html", "Our Work"),
-                 (p + "about.html", "About"), (p + "blog.html", "Blog"),
-                 (p + "contact.html", "Contact")]
+    links = [(p + "services.html", "Services"), (p + "areas.html", "Areas"),
+             (p + "about.html", "About"), (p + "testimonials.html", "Reviews"),
+             (p + "blog.html", "Blog"), (p + "contact.html", "Contact")]
     nav = "".join(f'<a class="nav-link" href="{h}">{t}</a>' for h, t in links)
     cta_href = "#quote" if page.get("landing") else p + "contact.html"
     return f'''<header class="site-header" id="top">
@@ -130,9 +126,18 @@ def sticky_cta(page, depth):
   <a class="sc-quote" href="{href}">Get a Free Quote</a>
 </div>'''
 
+AREA_PAGES = [
+    ("Melton", "areas/electrician-melton.html"),
+    ("Bacchus Marsh", "areas/electrician-bacchus-marsh.html"),
+    ("Caroline Springs", "areas/electrician-caroline-springs.html"),
+    ("Werribee", "areas/electrician-werribee.html"),
+    ("Point Cook", "areas/electrician-point-cook.html"),
+    ("Sunshine & Braybrook", "areas/electrician-sunshine-braybrook.html"),
+]
+
 def footer(page, depth):
     p = rel_prefix(depth)
-    areas = " · ".join(AREAS[:8])
+    areas = " · ".join(f'<a href="{p}{path}">{name}</a>' for name, path in AREA_PAGES)
     return f'''<footer class="site-footer">
   <div class="footer-inner">
     <div class="f-brand">
@@ -143,7 +148,10 @@ def footer(page, depth):
     <div class="f-col">
       <h3>Explore</h3>
       <a href="{p}services.html">Services</a>
+      <a href="{p}areas.html">Areas we cover</a>
       <a href="{p}case-studies.html">Our Work</a>
+      <a href="{p}testimonials.html">Reviews</a>
+      <a href="{p}faq.html">FAQ</a>
       <a href="{p}about.html">About Anthony</a>
       <a href="{p}blog.html">Blog</a>
       <a href="{p}contact.html">Contact &amp; directions</a>
@@ -442,6 +450,29 @@ def main():
                 "mainEntityOfPage": SITE["domain"] + f"/blog/{p['slug']}.html",
                 "image": SITE["domain"] + "/assets/img/og-share.png"}],
             body=content.blog_post_body(p)))
+
+    A(dict(path="areas.html", crumb="Areas",
+        title="Service Areas: Electricians Across Melbourne's West | Flowsmart",
+        desc="Local electrician pages for Melton, Bacchus Marsh, Caroline Springs, Werribee, Point Cook, Sunshine and Braybrook — each written from real jobs in that suburb.",
+        body=content.page_areas_hub()))
+
+    for a in content.AREA_DATA:
+        A(dict(path=f"areas/{a['slug']}.html", crumb=a["name"],
+            crumbs=[("Areas", "areas.html")],
+            title=a["title"], desc=a["desc"],
+            faqs=a["faqs"], body=content.area_page(a)))
+
+    A(dict(path="testimonials.html", crumb="Reviews",
+        title="Reviews of Flowsmart Electrical | Verbatim & Verified",
+        desc="Real reviews from Flowsmart Electrical customers across Melbourne's west — on time, clean, properly quoted, certified. Every word verbatim.",
+        schema_extra=content.review_schema(),
+        body=content.page_testimonials()))
+
+    A(dict(path="faq.html", crumb="FAQ",
+        title="FAQ: Quotes, Licensing & Common Problems | Flowsmart",
+        desc="Every fair question answered straight: response times, free quotes, licences and insurance, certificates, safety switches, switchboards and EV chargers.",
+        faqs=content.FAQ_HUB_FLAT,
+        body=content.page_faq_hub()))
 
     A(dict(path="contact.html", crumb="Contact",
         title="Free Quotes: Contact Flowsmart Electrical | 0433 348 403",

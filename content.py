@@ -819,3 +819,235 @@ def page_terms():
 <h2>Questions</h2>
 <p><a href="mailto:%%EMAIL%%">%%EMAIL%%</a> · %%PHONE%%</p>
 </div></section>'''
+
+# ================================================================ areas =====
+
+AREA_DATA = [
+    dict(slug="electrician-melton", name="Melton",
+        title="Electrician in Melton | Flowsmart Electrical",
+        desc="Local electrician for Melton, Melton South, Kurunjang and Thornhill Park. Switchboards, safety switches, EV chargers. Free quotes, two-hour response.",
+        h1="Your electrician in Melton",
+        lede="From 1970s brick veneers in Melton South to brand-new builds in Thornhill Park and Weir Views — Flowsmart has wired, fixed and certified homes across Melton for over a decade.",
+        body='''<p>Melton is really two electrical jobs wearing one postcode. The established streets — Melton South, Kurunjang, parts of Melton West — carry housing stock from the 70s and 80s, which means original switchboards with ceramic fuses, circuits sized for one TV and a kettle, and safety switches that simply don&rsquo;t exist. It&rsquo;s the single suburb where Flowsmart replaces the most boards, and the <a href="../blog/switchboard-upgrade-cost-melbourne.html">upgrade cost guide</a> was written largely off Melton jobs.</p>
+<p>Then there&rsquo;s the growth corridor: Thornhill Park, Weir Views, Harkness, Cobblebank. New homes, but builders wire to minimum spec — so the common calls are extra powerpoints where the plan put none, EV charger circuits the garage was never provisioned for, and shed power for the block that finally got its shed.</p>
+<p>Anthony has held a school maintenance contract in Melton for years, so the van is in the suburb most weeks — which is what makes the <a href="../contact.html">two-hour response promise</a> easy to keep here.</p>''',
+        faqs=[
+            ("Do you charge extra to come to Melton?", "No. Melton is core patch — Anthony is based fifteen minutes away at Rowsley and is in the suburb most weeks on contract work. Standard rates, free quotes."),
+            ("My Melton South house still has ceramic fuses. Urgent?", "Treat it as this-month, not someday. No ceramic fuse board has safety switches, and that generation of Melton wiring is now 40+ years old. An inspection is quick and the quote is free."),
+            ("Can you add circuits to a new build in Thornhill Park or Weir Views?", "Yes — extra powerpoints, garage and shed circuits, and EV charger provisioning are the most common new-estate jobs. Builder-spec boards usually have room; Anthony confirms before quoting."),
+            ("Do you service Melton businesses?", "Yes — shops, offices and schools. Flowsmart has run scheduled school maintenance in Melton for years and takes on commercial maintenance contracts across the suburb."),
+            ("Which nearby areas do you also cover?", "Everything around Melton: Bacchus Marsh, Caroline Springs, Rockbank, Cobblebank, Harkness, Kurunjang, Toolern Vale and out to Ballan."),
+        ]),
+    dict(slug="electrician-bacchus-marsh", name="Bacchus Marsh",
+        title="Electrician in Bacchus Marsh | Flowsmart Electrical",
+        desc="Bacchus Marsh's closest licensed electrician — five minutes away at Rowsley. Older-home rewires, shed power, switchboards, EV chargers. Free quotes.",
+        h1="Bacchus Marsh&rsquo;s local electrician",
+        lede="Flowsmart is based at Rowsley, five minutes up the road — which makes Anthony about the closest licensed sparky Bacchus Marsh has.",
+        body='''<p>Bacchus Marsh electrical work has a character of its own. The town centre and Darley carry genuinely old housing — weatherboards and period brick where a &ldquo;quick powerpoint&rdquo; can reveal cloth-insulated wiring that should have retired decades ago. Anthony quotes these jobs on-site, honestly: sometimes it&rsquo;s a simple add, sometimes the right answer is staged rewiring, and you&rsquo;ll know which before any work starts.</p>
+<p>Out past the town grid it turns semi-rural — acreage on Gisborne Road, hobby farms toward Balliang, properties running pumps, sheds and machinery. That&rsquo;s three-phase territory: shed sub-boards, long underground runs, and power that has to survive a working property, not just a lounge room.</p>
+<p>Being five minutes away matters most when something actually breaks. If half the house drops out on a Sunday morning, you&rsquo;re not waiting for someone to cross the West Gate — <a href="tel:%%TEL%%">call</a>, and it&rsquo;s a short drive.</p>''',
+        faqs=[
+            ("How fast can you get to Bacchus Marsh?", "Fastest of anywhere — the Flowsmart base at Rowsley is about five minutes from the town centre. Same-day is normal for urgent faults."),
+            ("Can you rewire an older Bacchus Marsh weatherboard?", "Yes, and it's a specialty by necessity — the town is full of them. Rewires are quoted room-by-room in writing, and can be staged so you're never living in a worksite."),
+            ("Do you do shed and acreage power?", "All the time: three-phase supply, sub-boards, underground runs to sheds and pumps, and proper protection for machinery circuits."),
+            ("Do you cover Darley, Maddingley and Hopetoun Park?", "Yes — all of greater Bacchus Marsh, plus Ballan, Gordon, Myrniong and the properties between."),
+            ("Will I get a certificate for the work?", "Every notifiable job is closed out with a Certificate of Electrical Safety — it matters for insurance on older homes especially."),
+        ]),
+    dict(slug="electrician-caroline-springs", name="Caroline Springs",
+        title="Electrician in Caroline Springs | Flowsmart Electrical",
+        desc="Electrician for Caroline Springs, Burnside and Taylors Hill. EV chargers, extra circuits, fans and lighting for 2000s family homes. Free written quotes.",
+        h1="Your electrician in Caroline Springs",
+        lede="Caroline Springs homes are young enough to be safe and old enough to be outgrown. Most of what Flowsmart does here is making 2000s houses keep up with 2026 families.",
+        body='''<p>The estates of Caroline Springs, Burnside and Taylors Hill mostly went up between the late 90s and 2010s. The wiring is sound and the boards have safety switches — so unlike Melton South or Sunshine, this isn&rsquo;t rescue work. It&rsquo;s capacity work.</p>
+<p>A house built in 2004 was wired for one fridge, one TV and a desktop computer. The same house now runs two fridges, ducted refrigerated cooling, a home office in the fourth bedroom, and — increasingly — an EV in the garage. The common Flowsmart jobs here follow exactly that curve: dedicated appliance circuits, powerpoints where life actually happens, ceiling fans and lighting upgrades as the builder-basic fittings date, and <a href="../services/ev-charger-installation.html">EV charger installs</a>, where Caroline Springs is one of the busiest suburbs on the run sheet.</p>
+<p>Load calculations matter in these homes — the board has spare ways, but the mains have a budget. Anthony checks capacity before quoting anything big, so the aircon, the oven and the car charger never end up fighting.</p>''',
+        faqs=[
+            ("Can my Caroline Springs house handle an EV charger?", "Usually yes, sometimes with a small board tidy-up. Anthony runs the capacity numbers as part of the free quote — you'll know before you buy the charger."),
+            ("Why do my lights dim when the aircon starts?", "Classic capacity symptom in 2000s estates — big motor loads sharing circuits that were fine twenty years ago. Sometimes it's a cheap fix at the board; a proper look tells you which."),
+            ("Do you replace builder-grade downlights?", "Constantly. Swapping dated halogen or first-gen LED fittings for modern LEDs cuts running costs and lifts the whole room. Quoted per-house, not per-fitting, so it stays sane."),
+            ("Do you cover Burnside and Taylors Hill?", "Yes — Caroline Springs, Burnside, Burnside Heights, Taylors Hill, Ravenhall and Deer Park are all standard patch."),
+            ("How quickly do you respond here?", "The standard promise applies: answered or called back within two business hours, seven days. Caroline Springs is twenty minutes from base."),
+        ]),
+    dict(slug="electrician-werribee", name="Werribee",
+        title="Electrician in Werribee | Flowsmart Electrical",
+        desc="Werribee and Wyndham electrician: rental safety checks, switchboards, fault-finding and commercial work from Hoppers Crossing to Werribee South.",
+        h1="Your electrician in Werribee",
+        lede="Half of Werribee&rsquo;s electrical work is keeping older homes safe; the other half is keeping Wyndham&rsquo;s rentals compliant. Flowsmart does both, in writing.",
+        body='''<p>Werribee proper has real age in its housing — post-war streets near the station where boards, wiring and powerpoints are past their design life, alongside waves of newer estates from Wyndham Vale to Manor Lakes. The mix means Flowsmart&rsquo;s Werribee week runs from full switchboard rescues to warranty-fresh homes that just need the powerpoints the builder skipped.</p>
+<p>What makes Werribee distinct is the rental market. Wyndham has one of the biggest rental pools in the state, and Victoria&rsquo;s rules require an electrical safety check every two years on every tenancy. Flowsmart runs these as a production line for local landlords and agents: scheduled directly with tenants, documented for the file, next-due date tracked so it never lapses. The <a href="../blog/rental-electrical-safety-checks-victoria.html">landlord guide</a> covers what the check involves.</p>
+<p>There&rsquo;s commercial here too — shops along Watton Street, industrial toward Laverton North, and the market-garden properties of Werribee South with their pumps and coolrooms.</p>''',
+        faqs=[
+            ("Do you do rental electrical safety checks in Werribee?", "Yes — it's one of the biggest parts of the Werribee run. Fixed price, scheduled with the tenant, compliance record to you or your agent, and a diary flag for the next one."),
+            ("Can you handle multiple rental properties at once?", "Yes, and batching saves you money — several Wyndham properties checked in one run costs less than separate call-outs. Agents welcome."),
+            ("My older Werribee home trips constantly. Can you find why?", "That's methodical fault-finding, not guesswork — and post-war Werribee wiring is familiar territory. See how Anthony approaches it in the safety switch guide, or just book the inspection."),
+            ("Do you cover Hoppers Crossing, Tarneit and Manor Lakes?", "All of Wyndham: Hoppers Crossing, Tarneit, Truganina, Wyndham Vale, Manor Lakes, Werribee South and Point Cook."),
+            ("Do you do commercial work in Werribee?", "Yes — shopfronts, offices, and rural-commercial properties in Werribee South. Maintenance contracts available."),
+        ]),
+    dict(slug="electrician-point-cook", name="Point Cook",
+        title="Electrician in Point Cook | Flowsmart Electrical",
+        desc="Point Cook electrician for EV chargers, solar-aware wiring, smart home circuits and new-estate electrical. Free quotes, two-hour response.",
+        h1="Your electrician in Point Cook",
+        lede="Point Cook is the newest patch Flowsmart covers — and the one moving fastest toward EVs, solar and smart homes. The wiring should keep up with the postcode.",
+        body='''<p>Almost everything in Point Cook was built this century, so the suburb skips the rescue work older suburbs need. What it has instead is the highest density of forward-looking jobs on the Flowsmart run sheet: this is EV-charger and solar country.</p>
+<p>Point Cook garages are filling with EVs faster than anywhere else in the west, and the houses — sold as complete — were rarely provisioned for a 7kW continuous load. A proper <a href="../services/ev-charger-installation.html">home charger install</a> here means a capacity check, a dedicated circuit, and increasingly a solar-aware setup, because half the streets already have panels on the roof. Charging the car on exported sunlight instead of a few cents of feed-in tariff is the quiet win most owners don&rsquo;t know they&rsquo;re missing.</p>
+<p>The rest of the Point Cook week: extra circuits for home offices, outdoor and alfresco power, smart switching, and the powerpoint audit every family does five years after moving into a builder-spec home. Sanctuary Lakes, Seabrook, Altona Meadows and Williams Landing are all the same run.</p>''',
+        faqs=[
+            ("Can you make my EV charger work with my solar?", "Yes — several chargers can throttle to match your export so the car charges on sunlight. If you have panels, mention it in the quote form; it changes the recommended unit."),
+            ("Is my Point Cook home's board ready for an EV charger?", "Usually close to ready — the stock is modern. The free quote includes the capacity check, and any tidy-up needed is priced in writing before you commit."),
+            ("Do you install outdoor and alfresco power?", "All the time — weatherproof powerpoints, festoon and garden lighting, spa and heat-pump circuits, all properly RCD-protected."),
+            ("Do you cover Sanctuary Lakes and Williams Landing?", "Yes — Point Cook, Sanctuary Lakes, Seabrook, Altona Meadows, Williams Landing and across to Tarneit and Truganina."),
+            ("What does a smart home rough-in involve?", "Mostly good planning: neutral-at-switch wiring, hub locations, and circuits that isolate cleanly. Cheapest done early — talk to Anthony before the renovation plaster goes up."),
+        ]),
+    dict(slug="electrician-sunshine-braybrook", name="Sunshine & Braybrook",
+        title="Electrician in Sunshine & Braybrook | Flowsmart Electrical",
+        desc="Sunshine and Braybrook electrician: pre-war rewires, switchboard upgrades and factory maintenance — including a 40-factory Braybrook estate.",
+        h1="Your electrician in Sunshine &amp; Braybrook",
+        lede="The oldest homes on Flowsmart&rsquo;s run and its biggest industrial contract share these two postcodes. Sunshine work is where the full toolkit comes out.",
+        body='''<p>Sunshine, Albion and Braybrook hold some of the oldest housing stock in the west — Californian bungalows and post-war homes where the wiring can predate the safety switch by half a century. Renovations here routinely uncover cloth-insulated cable, DIY horrors from previous decades, and boards mounted on asbestos panels that need licensed handling. Flowsmart quotes these honestly after looking, never over the phone, because in Sunshine the difference between a powerpoint and a rewire is one wall cavity.</p>
+<p>The other half of the story is industrial. Braybrook and Sunshine West are working suburbs in the literal sense, and Flowsmart maintains commercial sites here — including ongoing electrical maintenance across a 40-factory industrial estate in Braybrook. Three-phase supply, machine circuits, high-bay lighting, test and tag, RCD trip-testing: the compliance rhythm that keeps factories trading and audits boring.</p>
+<p>If you&rsquo;re buying or renovating in these suburbs, an electrical inspection before you commit is the cheapest insurance available — <a href="../contact.html">book one</a>.</p>''',
+        faqs=[
+            ("My Sunshine house is pre-war. What should I expect?", "An honest look first. Some period homes have been properly rewired already; others are original behind the plaster. Anthony inspects, tells you which you own, and quotes any work in writing — staged if that suits your budget."),
+            ("Do you handle asbestos switchboard panels?", "Old boards on asbestos backing are common here and are handled to regulation — priced in the quote, never a surprise on the day."),
+            ("What commercial work do you do in Braybrook?", "Factory and warehouse maintenance is the core — Flowsmart maintains a 40-factory Braybrook estate. Three-phase, machinery circuits, lighting, test and tag, and scheduled compliance."),
+            ("Can you do a pre-purchase electrical inspection?", "Yes — a documented once-over of the board, wiring and powerpoints before you buy. In this housing stock it regularly pays for itself in the price negotiation."),
+            ("Do you cover Albion, Ardeer and Sunshine West?", "Yes — Sunshine, Sunshine North and West, Albion, Ardeer, Braybrook, Maidstone and Tottenham."),
+        ]),
+]
+
+def area_page(a):
+    faqs_html = ""
+    for i, (q, ans) in enumerate(a["faqs"]):
+        faqs_html += f'''<div class="faq-item rv">
+  <button class="faq-q" aria-expanded="false" aria-controls="afaq-{i}">
+    <span>{q}</span>
+    <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+  </button>
+  <div class="faq-a" id="afaq-{i}"><p>{ans}</p></div>
+</div>'''
+    return f'''{page_hero("Electrician · " + a["name"], a["h1"], a["lede"])}
+<section class="svc-detail">
+  <div class="wrap svc-detail-grid">
+    <div class="rv">
+      <h2>What the work looks like in {a["name"]}</h2>
+      {a["body"]}
+    </div>
+    <aside class="svc-side rv">
+      <h3>Popular in {a["name"]}</h3>
+      <ul class="ticks">
+        <li><a href="../services/switchboard-upgrades.html">Switchboard upgrades</a></li>
+        <li><a href="../services/ev-charger-installation.html">EV charger installation</a></li>
+        <li><a href="../services/residential-electrician.html">Residential electrical</a></li>
+        <li><a href="../services/commercial-electrical-fitouts.html">Commercial &amp; factories</a></li>
+      </ul>
+      <p class="side-promise">%%PROMISE%%</p>
+    </aside>
+  </div>
+</section>
+<section class="faq">
+  <div class="wrap-narrow">
+    <p class="eyebrow rv">{a["name"]} questions</p>
+    <h2 class="rv">Asked around {a["name"]}</h2>
+    {faqs_html}
+  </div>
+</section>
+{cta_band(f"Need a sparky in {a['name']}?", "Free quote, answered within two business hours — seven days a week.")}'''
+
+def page_areas_hub():
+    cards = ""
+    blurbs = {
+        "electrician-melton": "Old boards in the south, new estates in the growth corridor — plus a long-running school maintenance contract.",
+        "electrician-bacchus-marsh": "Five minutes from base. Period weatherboards, acreage and shed power, fastest response on the run.",
+        "electrician-caroline-springs": "2000s family homes being upgraded to 2026 loads: EV chargers, extra circuits, modern lighting.",
+        "electrician-werribee": "Rescue work in the old streets, rental safety checks at scale across Wyndham.",
+        "electrician-point-cook": "EV and solar country — chargers, smart circuits and alfresco power in the newest stock in the west.",
+        "electrician-sunshine-braybrook": "Pre-war rewires on one side of the street, a 40-factory maintenance contract on the other.",
+    }
+    for a in AREA_DATA:
+        cards += f'''<a class="post-card rv" href="areas/{a["slug"]}.html">
+  <p class="post-meta">Service area</p>
+  <h2>{a["name"]}</h2>
+  <p>{blurbs[a["slug"]]}</p>
+  <span class="text-link">Local page<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
+</a>'''
+    return f'''{page_hero("Service areas", "One patch: Melbourne&rsquo;s west",
+    "Based at Rowsley, working from Ballan to the bay. Every area page below is written from real jobs in that suburb — not a template with the name swapped.")}
+<section class="post-list"><div class="wrap post-grid">{cards}</div></section>
+<section class="related"><div class="wrap"><p class="eyebrow">Also covered</p>
+<div class="chips"><span class="chip">Hoppers Crossing</span><span class="chip">Tarneit</span><span class="chip">Truganina</span><span class="chip">Deer Park</span><span class="chip">Ballan</span><span class="chip">Gordon</span><span class="chip">Rockbank</span><span class="chip">Wyndham Vale</span><span class="chip">Altona Meadows</span><span class="chip">Maidstone</span></div>
+<p style="margin-top:1rem">Close but not listed? <a href="contact.html">Ask</a> — the answer is usually yes.</p></div></section>
+{cta_band()}'''
+
+# ============================================================ testimonials ==
+def page_testimonials():
+    cards = ""
+    for name, body, _ in REVIEWS:
+        cards += f'''<figure class="review-card rv" style="width:auto">
+  <div class="stars" aria-label="Five star review">★★★★★</div>
+  <blockquote>{body}</blockquote>
+  <figcaption><b>{name}</b><span>Verified customer · Melbourne&rsquo;s west</span></figcaption>
+</figure>'''
+    return f'''{page_hero("Reviews", "What customers say when the job&rsquo;s done",
+    "Every word below is verbatim from a real Flowsmart customer. The shoes-off thing comes up more than once — that tells you most of it.")}
+<section class="reviews" style="padding-top:0">
+  <figure class="pull-quote rv">
+    <blockquote>&ldquo;He quoted the job, came on time, was very clean — even removed his shoes — and did some other odd jobs around the house at no extra cost.&rdquo;</blockquote>
+    <figcaption><b>Colomba</b> · Verified customer</figcaption>
+  </figure>
+  <div class="wrap post-grid" style="margin-top:2rem">{cards}</div>
+  <p class="reviews-foot rv">See the work behind the words in the <a href="case-studies.html">case studies</a>, or the photos on each <a href="services.html">service page</a>.</p>
+</section>
+{cta_band("Want service worth reviewing?", "It starts with a free quote and a call back inside two business hours.")}'''
+
+# ==================================================================== faq ===
+FAQ_HUB = [
+    ("Booking & quotes", [
+        ("How fast will you get back to me?", "Within two business hours, seven days a week — %%HOURS%%. If Anthony's on the tools when you call, you get a call back the moment he's off them."),
+        ("Are quotes really free?", "Yes, including on-site quotes for bigger jobs. You're paying for electrical work, not for finding out what it costs."),
+        ("Do you quote over the phone?", "Small, well-defined jobs, yes. Switchboards, rewires and fitouts get an on-site look so the written price actually holds."),
+        ("Can I just text a photo of the problem?", "Please do — a photo of the board or the fault answers half the quoting questions. Text it to %%PHONE%% with your suburb."),
+        ("What happens after I submit the quote form?", "It lands directly with Anthony — no call centre. You'll hear back with either a price or the two or three questions needed to give you one."),
+    ]),
+    ("The work", [
+        ("Are you licensed and insured?", "Registered Electrical Contractor 20672, A Class Licence A44962, $5M public liability. All checkable on the Energy Safe Victoria register — and you should check every trade you hire."),
+        ("Do I get a certificate?", "Every notifiable job is closed out with a Certificate of Electrical Safety (COES) — your proof for insurance and resale that the work meets standard."),
+        ("Do you do small jobs?", "Yes. One powerpoint gets the same booking and the same certificate as a rewire — and small jobs bundle well, so keep a list."),
+        ("What if something's not right afterwards?", "Anthony comes back and makes it right at no charge — the workmanship guarantee runs 12 months and sits alongside your Australian Consumer Law rights."),
+        ("Do you do commercial and factory work?", "A big part of every week — fitouts, three-phase, maintenance contracts, test and tag. See the commercial page and the Kaisercraft and Vogue Hair Bar case studies."),
+    ]),
+    ("Common problems", [
+        ("My safety switch keeps tripping. What now?", "It's protecting you from something — usually one appliance, sometimes moisture or a tired circuit. The safe self-checks and the point to stop DIY-ing are in the safety switch guide."),
+        ("How do I know if my switchboard needs upgrading?", "Ceramic fuses, no safety switches, weekly trips, flickering under load, warmth at the board. Two or more of those: book the inspection this month."),
+        ("Can I get an EV charger at home?", "Almost always yes — the real question is your board's capacity, which Anthony checks free as part of the quote, before you spend money on a unit."),
+        ("What does a rental safety check involve?", "A licensed check of the installation every two years per Victorian rental rules — board, safety switch trip-tests, earthing, fittings — with a written record for your file."),
+        ("How much do common jobs cost?", "Honest ranges live in the guides: start with the switchboard cost guide. Every real job gets a fixed written quote before work starts."),
+    ]),
+]
+
+def page_faq_hub():
+    sections = ""
+    idx = 0
+    for group, qas in FAQ_HUB:
+        items = ""
+        for q, a in qas:
+            items += f'''<div class="faq-item rv">
+  <button class="faq-q" aria-expanded="false" aria-controls="hfaq-{idx}">
+    <span>{q}</span>
+    <svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+  </button>
+  <div class="faq-a" id="hfaq-{idx}"><p>{a}</p></div>
+</div>'''
+            idx += 1
+        sections += f'<h2 class="rv" style="margin-top:2.5rem">{group}</h2>{items}'
+    return f'''{page_hero("FAQ", "Every fair question, answered straight",
+    "The full list — booking, licensing, guarantees and the common problems. If yours isn&rsquo;t here, ask it on the quote form and you&rsquo;ll have an answer within two business hours.")}
+<section class="faq" style="padding-top:0"><div class="wrap-narrow">{sections}
+<div class="chips" style="margin-top:2.5rem">
+  <a class="chip" href="blog/safety-switch-tripping.html">Safety switch guide</a>
+  <a class="chip" href="blog/switchboard-upgrade-cost-melbourne.html">Switchboard costs</a>
+  <a class="chip" href="blog/ev-charger-installation-home-guide.html">EV charging guide</a>
+  <a class="chip" href="blog/rental-electrical-safety-checks-victoria.html">Rental checks</a>
+</div></div></section>
+{cta_band()}'''
+
+FAQ_HUB_FLAT = [qa for _, qas in FAQ_HUB for qa in qas]
