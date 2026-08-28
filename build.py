@@ -29,7 +29,7 @@ SITE = {
     "rec":         "REC 20672",
     "licence":     "A Class Licence A44962",
     "insurance":   "$5M public liability",
-    "ga":          "G-XXXXXXXXXX",            # TODO: real GA4 measurement id
+    "ga":          "G-P18HNWECWE",            # GA4 measurement id (live)
     "gsc":         "GSC-VERIFICATION-TOKEN",  # TODO: Search Console verification content value
     # GoHighLevel form: leave "" to render the styled native form (redirects to
     # thank-you.html). Paste the GHL form id to embed the real inline form.
