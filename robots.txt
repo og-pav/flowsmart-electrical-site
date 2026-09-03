@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /thank-you
 Disallow: /thank-you.html
+Disallow: /404
 Disallow: /404.html
 
 Sitemap: https://flowsmartelec.com.au/sitemap.xml

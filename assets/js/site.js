@@ -104,10 +104,8 @@
       }
       // NOTE: when the GHL form id is set in build.py this native form is
       // replaced by the GHL inline embed and this handler never runs.
-      // Set the GHL form redirect to /thank-you.html for conversion tracking.
-      var redirect = form.getAttribute("data-redirect") || "thank-you.html";
-      var depth = (document.body.getAttribute("data-page") || "").split("/").length - 1;
-      window.location.href = new Array(depth + 1).join("../") + redirect;
+      // Set the GHL form redirect to /thank-you for conversion tracking.
+      window.location.href = form.getAttribute("data-redirect") || "/thank-you";
     });
   });
 

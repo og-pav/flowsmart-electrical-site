@@ -71,15 +71,20 @@ for page in pages:
         try: json.loads(raw)
         except Exception as e: errors.append(f"{rel}: invalid JSON-LD ({e})")
 
-    # internal links resolve
+    # internal links resolve (clean URLs: /services maps to services.html on disk)
     for href in s.links:
         if href.startswith(("http", "mailto:", "tel:", "#")) or not href:
             continue
         target = href.split("#")[0]
-        if not target: continue
-        resolved = (page.parent / target).resolve()
-        if not resolved.exists():
-            errors.append(f"{rel}: broken link -> {href}")
+        if not target or target == "/": continue
+        base = (ROOT / target.lstrip("/")) if target.startswith("/") else (page.parent / target)
+        if base.exists() or Path(str(base) + ".html").exists():
+            continue
+        errors.append(f"{rel}: broken link -> {href}")
+        # no .html suffixes should survive in hrefs
+    for href in s.links:
+        if href.split("#")[0].endswith(".html") and not href.startswith("http"):
+            errors.append(f"{rel}: link still has .html suffix -> {href}")
 
     # anchor targets on landing
     if rel == "index.html":
@@ -97,15 +102,16 @@ for page in pages:
             warns.append(f"{page.relative_to(ROOT)}: banned word '{w}'")
 
 # required files
-for f in ["robots.txt", "sitemap.xml", "llms.txt", "assets/img/favicon.svg",
+for f in ["robots.txt", "sitemap.xml", "llms.txt", "vercel.json", "assets/img/favicon.svg",
           "assets/img/og-share.png", "assets/img/apple-touch-icon.png"]:
     if not (ROOT / f).exists(): errors.append(f"missing {f}")
 
 # sitemap entries resolve
 sm = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
 for loc in re.findall(r"<loc>([^<]+)</loc>", sm):
-    path = loc.replace("https://flowsmartelec.com.au/", "") or "index.html"
-    if not (ROOT / path).exists(): errors.append(f"sitemap: missing {path}")
+    path = loc.replace("https://flowsmartelec.com.au/", "") or "index"
+    if not (ROOT / (path + ".html")).exists(): errors.append(f"sitemap: missing {path}")
+    if path.endswith(".html"): errors.append(f"sitemap: {path} still has .html suffix")
 
 print(f"Audited {len(pages)} pages.")
 for e in errors: print("ERROR:", e)

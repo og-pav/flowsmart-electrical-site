@@ -32,7 +32,7 @@ SITE = {
     "ga":          "G-P18HNWECWE",            # GA4 measurement id (live)
     "gsc":         "lYJ4xY5yOkRVsYia_2qcDnOOr3vom4SuJlbe9sTxFf8",  # Search Console verification (live)
     # GoHighLevel form: leave "" to render the styled native form (redirects to
-    # thank-you.html). Paste the GHL form id to embed the real inline form.
+    # /thank-you). Paste the GHL form id to embed the real inline form.
     "ghl_form_id": "",
     "linkedin":    "https://www.linkedin.com/in/anthony-vella-6346238a/",
     "gbp":         "https://www.google.com/maps/search/?api=1&query=Flowsmart+Electrical+Rowsley+VIC",
@@ -83,6 +83,28 @@ def img_src(key, depth=0):
 
 def rel_prefix(depth):
     return "../" * depth
+
+def clean_urls(doc):
+    """Serve every page without its .html suffix (/services, /areas/electrician-melton).
+    Files stay as .html on disk; vercel.json cleanUrls maps them and 308-redirects
+    the old .html URLs, so nothing that was already linked or indexed breaks."""
+    # home link (index.html at any depth) -> site root
+    doc = re.sub(r'href="(?:\.\./)*index\.html"', 'href="/"', doc)
+    doc = re.sub(r"href='(?:\.\./)*index\.html'", 'href="/"', doc)
+    # every other href, keeping any #fragment (page copy uses both quote styles)
+    doc = re.sub(r'(href="[^"]*?)\.html(?=["#])', r'\1', doc)
+    doc = re.sub(r"(href='[^']*?)\.html(?=['#])", r"\1", doc)
+    # og:url / twitter:* absolute URLs
+    doc = re.sub(r'(content="https://[^"]*?)\.html(?=")', r'\1', doc)
+    # absolute URLs inside JSON-LD
+    doc = re.sub(r'(https://flowsmartelec\.com\.au/[^"\s]*?)\.html(?=")', r'\1', doc)
+    return doc
+
+def clean_path(path):
+    """index.html -> '' ; services.html -> services ; blog/x.html -> blog/x"""
+    if path == "index.html":
+        return ""
+    return re.sub(r"\.html$", "", path)
 
 # ---------------------------------------------------------------- chrome ---
 def wordmark(depth, reversed_=False):
@@ -262,7 +284,7 @@ def breadcrumb_html(page, depth):
 def render(page):
     depth = page["path"].count("/")
     p = rel_prefix(depth)
-    canonical = SITE["domain"] + "/" + ("" if page["path"] == "index.html" else page["path"])
+    canonical = SITE["domain"] + "/" + clean_path(page["path"])
     robots = '<meta name="robots" content="noindex,nofollow">' if page.get("noindex") else ""
     og_img = SITE["domain"] + "/assets/img/og-share.png"
     schema = {"@context": "https://schema.org", "@graph": [business_node()]}
@@ -335,6 +357,7 @@ def render(page):
               .replace("%%HOURS%%", SITE["hours_line"])
               .replace("%%REL%%", p))
     doc = re.sub(r"%%IMG:([a-z0-9_]+)%%", lambda m: img_src(m.group(1), depth), doc)
+    doc = clean_urls(doc)
     out = ROOT / page["path"]
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(doc, encoding="utf-8")
@@ -343,7 +366,7 @@ def render(page):
 # ------------------------------------------------- GHL form / native form ---
 def quote_form(variant="landing"):
     """Inline GHL embed when a form id is set; styled native form otherwise.
-    The native form validates client-side and redirects to thank-you.html,
+    The native form validates client-side and redirects to /thank-you,
     where the generate_lead conversion event fires."""
     if SITE["ghl_form_id"]:
         return f'''<div class="ghl-wrap">
@@ -355,7 +378,7 @@ def quote_form(variant="landing"):
 </iframe>
 <script src="https://link.msgsndr.com/js/form_embed.js"></script>
 </div>'''
-    return f'''<form class="quote-form" novalidate data-redirect="thank-you.html" aria-label="Request a free quote">
+    return f'''<form class="quote-form" novalidate data-redirect="/thank-you" aria-label="Request a free quote">
   <div class="qf-field">
     <label for="qf-name-{variant}">Your name</label>
     <input id="qf-name-{variant}" name="name" type="text" autocomplete="name" required minlength="2" placeholder="Jane Citizen">
@@ -505,7 +528,9 @@ def main():
     # robots.txt
     (ROOT / "robots.txt").write_text(f"""User-agent: *
 Allow: /
+Disallow: /thank-you
 Disallow: /thank-you.html
+Disallow: /404
 Disallow: /404.html
 
 Sitemap: {SITE['domain']}/sitemap.xml
@@ -516,7 +541,7 @@ Sitemap: {SITE['domain']}/sitemap.xml
     for page in pages:
         if page.get("noindex"):
             continue
-        loc = SITE["domain"] + "/" + ("" if page["path"] == "index.html" else page["path"])
+        loc = SITE["domain"] + "/" + clean_path(page["path"])
         pr = "1.0" if page["path"] == "index.html" else ("0.9" if page["path"] in ("contact.html", "services.html") else "0.7")
         urls += f"  <url><loc>{loc}</loc><lastmod>2026-08-20</lastmod><priority>{pr}</priority></url>\n"
     (ROOT / "sitemap.xml").write_text(
@@ -535,15 +560,15 @@ Sitemap: {SITE['domain']}/sitemap.xml
 > Free quotes answered within two business hours, seven days a week.
 
 ## Services
-- [Residential electrical]({SITE['domain']}/services/residential-electrician.html): powerpoints, rewires, lighting, smoke alarms, fault-finding
-- [Switchboard upgrades]({SITE['domain']}/services/switchboard-upgrades.html): board replacements with RCD safety switches, certified same day
-- [EV charger installation]({SITE['domain']}/services/ev-charger-installation.html): 7-22kW home chargers, capacity assessments, solar-aware setups
-- [Commercial & fitouts]({SITE['domain']}/services/commercial-electrical-fitouts.html): shop fitouts, factory maintenance, test & tag
+- [Residential electrical]({SITE['domain']}/services/residential-electrician): powerpoints, rewires, lighting, smoke alarms, fault-finding
+- [Switchboard upgrades]({SITE['domain']}/services/switchboard-upgrades): board replacements with RCD safety switches, certified same day
+- [EV charger installation]({SITE['domain']}/services/ev-charger-installation): 7-22kW home chargers, capacity assessments, solar-aware setups
+- [Commercial & fitouts]({SITE['domain']}/services/commercial-electrical-fitouts): shop fitouts, factory maintenance, test & tag
 
 ## Key pages
-- [Free quote / contact]({SITE['domain']}/contact.html)
-- [Case studies]({SITE['domain']}/case-studies.html): Kaisercraft warehouse, Vogue Hair Bar
-- [Guides]({SITE['domain']}/blog.html): switchboard costs, EV charging, safety switches, rental compliance
+- [Free quote / contact]({SITE['domain']}/contact)
+- [Case studies]({SITE['domain']}/case-studies): Kaisercraft warehouse, Vogue Hair Bar
+- [Guides]({SITE['domain']}/blog): switchboard costs, EV charging, safety switches, rental compliance
 """, encoding="utf-8")
 
     print(f"Built {len(pages)} pages + robots.txt, sitemap.xml, llms.txt")
