@@ -30,7 +30,7 @@ SITE = {
     "licence":     "A Class Licence A44962",
     "insurance":   "$5M public liability",
     "ga":          "G-P18HNWECWE",            # GA4 measurement id (live)
-    "gsc":         "GSC-VERIFICATION-TOKEN",  # TODO: Search Console verification content value
+    "gsc":         "lYJ4xY5yOkRVsYia_2qcDnOOr3vom4SuJlbe9sTxFf8",  # Search Console verification (live)
     # GoHighLevel form: leave "" to render the styled native form (redirects to
     # thank-you.html). Paste the GHL form id to embed the real inline form.
     "ghl_form_id": "",
