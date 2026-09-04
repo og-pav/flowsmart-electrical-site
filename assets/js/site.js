@@ -211,20 +211,37 @@
   }
   function heroFallback() {
     document.querySelectorAll("[data-hero]").forEach(function (el, i) {
-      el.style.transition = "opacity .6s ease " + i * 130 + "ms, transform .6s cubic-bezier(.22,.7,.3,1) " + i * 130 + "ms";
+      el.style.transition = "opacity .6s ease " + i * 120 + "ms, transform .6s cubic-bezier(.22,.7,.3,1) " + i * 120 + "ms";
       requestAnimationFrame(function () { el.style.opacity = 1; el.style.transform = "none"; });
     });
   }
-  window.addEventListener("load", function () {
+  function forceHeroVisible() {
+    document.querySelectorAll("[data-hero]").forEach(function (el) {
+      el.style.opacity = 1; el.style.transform = "none";
+    });
+  }
+
+  /* The hero must never wait on third-party assets (the GHL form iframe can
+     delay window.load by seconds). Start as soon as the DOM is ready, give the
+     GSAP CDN a short grace period, and hard-reveal if anything goes wrong. */
+  var heroStarted = false;
+  var heroSafety = setTimeout(forceHeroVisible, 1600);   // last line of defence
+
+  function startHero() {
+    if (heroStarted) return;
+    heroStarted = true;
+    clearTimeout(heroSafety);
+
     if (!window.gsap) { heroFallback(); return; }
-    /* hero entry: stagger fade-up, ~800ms total, ease-out */
+
     gsap.to("[data-hero]", {
       opacity: 1, y: 0, duration: 0.55, ease: "power3.out", stagger: 0.13
     });
-    /* mouse parallax on floating shapes */
+
     var shapes = [].slice.call(document.querySelectorAll(".hero-shape"));
     if (shapes.length && window.matchMedia("(pointer:fine)").matches) {
-      document.querySelector(".hero").addEventListener("mousemove", function (e) {
+      var heroEl = document.querySelector(".hero");
+      if (heroEl) heroEl.addEventListener("mousemove", function (e) {
         var cx = e.clientX / window.innerWidth - 0.5;
         var cy = e.clientY / window.innerHeight - 0.5;
         shapes.forEach(function (s) {
@@ -233,22 +250,25 @@
         });
       });
     }
-    /* section headline drift: a touch of extra ease on scroll (ScrollTrigger) */
+
     if (window.ScrollTrigger) {
       gsap.registerPlugin(ScrollTrigger);
       gsap.utils.toArray(".pull-quote blockquote").forEach(function (q) {
-        gsap.from(q, {
-          y: 40, opacity: 0, duration: 0.9, ease: "power3.out",
-          scrollTrigger: { trigger: q, start: "top 82%", once: true }
-        });
+        gsap.from(q, { y: 40, opacity: 0, duration: 0.9, ease: "power3.out",
+          scrollTrigger: { trigger: q, start: "top 82%", once: true } });
       });
-      /* step numbers count-scale in */
       gsap.utils.toArray(".step-num").forEach(function (n) {
-        gsap.from(n, {
-          scale: 1.4, opacity: 0, duration: 0.8, ease: "power3.out",
-          scrollTrigger: { trigger: n, start: "top 85%", once: true }
-        });
+        gsap.from(n, { scale: 1.4, opacity: 0, duration: 0.8, ease: "power3.out",
+          scrollTrigger: { trigger: n, start: "top 85%", once: true } });
       });
     }
-  });
+  }
+
+  /* poll briefly for the deferred GSAP bundle, then go regardless */
+  var waited = 0;
+  (function waitForGsap() {
+    if (window.gsap || waited >= 900) { startHero(); return; }
+    waited += 60;
+    setTimeout(waitForGsap, 60);
+  })();
 })();
