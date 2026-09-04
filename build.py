@@ -9,6 +9,19 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 
+def asset_version():
+    """Short hash of the shared CSS+JS, appended to their URLs so a deploy can
+    never be masked by a stale browser cache."""
+    import hashlib
+    h = hashlib.md5()
+    for f in ("assets/css/site.css", "assets/js/site.js"):
+        p = ROOT / f
+        if p.exists():
+            h.update(p.read_bytes())
+    return h.hexdigest()[:8]
+
+ASSET_V = asset_version()
+
 # ---------------------------------------------------------------- config ---
 SITE = {
     "name":        "Flowsmart Electrical",
@@ -355,9 +368,9 @@ def render(page):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="{p}assets/css/site.css">
+<link rel="stylesheet" href="{p}assets/css/site.css?v={ASSET_V}">
 {gsap}
-<script defer src="{p}assets/js/site.js"></script>
+<script defer src="{p}assets/js/site.js?v={ASSET_V}"></script>
 <!-- GA4 loads only after cookie consent; configured in site.js -->
 <script>window.FSE_GA="{SITE['ga']}";window.FSE_GHL_TRACK="{SITE['ghl_tracking']}";</script>
 <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
