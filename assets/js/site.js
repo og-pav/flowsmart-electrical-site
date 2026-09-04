@@ -225,12 +225,26 @@
      delay window.load by seconds). Start as soon as the DOM is ready, give the
      GSAP CDN a short grace period, and hard-reveal if anything goes wrong. */
   var heroStarted = false;
-  var heroSafety = setTimeout(forceHeroVisible, 1600);   // last line of defence
+
+  /* Watchdog: whatever happens above, the hero is visible within 2.6s. It is
+     never cleared, and it only acts on elements still hidden — so it also
+     rescues a tween frozen by a backgrounded tab (rAF is paused there). */
+  setTimeout(function () {
+    document.querySelectorAll("[data-hero]").forEach(function (el) {
+      if (parseFloat(getComputedStyle(el).opacity) < 0.99) {
+        if (window.gsap) gsap.killTweensOf(el);
+        el.style.opacity = 1; el.style.transform = "none";
+      }
+    });
+  }, 2600);
 
   function startHero() {
     if (heroStarted) return;
     heroStarted = true;
-    clearTimeout(heroSafety);
+
+    /* No point animating a hero nobody can see — a background tab would freeze
+       the tween half-done and show a blank hero on focus. */
+    if (document.hidden) { forceHeroVisible(); return; }
 
     if (!window.gsap) { heroFallback(); return; }
 
