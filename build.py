@@ -33,12 +33,17 @@ SITE = {
     "gsc":         "lYJ4xY5yOkRVsYia_2qcDnOOr3vom4SuJlbe9sTxFf8",  # Search Console verification (live)
     # GoHighLevel form: leave "" to render the styled native form (redirects to
     # /thank-you). Paste the GHL form id to embed the real inline form.
-    "ghl_form_id": "",
+    "ghl_form_id": "2kexV7DvSR7t6gwNMNaH",
+    "ghl_tracking": "tk_c1dbb7f184af42dd8c86c3605f248bb9",
     "linkedin":    "https://www.linkedin.com/in/anthony-vella-6346238a/",
     "gbp":         "https://www.google.com/maps/search/?api=1&query=Flowsmart+Electrical+Rowsley+VIC",
     "promise":     "Calls answered or returned within two business hours, seven days a week.",
     "hours_line":  "Mon–Fri 7:00am–8:00pm · Sat–Sun 8:30am–8:00pm",
 }
+DEFAULT_KEYWORDS = ("electrician Melbourne west, electrician Melton, electrician Bacchus Marsh, "
+    "licensed electrician, switchboard upgrade, EV charger installation, safety switch, "
+    "emergency electrician, commercial electrician, residential electrician Victoria")
+
 AREAS = ["Melton", "Bacchus Marsh", "Caroline Springs", "Sunshine", "Braybrook",
          "Werribee", "Point Cook", "Hoppers Crossing", "Tarneit", "Truganina",
          "Deer Park", "Ballan"]
@@ -203,7 +208,7 @@ def footer(page, depth):
   </div>
 </footer>
 <div class="cookie-bar" hidden role="dialog" aria-label="Cookies">
-  <p>We use one analytics cookie to see which pages help people. No ads, no tracking across sites.</p>
+  <p>We use cookies to see which pages help people and which ad or search sent you. No selling your data, ever.</p>
   <div><button class="btn btn-ghost" data-cookie="decline">No thanks</button>
   <button class="btn btn-volt" data-cookie="accept">That&rsquo;s fine</button></div>
 </div>'''
@@ -287,7 +292,21 @@ def render(page):
     canonical = SITE["domain"] + "/" + clean_path(page["path"])
     robots = '<meta name="robots" content="noindex,nofollow">' if page.get("noindex") else ""
     og_img = SITE["domain"] + "/assets/img/og-share.png"
-    schema = {"@context": "https://schema.org", "@graph": [business_node()]}
+    site_node = {
+        "@type": "WebSite", "@id": SITE["domain"] + "/#website",
+        "url": SITE["domain"] + "/", "name": SITE["name"],
+        "publisher": {"@id": SITE["domain"] + "/#business"},
+        "inLanguage": "en-AU",
+    }
+    page_node = {
+        "@type": "WebPage", "@id": canonical + "#webpage", "url": canonical,
+        "name": page["title"], "description": page["desc"],
+        "isPartOf": {"@id": SITE["domain"] + "/#website"},
+        "about": {"@id": SITE["domain"] + "/#business"},
+        "inLanguage": "en-AU",
+        "primaryImageOfPage": {"@type": "ImageObject", "url": SITE["domain"] + "/assets/img/og-share.png"},
+    }
+    schema = {"@context": "https://schema.org", "@graph": [business_node(), site_node, page_node]}
     bc = breadcrumb_schema(page, depth)
     if bc: schema["@graph"].append(bc)
     if page.get("faqs"): schema["@graph"].append(faq_schema(page["faqs"]))
@@ -309,6 +328,13 @@ def render(page):
 <link rel="canonical" href="{canonical}">
 {robots}
 <meta name="google-site-verification" content="{SITE['gsc']}">
+<meta name="author" content="{SITE['owner']}, {SITE['name']}">
+<meta name="robots" content="max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+<meta name="geo.region" content="AU-VIC">
+<meta name="geo.placename" content="{SITE['locality']}, Melbourne, Victoria">
+<meta name="geo.position" content="{SITE['lat']};{SITE['lng']}">
+<meta name="ICBM" content="{SITE['lat']}, {SITE['lng']}">
+<meta name="keywords" content="{page.get('keywords', DEFAULT_KEYWORDS)}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{SITE['name']}">
 <meta property="og:title" content="{html.escape(page["title"])}">
@@ -333,22 +359,25 @@ def render(page):
 {gsap}
 <script defer src="{p}assets/js/site.js"></script>
 <!-- GA4 loads only after cookie consent; configured in site.js -->
-<script>window.FSE_GA="{SITE['ga']}";</script>
+<script>window.FSE_GA="{SITE['ga']}";window.FSE_GHL_TRACK="{SITE['ghl_tracking']}";</script>
 <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
 </head>
 <body class="{body_class}" data-page="{page['path']}">
 <a class="skip-link" href="#main">Skip to content</a>
 {header(page, depth)}
 <main id="main">
-{breadcrumb_html(page, depth)}
+{"" if "%%BREADCRUMBS%%" in body else breadcrumb_html(page, depth)}
 {body}
 </main>
 {footer(page, depth)}
 {sticky_cta(page, depth)}
+<!-- GoHighLevel external tracking — injected by assets/js/site.js once the
+     visitor accepts cookies, so the consent banner tells the truth. -->
 </body>
 </html>'''
     # token substitution
     doc = doc.replace("%%QUOTE_FORM%%", quote_form(page["path"].replace("/", "-")))
+    doc = doc.replace("%%BREADCRUMBS%%", breadcrumb_html(page, depth))
     doc = (doc.replace("%%PHONE%%", SITE["phone"])
               .replace("%%TEL%%", SITE["phone_tel"])
               .replace("%%EMAIL%%", SITE["email"])
@@ -369,12 +398,28 @@ def quote_form(variant="landing"):
     The native form validates client-side and redirects to /thank-you,
     where the generate_lead conversion event fires."""
     if SITE["ghl_form_id"]:
+        # GoHighLevel inline embed, exactly as supplied by GHL. form_embed.js
+        # auto-resizes the iframe, so the inline height is only the starting size.
+        fid = SITE["ghl_form_id"]
         return f'''<div class="ghl-wrap">
-<iframe src="https://api.leadconnectorhq.com/widget/form/{SITE['ghl_form_id']}"
-  style="width:100%;height:520px;border:none;border-radius:16px"
-  id="inline-{SITE['ghl_form_id']}" data-layout="{{'id':'INLINE'}}"
-  data-trigger-type="alwaysShow" data-activation-type="alwaysActivated"
-  data-deactivation-type="neverDeactivate" title="Free quote form">
+<iframe
+    src="https://api.leadconnectorhq.com/widget/form/{fid}"
+    style="width:100%;height:1164px;border:none;border-radius:8px"
+    id="inline-{fid}"
+    data-layout="{{'id':'INLINE'}}"
+    data-trigger-type="alwaysShow"
+    data-trigger-value=""
+    data-activation-type="alwaysActivated"
+    data-activation-value=""
+    data-deactivation-type="neverDeactivate"
+    data-deactivation-value=""
+    data-form-name="Flowsmart Electrical EMBED Form"
+    data-height="1164"
+    data-layout-iframe-id="inline-{fid}"
+    data-form-id="{fid}"
+    data-cookie-consent="true"
+    data-cookie-consent-provider="auto"
+    title="Flowsmart Electrical EMBED Form">
 </iframe>
 <script src="https://link.msgsndr.com/js/form_embed.js"></script>
 </div>'''
@@ -421,25 +466,38 @@ def main():
         desc="Residential electrical, switchboard upgrades, EV charger installation and commercial fitouts across Melton, Bacchus Marsh and Melbourne's western suburbs.",
         body=content.page_services_hub()))
 
-    A(dict(path="services/residential-electrician.html", crumb="Residential",
+    def service_node(name, desc):
+        return [{"@type": "Service", "serviceType": name, "name": name, "description": desc,
+                 "provider": {"@id": SITE["domain"] + "/#business"},
+                 "areaServed": [{"@type": "City", "name": a} for a in AREAS]}]
+
+    A(dict(schema_extra=service_node("Residential electrical services",
+            "Powerpoints, rewires, lighting, fans, smoke alarms and fault-finding for homes across Melbourne's west."),
+        keywords="residential electrician Melton, home electrician Melbourne west, powerpoint installation, house rewiring Melbourne, smoke alarm installation Victoria, ceiling fan installation, downlight installation, electrical fault finding", path="services/residential-electrician.html", crumb="Residential",
         crumbs=[("Services", "services.html")],
         title="Residential Electrician Melton & Melbourne's West | Flowsmart",
         desc="Home electrical done clean and certified: powerpoints, rewires, lighting, fans, smoke alarms and fault-finding across Melton, Bacchus Marsh and the west.",
         faqs=content.RES_FAQS, body=content.page_residential()))
 
-    A(dict(path="services/switchboard-upgrades.html", crumb="Switchboard upgrades",
+    A(dict(schema_extra=service_node("Switchboard upgrades",
+            "Replacement of old fuse boards with modern switchboards and RCD safety switches, tested and certified."),
+        keywords="switchboard upgrade Melbourne, fuse box replacement, safety switch installation, RCD installation Victoria, switchboard cost Melbourne, ceramic fuse replacement, consumer mains upgrade", path="services/switchboard-upgrades.html", crumb="Switchboard upgrades",
         crumbs=[("Services", "services.html")],
         title="Switchboard Upgrades Melbourne's West | Flowsmart Electrical",
         desc="Replace old fuse boards with modern boards and safety switches on every circuit. Fixed written quotes, same-day certification, Melbourne's western suburbs.",
         faqs=content.SB_FAQS, body=content.page_switchboards()))
 
-    A(dict(path="services/ev-charger-installation.html", crumb="EV charger installation",
+    A(dict(schema_extra=service_node("EV charger installation",
+            "Home electric vehicle charger supply and installation, including switchboard capacity assessment."),
+        keywords="EV charger installation Melbourne, home EV charger, 7kW charger install, Tesla charger installation Victoria, electric car charger Point Cook, solar EV charging", path="services/ev-charger-installation.html", crumb="EV charger installation",
         crumbs=[("Services", "services.html")],
         title="EV Charger Installation Melbourne's West | Flowsmart Electrical",
         desc="Home EV chargers sized to your car, switchboard and tariff. Capacity checks first, clean installs, solar-aware setups. Melton to Point Cook.",
         faqs=content.EV_FAQS, body=content.page_ev()))
 
-    A(dict(path="services/commercial-electrical-fitouts.html", crumb="Commercial & fitouts",
+    A(dict(schema_extra=service_node("Commercial electrical and fitouts",
+            "Shop and office fitouts, factory and warehouse maintenance, three-phase power, test and tag."),
+        keywords="commercial electrician Melbourne west, shop fitout electrician, factory maintenance electrician, warehouse lighting, three phase electrician, test and tag Melbourne", path="services/commercial-electrical-fitouts.html", crumb="Commercial & fitouts",
         crumbs=[("Services", "services.html")],
         title="Commercial Electricians & Fitouts, Melbourne's West | Flowsmart",
         desc="Shop fitouts, factory maintenance, three-phase and test & tag across Melbourne's west — scheduled around your trading hours. REC 20672, $5M insured.",
@@ -474,30 +532,32 @@ def main():
                 "image": SITE["domain"] + "/assets/img/og-share.png"}],
             body=content.blog_post_body(p)))
 
-    A(dict(path="areas.html", crumb="Areas",
+    A(dict(keywords="electrician Melton, electrician Werribee, electrician Point Cook, electrician Caroline Springs, electrician Sunshine, electrician Braybrook, electrician Bacchus Marsh", path="areas.html", crumb="Areas",
         title="Service Areas: Electricians Across Melbourne's West | Flowsmart",
         desc="Local electrician pages for Melton, Bacchus Marsh, Caroline Springs, Werribee, Point Cook, Sunshine and Braybrook — each written from real jobs in that suburb.",
         body=content.page_areas_hub()))
 
     for a in content.AREA_DATA:
-        A(dict(path=f"areas/{a['slug']}.html", crumb=a["name"],
+        A(dict(keywords=f"electrician {a['name']}, {a['name']} electrician, licensed electrician {a['name']}, "
+                        f"switchboard upgrade {a['name']}, emergency electrician {a['name']}, EV charger {a['name']}",
+            path=f"areas/{a['slug']}.html", crumb=a["name"],
             crumbs=[("Areas", "areas.html")],
             title=a["title"], desc=a["desc"],
             faqs=a["faqs"], body=content.area_page(a)))
 
-    A(dict(path="testimonials.html", crumb="Reviews",
+    A(dict(keywords="Flowsmart Electrical reviews, electrician reviews Melbourne west, trusted electrician Melton", path="testimonials.html", crumb="Reviews",
         title="Reviews of Flowsmart Electrical | Verbatim & Verified",
         desc="Real reviews from Flowsmart Electrical customers across Melbourne's west — on time, clean, properly quoted, certified. Every word verbatim.",
         schema_extra=content.review_schema(),
         body=content.page_testimonials()))
 
-    A(dict(path="faq.html", crumb="FAQ",
+    A(dict(keywords="electrician questions, do I need a switchboard upgrade, why does my safety switch trip, electrician call out fee Melbourne, certificate of electrical safety", path="faq.html", crumb="FAQ",
         title="FAQ: Quotes, Licensing & Common Problems | Flowsmart",
         desc="Every fair question answered straight: response times, free quotes, licences and insurance, certificates, safety switches, switchboards and EV chargers.",
         faqs=content.FAQ_HUB_FLAT,
         body=content.page_faq_hub()))
 
-    A(dict(path="contact.html", crumb="Contact",
+    A(dict(keywords="electrician near me, free electrical quote Melbourne, emergency electrician Melton, electrician Bacchus Marsh contact, book an electrician", path="contact.html", crumb="Contact",
         title="Free Quotes: Contact Flowsmart Electrical | 0433 348 403",
         desc="Get a free electrical quote answered within two business hours. Call 0433 348 403, email, or use the 60-second form. Melton, Bacchus Marsh & Melbourne's west.",
         body=content.page_contact()))

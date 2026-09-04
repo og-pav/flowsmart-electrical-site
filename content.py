@@ -105,26 +105,59 @@ def landing_body():
 <!-- 1 · HERO -->
 <section class="hero" aria-label="Introduction">
   <div class="hero-bg" aria-hidden="true">
-    <span class="hero-shape hs-1" data-depth="18"></span>
-    <span class="hero-shape hs-2" data-depth="34"></span>
-    <span class="hero-shape hs-3" data-depth="10"></span>
+    <span class="hero-mesh"></span>
+    <span class="hero-grain"></span>
+    <span class="hero-shape hs-1" data-depth="20"></span>
+    <span class="hero-shape hs-2" data-depth="36"></span>
+    <span class="hero-shape hs-3" data-depth="12"></span>
     <span class="hero-grid"></span>
   </div>
   <div class="hero-inner">
-    <p class="eyebrow" data-hero>Licensed electricians · Melbourne&rsquo;s west</p>
-    <h1 data-hero>Power done properly.<br><em>Answered the first time.</em></h1>
-    <p class="hero-sub" data-hero>Thirteen years on the tools across Melton, Bacchus Marsh and Melbourne&rsquo;s west. One electrician who picks up the phone, turns up when he said he would, and leaves your place cleaner than he found it.</p>
-    <div class="hero-cta" data-hero>
-      <a class="btn btn-volt btn-lg" href="#quote">Get a Free Quote</a>
-      <a class="hero-call" href="tel:%%TEL%%">or call %%OWNER%% — %%PHONE%%</a>
+    <div class="hero-copy">
+      <p class="hero-badge" data-hero>
+        <span class="hb-dot" aria-hidden="true"></span>
+        Licensed electricians · Melbourne&rsquo;s west
+      </p>
+      <h1 data-hero>Power done properly.<br><em>Answered the first time.</em></h1>
+      <p class="hero-sub" data-hero>Thirteen years on the tools across Melton, Bacchus Marsh and Melbourne&rsquo;s west. One electrician who picks up the phone, turns up when he said he would, and leaves your place cleaner than he found it.</p>
+      <div class="hero-cta" data-hero>
+        <a class="btn btn-volt btn-lg" href="#quote">Get a Free Quote</a>
+        <a class="hero-call" href="tel:%%TEL%%">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.7.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.7.1.3 0 .7-.2 1l-2.2 2.1Z"/></svg>
+          <span>or call %%OWNER%% — <b>%%PHONE%%</b></span>
+        </a>
+      </div>
+      <div class="proof-strip" data-hero>
+        <span class="proof"><b class="stars">★★★★★</b> 20+ Google reviews</span>
+        <span class="proof-sep" aria-hidden="true"></span>
+        <span class="proof">Since 2013</span>
+        <span class="proof-sep" aria-hidden="true"></span>
+        <span class="proof tip" data-tip="Registered Electrical Contractor 20672 — checkable on the Energy Safe Victoria register">REC 20672</span>
+        <span class="proof-sep" aria-hidden="true"></span>
+        <span class="proof">$5M insured</span>
+      </div>
     </div>
-    <div class="proof-strip" data-hero>
-      <span class="proof"><b class="stars">★★★★★</b> 20+ Google reviews</span>
-      <span class="proof">Since 2013</span>
-      <span class="proof tip" data-tip="Registered Electrical Contractor 20672 — checkable on the Energy Safe Victoria register">REC 20672</span>
-      <span class="proof">$5M insured</span>
+
+    <div class="hero-visual" data-hero>
+      <figure class="hv-main">
+        <img src="%%IMG:fse_sparky%%" alt="Anthony from Flowsmart Electrical working on a switchboard in Melbourne's west" width="460" height="298" fetchpriority="high">
+      </figure>
+      <figure class="hv-sub">
+        <img src="%%IMG:fse_switch%%" alt="Modern switchboard with labelled safety switches after a Flowsmart upgrade" width="320" height="212" loading="lazy">
+      </figure>
+      <div class="hv-card hv-card-1">
+        <span class="hvc-num">2 hrs</span>
+        <span class="hvc-label">Answered or called back,<br>seven days</span>
+      </div>
+      <div class="hv-card hv-card-2">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>
+        <span class="hvc-label">Certificate of Electrical<br>Safety on every job</span>
+      </div>
     </div>
   </div>
+  <a class="hero-scroll" href="#problem" aria-label="Scroll to content">
+    <span></span>
+  </a>
 </section>
 
 <!-- 2 · THE PROBLEM -->
@@ -258,16 +291,30 @@ def landing_body():
 
 # ================================================================ subpages ==
 
-def page_hero(eyebrow, h1, lede, cta_label="Get a Free Quote", cta_href="%%REL%%contact.html"):
-    return f'''<section class="page-hero">
-  <div class="wrap-narrow">
-    <p class="eyebrow">{eyebrow}</p>
-    <h1>{h1}</h1>
-    <p class="lede">{lede}</p>
-    <div class="hero-cta">
-      <a class="btn btn-volt btn-lg" href="{cta_href}">{cta_label}</a>
-      <a class="hero-call" href="tel:%%TEL%%">or call %%PHONE%%</a>
+def page_hero(eyebrow, h1, lede, cta_label="Get a Free Quote", cta_href="%%REL%%contact.html",
+              image=None, alt="", tone="dark"):
+    """Each page gets its own hero: dark band, its own photo, breadcrumbs inside.
+    Falls back to a clean text-only band when no image suits the page."""
+    visual = ""
+    if image:
+        visual = f'''<div class="ph-visual"><figure><img src="{image}" alt="{alt}" width="640" height="427" fetchpriority="high"></figure></div>'''
+    return f'''<section class="page-hero ph-{tone} {"ph-has-img" if image else "ph-no-img"}">
+  <div class="ph-bg" aria-hidden="true"><span class="ph-mesh"></span><span class="ph-grain"></span><span class="hero-grid"></span></div>
+  <div class="wrap ph-inner">
+    <div class="ph-copy">
+      %%BREADCRUMBS%%
+      <p class="eyebrow eyebrow-light">{eyebrow}</p>
+      <h1>{h1}</h1>
+      <p class="lede">{lede}</p>
+      <div class="hero-cta">
+        <a class="btn btn-volt btn-lg" href="{cta_href}">{cta_label}</a>
+        <a class="hero-call" href="tel:%%TEL%%">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.7.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.7.1.3 0 .7-.2 1l-2.2 2.1Z"/></svg>
+          <span>or call <b>%%PHONE%%</b></span>
+        </a>
+      </div>
     </div>
+    {visual}
   </div>
 </section>'''
 
@@ -312,10 +359,10 @@ def cta_band(h="Ready when you are.", sub="Free quote, answered within two busin
   </div>
 </section>'''
 
-def svc_body(h1, eyebrow, lede, intro_h, intro, ticks, gal_items, gal_caption, faqs, related):
+def svc_body(h1, eyebrow, lede, intro_h, intro, ticks, gal_items, gal_caption, faqs, related, hero_img=None, hero_alt=''):
     ticks_html = "".join(f"<li>{t}</li>" for t in ticks)
     rel_html = "".join(f'<a class="chip" href="{h}">{t}</a>' for t, h in related)
-    return f'''{page_hero(eyebrow, h1, lede)}
+    return f'''{page_hero(eyebrow, h1, lede, image=hero_img, alt=hero_alt)}
 <section class="svc-detail">
   <div class="wrap svc-detail-grid">
     <div class="rv">
@@ -370,7 +417,8 @@ def page_residential():
         [("Switchboard upgrades", "switchboard-upgrades.html"),
          ("EV charger installation", "ev-charger-installation.html"),
          ("What a switchboard upgrade costs", "../blog/switchboard-upgrade-cost-melbourne.html"),
-         ("Rental safety checks in Victoria", "../blog/rental-electrical-safety-checks-victoria.html")])
+         ("Rental safety checks in Victoria", "../blog/rental-electrical-safety-checks-victoria.html")],
+        hero_img="%%IMG:u_lounge%%", hero_alt="Warm living-room lighting installed by Flowsmart Electrical")
 
 # ---- switchboards ----
 SB_FAQS = [
@@ -406,7 +454,8 @@ def page_switchboards():
         [("What upgrades cost in 2026", "../blog/switchboard-upgrade-cost-melbourne.html"),
          ("Why safety switches trip", "../blog/safety-switch-tripping.html"),
          ("Residential electrical", "residential-electrician.html"),
-         ("EV chargers need board capacity", "ev-charger-installation.html")])
+         ("EV chargers need board capacity", "ev-charger-installation.html")],
+        hero_img="%%IMG:fse_switch%%", hero_alt="Upgraded switchboard with labelled RCD safety switches")
 
 # ---- EV ----
 EV_FAQS = [
@@ -441,7 +490,8 @@ def page_ev():
         [("The home EV charging guide", "../blog/ev-charger-installation-home-guide.html"),
          ("Switchboard upgrades", "switchboard-upgrades.html"),
          ("What upgrades cost", "../blog/switchboard-upgrade-cost-melbourne.html"),
-         ("Residential electrical", "residential-electrician.html")])
+         ("Residential electrical", "residential-electrician.html")],
+        hero_img="%%IMG:u_ev%%", hero_alt="Electric vehicle charging from a wall-mounted home charger")
 
 # ---- commercial ----
 COM_FAQS = [
@@ -479,7 +529,8 @@ def page_commercial():
         [("Kaisercraft &amp; Vogue case studies", "../case-studies.html"),
          ("Switchboard upgrades", "switchboard-upgrades.html"),
          ("About Anthony", "../about.html"),
-         ("Talk through a fitout", "../contact.html")])
+         ("Talk through a fitout", "../contact.html")],
+        hero_img="%%IMG:u_warehouse%%", hero_alt="High-bay lighting in a warehouse maintained by Flowsmart Electrical")
 
 # ---- services hub ----
 def page_services_hub():
@@ -494,14 +545,16 @@ def page_services_hub():
   <div class="svc-card-body"><h2>{t}</h2><p>{d}</p><span class="text-link">View service &amp; gallery<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></div>
 </a>''' for t, d, h, img, alt in cards)
     return f'''{page_hero("Services", "Electrical services across Melbourne&rsquo;s west",
-    "Four core services, one standard: answered fast, quoted in writing, finished certified. Every service page includes a gallery of real jobs.")}
+    "Four core services, one standard: answered fast, quoted in writing, finished certified. Every service page includes a gallery of real jobs.",
+    image="%%IMG:u_drill%%", alt="Licensed electrician fixing off a wall-mounted installation")}
 <section class="svc-hub"><div class="wrap svc-hub-grid">{cards_html}</div></section>
 {cta_band("Not sure which service you need?", "Describe the job in plain words — %%OWNER%% will tell you what it actually requires.")}'''
 
 # ---- about ----
 def page_about():
     return f'''{page_hero("About Flowsmart", "The sparky who answers his phone",
-    "Flowsmart Electrical is %%OWNER%% — an A Class licensed electrician who has wired everything from weatherboard rewires to a 40-factory estate since 2013.")}
+    "Flowsmart Electrical is %%OWNER%% — an A Class licensed electrician who has wired everything from weatherboard rewires to a 40-factory estate since 2013.",
+    image="%%IMG:fse_sparky%%", alt="Anthony Vella of Flowsmart Electrical working at a residential switchboard")}
 <section class="about-main">
   <div class="wrap about-grid">
     <div class="about-copy rv">
@@ -542,7 +595,8 @@ def page_about():
 # ---- case studies ----
 def page_case_studies():
     return f'''{page_hero("Our Work", "Case studies from Melbourne&rsquo;s west",
-    "Real jobs with the photos to prove them — and the reviews customers wrote afterwards.")}
+    "Real jobs with the photos to prove them — and the reviews customers wrote afterwards.",
+    image="%%IMG:kaiser_1%%", alt="Warehouse electrical fitout completed at the Kaisercraft site")}
 <section class="cs-list">
   <div class="wrap">
     <article class="cs rv">
@@ -681,7 +735,8 @@ def page_blog_hub():
   <span class="text-link">Read the guide<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
 </a>'''
     return f'''{page_hero("The Flowsmart blog", "Straight answers about home &amp; commercial electrical",
-    "No filler, no scare tactics — the guides %%OWNER%% wishes every customer read before calling any electrician, including him.")}
+    "No filler, no scare tactics — the guides %%OWNER%% wishes every customer read before calling any electrician, including him.",
+    image="%%IMG:u_pendant%%", alt="Pendant lighting installed during a Flowsmart lighting upgrade")}
 <section class="post-list"><div class="wrap post-grid">{cards}</div></section>
 {cta_band()}'''
 
@@ -707,7 +762,8 @@ def blog_post_body(p):
 # ---- contact ----
 def page_contact():
     return f'''{page_hero("Contact · Free quotes", "Tell %%OWNER%% what needs doing",
-    "Form, phone or email — whichever suits. Either way: %%PROMISE%%", cta_label="Call %%PHONE%%", cta_href="tel:%%TEL%%")}
+    "Form, phone or email — whichever suits. Either way: %%PROMISE%%", cta_label="Call %%PHONE%%", cta_href="tel:%%TEL%%",
+    image="%%IMG:u_office%%", alt="Modern office fitout with integrated lighting by Flowsmart Electrical")}
 <section class="contact-main">
   <div class="wrap contact-grid">
     <div class="contact-form-col rv">
@@ -823,7 +879,7 @@ def page_terms():
 # ================================================================ areas =====
 
 AREA_DATA = [
-    dict(slug="electrician-melton", name="Melton",
+    dict(img="%%IMG:fse_switch%%", slug="electrician-melton", name="Melton",
         title="Electrician in Melton | Flowsmart Electrical",
         desc="Local electrician for Melton, Melton South, Kurunjang and Thornhill Park. Switchboards, safety switches, EV chargers. Free quotes, two-hour response.",
         h1="Your electrician in Melton",
@@ -838,7 +894,7 @@ AREA_DATA = [
             ("Do you service Melton businesses?", "Yes — shops, offices and schools. Flowsmart has run scheduled school maintenance in Melton for years and takes on commercial maintenance contracts across the suburb."),
             ("Which nearby areas do you also cover?", "Everything around Melton: Bacchus Marsh, Caroline Springs, Rockbank, Cobblebank, Harkness, Kurunjang, Toolern Vale and out to Ballan."),
         ]),
-    dict(slug="electrician-bacchus-marsh", name="Bacchus Marsh",
+    dict(img="%%IMG:u_drill%%", slug="electrician-bacchus-marsh", name="Bacchus Marsh",
         title="Electrician in Bacchus Marsh | Flowsmart Electrical",
         desc="Bacchus Marsh's closest licensed electrician — five minutes away at Rowsley. Older-home rewires, shed power, switchboards, EV chargers. Free quotes.",
         h1="Bacchus Marsh&rsquo;s local electrician",
@@ -853,7 +909,7 @@ AREA_DATA = [
             ("Do you cover Darley, Maddingley and Hopetoun Park?", "Yes — all of greater Bacchus Marsh, plus Ballan, Gordon, Myrniong and the properties between."),
             ("Will I get a certificate for the work?", "Every notifiable job is closed out with a Certificate of Electrical Safety — it matters for insurance on older homes especially."),
         ]),
-    dict(slug="electrician-caroline-springs", name="Caroline Springs",
+    dict(img="%%IMG:u_lounge%%", slug="electrician-caroline-springs", name="Caroline Springs",
         title="Electrician in Caroline Springs | Flowsmart Electrical",
         desc="Electrician for Caroline Springs, Burnside and Taylors Hill. EV chargers, extra circuits, fans and lighting for 2000s family homes. Free written quotes.",
         h1="Your electrician in Caroline Springs",
@@ -868,7 +924,7 @@ AREA_DATA = [
             ("Do you cover Burnside and Taylors Hill?", "Yes — Caroline Springs, Burnside, Burnside Heights, Taylors Hill, Ravenhall and Deer Park are all standard patch."),
             ("How quickly do you respond here?", "The standard promise applies: answered or called back within two business hours, seven days. Caroline Springs is twenty minutes from base."),
         ]),
-    dict(slug="electrician-werribee", name="Werribee",
+    dict(img="%%IMG:u_test%%", slug="electrician-werribee", name="Werribee",
         title="Electrician in Werribee | Flowsmart Electrical",
         desc="Werribee and Wyndham electrician: rental safety checks, switchboards, fault-finding and commercial work from Hoppers Crossing to Werribee South.",
         h1="Your electrician in Werribee",
@@ -883,7 +939,7 @@ AREA_DATA = [
             ("Do you cover Hoppers Crossing, Tarneit and Manor Lakes?", "All of Wyndham: Hoppers Crossing, Tarneit, Truganina, Wyndham Vale, Manor Lakes, Werribee South and Point Cook."),
             ("Do you do commercial work in Werribee?", "Yes — shopfronts, offices, and rural-commercial properties in Werribee South. Maintenance contracts available."),
         ]),
-    dict(slug="electrician-point-cook", name="Point Cook",
+    dict(img="%%IMG:u_ev%%", slug="electrician-point-cook", name="Point Cook",
         title="Electrician in Point Cook | Flowsmart Electrical",
         desc="Point Cook electrician for EV chargers, solar-aware wiring, smart home circuits and new-estate electrical. Free quotes, two-hour response.",
         h1="Your electrician in Point Cook",
@@ -898,7 +954,7 @@ AREA_DATA = [
             ("Do you cover Sanctuary Lakes and Williams Landing?", "Yes — Point Cook, Sanctuary Lakes, Seabrook, Altona Meadows, Williams Landing and across to Tarneit and Truganina."),
             ("What does a smart home rough-in involve?", "Mostly good planning: neutral-at-switch wiring, hub locations, and circuits that isolate cleanly. Cheapest done early — talk to Anthony before the renovation plaster goes up."),
         ]),
-    dict(slug="electrician-sunshine-braybrook", name="Sunshine & Braybrook",
+    dict(img="%%IMG:u_warehouse%%", slug="electrician-sunshine-braybrook", name="Sunshine & Braybrook",
         title="Electrician in Sunshine & Braybrook | Flowsmart Electrical",
         desc="Sunshine and Braybrook electrician: pre-war rewires, switchboard upgrades and factory maintenance — including a 40-factory Braybrook estate.",
         h1="Your electrician in Sunshine &amp; Braybrook",
@@ -925,7 +981,8 @@ def area_page(a):
   </button>
   <div class="faq-a" id="afaq-{i}"><p>{ans}</p></div>
 </div>'''
-    return f'''{page_hero("Electrician · " + a["name"], a["h1"], a["lede"])}
+    return f'''{page_hero("Electrician · " + a["name"], a["h1"], a["lede"],
+        image=a.get("img", "%%IMG:fse_sparky%%"), alt="Flowsmart Electrical on a job in " + a["name"])}
 <section class="svc-detail">
   <div class="wrap svc-detail-grid">
     <div class="rv">
@@ -971,7 +1028,8 @@ def page_areas_hub():
   <span class="text-link">Local page<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span>
 </a>'''
     return f'''{page_hero("Service areas", "One patch: Melbourne&rsquo;s west",
-    "Based at Rowsley, working from Ballan to the bay. Every area page below is written from real jobs in that suburb — not a template with the name swapped.")}
+    "Based at Rowsley, working from Ballan to the bay. Every area page below is written from real jobs in that suburb — not a template with the name swapped.",
+    image="%%IMG:u_test%%", alt="Multimeter testing circuits on a job in Melbourne's west")}
 <section class="post-list"><div class="wrap post-grid">{cards}</div></section>
 <section class="related"><div class="wrap"><p class="eyebrow">Also covered</p>
 <div class="chips"><span class="chip">Hoppers Crossing</span><span class="chip">Tarneit</span><span class="chip">Truganina</span><span class="chip">Deer Park</span><span class="chip">Ballan</span><span class="chip">Gordon</span><span class="chip">Rockbank</span><span class="chip">Wyndham Vale</span><span class="chip">Altona Meadows</span><span class="chip">Maidstone</span></div>
@@ -988,7 +1046,8 @@ def page_testimonials():
   <figcaption><b>{name}</b><span>Verified customer · Melbourne&rsquo;s west</span></figcaption>
 </figure>'''
     return f'''{page_hero("Reviews", "What customers say when the job&rsquo;s done",
-    "Every word below is verbatim from a real Flowsmart customer. The shoes-off thing comes up more than once — that tells you most of it.")}
+    "Every word below is verbatim from a real Flowsmart customer. The shoes-off thing comes up more than once — that tells you most of it.",
+    image="%%IMG:vogue_4%%", alt="Salon lighting installed by Flowsmart Electrical for the Vogue Hair Bar fitout")}
 <section class="reviews" style="padding-top:0">
   <figure class="pull-quote rv">
     <blockquote>&ldquo;He quoted the job, came on time, was very clean — even removed his shoes — and did some other odd jobs around the house at no extra cost.&rdquo;</blockquote>
@@ -1040,7 +1099,8 @@ def page_faq_hub():
             idx += 1
         sections += f'<h2 class="rv" style="margin-top:2.5rem">{group}</h2>{items}'
     return f'''{page_hero("FAQ", "Every fair question, answered straight",
-    "The full list — booking, licensing, guarantees and the common problems. If yours isn&rsquo;t here, ask it on the quote form and you&rsquo;ll have an answer within two business hours.")}
+    "The full list — booking, licensing, guarantees and the common problems. If yours isn&rsquo;t here, ask it on the quote form and you&rsquo;ll have an answer within two business hours.",
+    image="%%IMG:u_sparks%%", alt="Electrician at work, sparks from a grinder on a commercial job")}
 <section class="faq" style="padding-top:0"><div class="wrap-narrow">{sections}
 <div class="chips" style="margin-top:2.5rem">
   <a class="chip" href="blog/safety-switch-tripping.html">Safety switch guide</a>

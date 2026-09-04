@@ -31,9 +31,9 @@ Change the phone number in one place (`build.py → SITE`) and 19 pages update.
 |---|------|-------|
 | 1 | **GHL form id.** Currently empty, so a styled native form renders and redirects to `/thank-you.html`. Paste the real form id and rebuild to embed the GHL inline form. | `build.py → SITE["ghl_form_id"]` |
 | 2 | **Point the GHL form's redirect at `/thank-you.html`.** That page fires the `generate_lead` event — without the redirect there is no conversion tracking. | GHL form settings |
-| 3 | **GA4 measurement id.** Currently `G-XXXXXXXXXX`; analytics deliberately doesn't load while the placeholder is present. | `build.py → SITE["ga"]` |
+| 3 | **DONE — GA4 live** (`G-P18HNWECWE`) and **GHL external tracking live** (`tk_c1dbb7f1…`). Both load only after the visitor accepts cookies. | `build.py → SITE`, `assets/js/site.js` |
 | 4 | **Google Ads conversion label** on thank-you. | `assets/js/site.js`, commented TODO |
-| 5 | **Search Console verification token.** | `build.py → SITE["gsc"]` |
+| 5 | **DONE — Search Console verified** and sitemap submitted (26 URLs). Resubmit after any URL change. | `build.py → SITE["gsc"]` |
 | 6 | **Run `./localise-assets.sh` before DNS cutover.** Job photos currently hotlink the old WordPress site; when that site is replaced those URLs die. The script pulls every image local and rebuilds. Then compress (WebP ~82% quality ≈ 70% smaller). | project root |
 | 7 | **Confirm the email address.** `info@flowsmartelec.com.au` was decoded from the current site's contact page — verify it's monitored. | `build.py → SITE` |
 | 8 | **Team photo.** The About page uses a work photo with a marked caption; a real photo of Anthony converts better than almost anything else on a trade site. | `content.py → page_about` |
@@ -84,6 +84,23 @@ Change the phone number in one place (`build.py → SITE`) and 19 pages update.
 | TS page | `/terms-of-service.html`, plain English, ACL-aware |
 | Clear payment method | Tap-to-pay card / transfer / invoice — footer, contact, terms, benefits |
 | Guarantee statement | "We come back and make it right, no charge" + 12-month workmanship — benefits card + terms |
+
+## Consent gating — read before changing tracking
+
+Both GA4 and the GoHighLevel tracker are injected by `assets/js/site.js` **only
+after the visitor clicks "That's fine"**. Declining stores the choice, clears any
+`_ga`/`_gcl`/`_fbp` cookies from earlier visits, and loads nothing.
+
+GHL's own instructions say to paste the tracking script directly before
+`</body>`. It is deliberately not hardcoded there, because the cookie banner and
+the privacy policy both promise the visitor a real choice — an unconditional
+tracker would make those statements false. If you want it firing for everyone
+regardless of consent, move the `FSE_GHL_TRACK` block out of `loadTracking()`
+in `site.js` **and** reword the banner and privacy policy to match.
+
+Note also: `.cookie-bar[hidden]` needs `display:none !important`, because the
+bar's own `display:flex` otherwise beats the browser's `[hidden]` rule and the
+banner never dismisses. That was a real bug; don't remove that line.
 
 ## Design system (extracted → evolved)
 

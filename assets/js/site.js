@@ -113,34 +113,91 @@
   var bar = document.querySelector(".cookie-bar");
   function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   function read(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
-  function loadGA() {
-    if (!window.FSE_GA || window.FSE_GA.indexOf("XXXX") !== -1) return; // placeholder id — skip
-    var s = document.createElement("script");
-    s.async = true;
-    s.src = "https://www.googletagmanager.com/gtag/js?id=" + window.FSE_GA;
-    document.head.appendChild(s);
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function () { window.dataLayer.push(arguments); };
-    window.gtag("js", new Date());
-    window.gtag("config", window.FSE_GA, { anonymize_ip: true });
-    /* thank-you page → lead conversion */
-    if ((document.body.getAttribute("data-page") || "") === "thank-you.html") {
-      window.gtag("event", "generate_lead", { currency: "AUD" });
-      // TODO Google Ads: uncomment + fill once the Ads account exists
-      // window.gtag("event", "conversion", { send_to: "AW-XXXXXXXXX/XXXXXXX" });
+
+  var loaded = false;
+  function loadTracking() {
+    if (loaded) return;                      // never double-load
+    loaded = true;
+    /* --- Google Analytics 4 --- */
+    if (window.FSE_GA && window.FSE_GA.indexOf("XXXX") === -1) {
+      var s = document.createElement("script");
+      s.async = true;
+      s.src = "https://www.googletagmanager.com/gtag/js?id=" + window.FSE_GA;
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag("js", new Date());
+      window.gtag("config", window.FSE_GA, { anonymize_ip: true });
+      /* thank-you page → lead conversion */
+      if ((document.body.getAttribute("data-page") || "") === "thank-you.html") {
+        window.gtag("event", "generate_lead", { currency: "AUD" });
+        // TODO Google Ads: uncomment + fill once the Ads account exists
+        // window.gtag("event", "conversion", { send_to: "AW-XXXXXXXXX/XXXXXXX" });
+      }
+    }
+    /* --- GoHighLevel external tracking (lead source attribution) --- */
+    if (window.FSE_GHL_TRACK) {
+      var g = document.createElement("script");
+      g.src = "https://link.msgsndr.com/js/external-tracking.js";
+      g.setAttribute("data-tracking-id", window.FSE_GHL_TRACK);
+      document.body.appendChild(g);
     }
   }
+
+  /* declining clears anything a previous visit may have set */
+  function clearTrackingCookies() {
+    try {
+      document.cookie.split(";").forEach(function (c) {
+        var name = c.split("=")[0].trim();
+        if (/^(_ga|_gid|_gcl|__ptq|_fbp)/.test(name)) {
+          document.cookie = name + "=; Max-Age=0; path=/";
+          document.cookie = name + "=; Max-Age=0; path=/; domain=." + location.hostname.replace(/^www\./, "");
+        }
+      });
+    } catch (e) {}
+  }
+
+  function toast(msg) {
+    var t = document.createElement("div");
+    t.className = "cookie-toast";
+    t.setAttribute("role", "status");
+    t.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg><span></span>';
+    t.querySelector("span").textContent = msg;
+    document.body.appendChild(t);
+    requestAnimationFrame(function () { t.classList.add("is-in"); });
+    setTimeout(function () {
+      t.classList.remove("is-in");
+      setTimeout(function () { t.remove(); }, 400);
+    }, 2600);
+  }
+
+  function dismissBar() {
+    if (!bar) return;
+    bar.classList.remove("is-in");
+    bar.classList.add("is-out");
+    var done = false;
+    function finish() { if (done) return; done = true; bar.hidden = true; }
+    bar.addEventListener("transitionend", finish, { once: true });
+    setTimeout(finish, 500);                 // fallback if transitionend never fires
+  }
+
   var consent = read("fse-consent");
-  if (consent === "yes") loadGA();
-  else if (bar && consent !== "no") {
-    setTimeout(function () { bar.hidden = false; }, 1200);
+  if (consent === "yes") {
+    loadTracking();
+  } else if (bar && consent !== "no") {
+    setTimeout(function () {
+      bar.hidden = false;
+      requestAnimationFrame(function () { bar.classList.add("is-in"); });
+    }, 1000);
     bar.addEventListener("click", function (e) {
       var b = e.target.closest("[data-cookie]");
       if (!b) return;
+      e.preventDefault();
       var yes = b.getAttribute("data-cookie") === "accept";
       store("fse-consent", yes ? "yes" : "no");
-      bar.hidden = true;
-      if (yes) loadGA();
+      dismissBar();
+      if (yes) { loadTracking(); toast("Thanks — analytics on."); }
+      else { clearTrackingCookies(); toast("No worries — analytics off."); }
     });
   }
 
