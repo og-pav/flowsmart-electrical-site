@@ -140,10 +140,10 @@ def landing_body():
 
     <div class="hero-visual" data-hero>
       <figure class="hv-main">
-        <img src="%%IMG:fse_sparky%%" alt="Anthony from Flowsmart Electrical working on a switchboard in Melbourne's west" width="460" height="298" fetchpriority="high">
+        <img src="%%IMG:fse_kitchen%%" alt="An electrician's gloved hands wiring a distribution board" width="460" height="298" fetchpriority="high">
       </figure>
       <figure class="hv-sub">
-        <img src="%%IMG:fse_switch%%" alt="Modern switchboard with labelled safety switches after a Flowsmart upgrade" width="320" height="212" loading="lazy">
+        <img src="%%IMG:fse_switch%%" alt="A warmly lit living room in a finished home" width="320" height="212" loading="lazy">
       </figure>
       <div class="hv-card hv-card-1">
         <span class="hvc-num">2 hrs</span>
@@ -184,9 +184,9 @@ def landing_body():
       <a class="btn btn-volt" href="#quote">Get a Free Quote</a>
     </div>
     <div class="shift-media">
-      <figure class="shift-img si-1 rv-clip"><img src="%%IMG:u_drill%%" alt="Electrician in safety gear installing a wall fitting" loading="lazy" width="800" height="600"></figure>
-      <figure class="shift-img si-2 rv-clip"><img src="%%IMG:fse_sparky%%" alt="Anthony from Flowsmart Electrical working on a home electrical panel" loading="lazy" width="460" height="298"></figure>
-      <figure class="shift-img si-3 rv-clip"><img src="%%IMG:fse_kitchen%%" alt="Finished kitchen with clean downlight and appliance wiring by Flowsmart Electrical" loading="lazy" width="460" height="298"></figure>
+      <figure class="shift-img si-1 rv-clip"><img src="%%IMG:u_drill%%" alt="An electrician in safety gear installing a wall fitting" loading="lazy" width="800" height="600"></figure>
+      <figure class="shift-img si-2 rv-clip"><img src="%%IMG:fse_sparky%%" alt="Close-up of an electrician wiring a distribution board" loading="lazy" width="460" height="298"></figure>
+      <figure class="shift-img si-3 rv-clip"><img src="%%IMG:fse_kitchen%%" alt="A bright, warmly lit living space" loading="lazy" width="460" height="298"></figure>
     </div>
   </div>
 </section>
@@ -418,7 +418,7 @@ def page_residential():
          ("EV charger installation", "ev-charger-installation.html"),
          ("What a switchboard upgrade costs", "../blog/switchboard-upgrade-cost-melbourne.html"),
          ("Rental safety checks in Victoria", "../blog/rental-electrical-safety-checks-victoria.html")],
-        hero_img="%%IMG:u_lounge%%", hero_alt="Warm living-room lighting installed by Flowsmart Electrical")
+        hero_img="%%IMG:u_lounge%%", hero_alt="A warmly lit lounge room in the evening")
 
 # ---- switchboards ----
 SB_FAQS = [
@@ -455,7 +455,7 @@ def page_switchboards():
          ("Why safety switches trip", "../blog/safety-switch-tripping.html"),
          ("Residential electrical", "residential-electrician.html"),
          ("EV chargers need board capacity", "ev-charger-installation.html")],
-        hero_img="%%IMG:fse_switch%%", hero_alt="Upgraded switchboard with labelled RCD safety switches")
+        hero_img="%%IMG:fse_switch%%", hero_alt="A living area with layered lighting")
 
 # ---- EV ----
 EV_FAQS = [
@@ -491,7 +491,7 @@ def page_ev():
          ("Switchboard upgrades", "switchboard-upgrades.html"),
          ("What upgrades cost", "../blog/switchboard-upgrade-cost-melbourne.html"),
          ("Residential electrical", "residential-electrician.html")],
-        hero_img="%%IMG:u_ev%%", hero_alt="Electric vehicle charging from a wall-mounted home charger")
+        hero_img="%%IMG:u_ev%%", hero_alt="An electric vehicle charging from a wall-mounted home charger")
 
 # ---- commercial ----
 COM_FAQS = [
@@ -530,7 +530,7 @@ def page_commercial():
          ("Switchboard upgrades", "switchboard-upgrades.html"),
          ("About Anthony", "../about.html"),
          ("Talk through a fitout", "../contact.html")],
-        hero_img="%%IMG:u_warehouse%%", hero_alt="High-bay lighting in a warehouse maintained by Flowsmart Electrical")
+        hero_img="%%IMG:kaiser_2%%", hero_alt="Ceiling lighting across the Kaisercraft store floor, installed by Flowsmart Electrical")
 
 # ---- services hub ----
 def page_services_hub():
@@ -546,7 +546,7 @@ def page_services_hub():
 </a>''' for t, d, h, img, alt in cards)
     return f'''{page_hero("Services", "Electrical services across Melbourne&rsquo;s west",
     "Four core services, one standard: answered fast, quoted in writing, finished certified. Every service page includes a gallery of real jobs.",
-    image="%%IMG:u_drill%%", alt="Licensed electrician fixing off a wall-mounted installation")}
+    image="%%IMG:u_drill%%", alt="An electrician fixing off a wall-mounted installation")}
 <section class="svc-hub"><div class="wrap svc-hub-grid">{cards_html}</div></section>
 {cta_band("Not sure which service you need?", "Describe the job in plain words — %%OWNER%% will tell you what it actually requires.")}'''
 
@@ -554,7 +554,7 @@ def page_services_hub():
 def page_about():
     return f'''{page_hero("About Flowsmart", "The sparky who answers his phone",
     "Flowsmart Electrical is %%OWNER%% — an A Class licensed electrician who has wired everything from weatherboard rewires to a 40-factory estate since 2013.",
-    image="%%IMG:fse_sparky%%", alt="Anthony Vella of Flowsmart Electrical working at a residential switchboard")}
+    image="%%IMG:fse_commercial%%", alt="An electrician working inside an industrial control panel")}
 <section class="about-main">
   <div class="wrap about-grid">
     <div class="about-copy rv">
@@ -574,8 +574,8 @@ def page_about():
     </div>
     <aside class="about-side">
       <figure class="team-photo rv-clip">
-        <img src="%%IMG:fse_sparky%%" alt="Anthony Vella of Flowsmart Electrical working at a residential switchboard" loading="lazy" width="460" height="298">
-        <figcaption>%%OWNER%% on the tools. (A proper team photo is coming — Anthony keeps promising to stand still for one.)</figcaption>
+        <img src="%%IMG:kaiser_1%%" alt="Kaisercraft shopfront and signage lighting installed by Flowsmart Electrical" loading="lazy" width="640" height="414">
+        <figcaption>The Kaisercraft fitout — one of Anthony&rsquo;s. A photo of the man himself is still owed; he keeps promising to stand still for one.</figcaption>
       </figure>
       <div class="fact-card rv"><b>2013</b><span>on the tools under the Flowsmart name</span></div>
       <div class="fact-card rv"><b>9 &amp; 6</b><span>staff and vehicles at peak — he knows how to run jobs at scale</span></div>
@@ -596,11 +596,11 @@ def page_about():
 def page_case_studies():
     return f'''{page_hero("Our Work", "Case studies from Melbourne&rsquo;s west",
     "Real jobs with the photos to prove them — and the reviews customers wrote afterwards.",
-    image="%%IMG:kaiser_1%%", alt="Warehouse electrical fitout completed at the Kaisercraft site")}
+    image="%%IMG:kaiser_1%%", alt="The Kaisercraft store lit by the ceiling lighting Flowsmart installed")}
 <section class="cs-list">
   <div class="wrap">
     <article class="cs rv">
-      <div class="cs-media rv-clip"><img src="%%IMG:kaiser_1%%" alt="Warehouse electrical installation completed at the Kaisercraft site" loading="lazy" width="640" height="414"></div>
+      <div class="cs-media rv-clip"><img src="%%IMG:kaiser_1%%" alt="Kaisercraft shopfront and signage lighting installed by Flowsmart Electrical" loading="lazy" width="640" height="414"></div>
       <div class="cs-body">
         <p class="eyebrow">Commercial · Warehouse</p>
         <h2>Kaisercraft warehouse fitout</h2>
@@ -610,7 +610,7 @@ def page_case_studies():
       </div>
     </article>
     <article class="cs cs-flip rv">
-      <div class="cs-media rv-clip"><img src="%%IMG:vogue_4%%" alt="Salon lighting installed for the Vogue Hair Bar fitout" loading="lazy" width="640" height="427"></div>
+      <div class="cs-media rv-clip"><img src="%%IMG:vogue_4%%" alt="Mirror and feature lighting at the Vogue Hair Bar salon" loading="lazy" width="640" height="427"></div>
       <div class="cs-body">
         <p class="eyebrow">Commercial · Salon fitout</p>
         <h2>Vogue Hair Bar</h2>
@@ -620,7 +620,7 @@ def page_case_studies():
       </div>
     </article>
     <article class="cs rv">
-      <div class="cs-media rv-clip"><img src="%%IMG:fse_switch%%" alt="Rebuilt residential switchboard from a large home electrical job" loading="lazy" width="460" height="298"></div>
+      <div class="cs-media rv-clip"><img src="%%IMG:fse_switch%%" alt="An industrial control panel with colour-coded wiring" loading="lazy" width="460" height="298"></div>
       <div class="cs-body">
         <p class="eyebrow">Residential · Big job, quoted properly</p>
         <h2>The 45-minute quote</h2>
@@ -736,7 +736,7 @@ def page_blog_hub():
 </a>'''
     return f'''{page_hero("The Flowsmart blog", "Straight answers about home &amp; commercial electrical",
     "No filler, no scare tactics — the guides %%OWNER%% wishes every customer read before calling any electrician, including him.",
-    image="%%IMG:u_pendant%%", alt="Pendant lighting installed during a Flowsmart lighting upgrade")}
+    image="%%IMG:u_pendant%%", alt="A pendant light hanging in a renovated room")}
 <section class="post-list"><div class="wrap post-grid">{cards}</div></section>
 {cta_band()}'''
 
@@ -763,7 +763,7 @@ def blog_post_body(p):
 def page_contact():
     return f'''{page_hero("Contact · Free quotes", "Tell %%OWNER%% what needs doing",
     "Form, phone or email — whichever suits. Either way: %%PROMISE%%", cta_label="Call %%PHONE%%", cta_href="tel:%%TEL%%",
-    image="%%IMG:u_office%%", alt="Modern office fitout with integrated lighting by Flowsmart Electrical")}
+    image="%%IMG:u_office%%", alt="A modern office interior with integrated lighting")}
 <section class="contact-main">
   <div class="wrap contact-grid">
     <div class="contact-form-col rv">
@@ -982,7 +982,7 @@ def area_page(a):
   <div class="faq-a" id="afaq-{i}"><p>{ans}</p></div>
 </div>'''
     return f'''{page_hero("Electrician · " + a["name"], a["h1"], a["lede"],
-        image=a.get("img", "%%IMG:fse_sparky%%"), alt="Flowsmart Electrical on a job in " + a["name"])}
+        image=a.get("img", "%%IMG:fse_sparky%%"), alt="Electrical work of the kind Flowsmart carries out in " + a["name"])}
 <section class="svc-detail">
   <div class="wrap svc-detail-grid">
     <div class="rv">
@@ -1029,7 +1029,7 @@ def page_areas_hub():
 </a>'''
     return f'''{page_hero("Service areas", "One patch: Melbourne&rsquo;s west",
     "Based at Rowsley, working from Ballan to the bay. Every area page below is written from real jobs in that suburb — not a template with the name swapped.",
-    image="%%IMG:u_test%%", alt="Multimeter testing circuits on a job in Melbourne's west")}
+    image="%%IMG:u_test%%", alt="A multimeter being used to test live circuits")}
 <section class="post-list"><div class="wrap post-grid">{cards}</div></section>
 <section class="related"><div class="wrap"><p class="eyebrow">Also covered</p>
 <div class="chips"><span class="chip">Hoppers Crossing</span><span class="chip">Tarneit</span><span class="chip">Truganina</span><span class="chip">Deer Park</span><span class="chip">Ballan</span><span class="chip">Gordon</span><span class="chip">Rockbank</span><span class="chip">Wyndham Vale</span><span class="chip">Altona Meadows</span><span class="chip">Maidstone</span></div>
@@ -1047,7 +1047,7 @@ def page_testimonials():
 </figure>'''
     return f'''{page_hero("Reviews", "What customers say when the job&rsquo;s done",
     "Every word below is verbatim from a real Flowsmart customer. The shoes-off thing comes up more than once — that tells you most of it.",
-    image="%%IMG:vogue_4%%", alt="Salon lighting installed by Flowsmart Electrical for the Vogue Hair Bar fitout")}
+    image="%%IMG:vogue_4%%", alt="Styling stations and mirror lighting at Vogue Hair Bar, fitted out by Flowsmart Electrical")}
 <section class="reviews" style="padding-top:0">
   <figure class="pull-quote rv">
     <blockquote>&ldquo;He quoted the job, came on time, was very clean — even removed his shoes — and did some other odd jobs around the house at no extra cost.&rdquo;</blockquote>
@@ -1100,7 +1100,7 @@ def page_faq_hub():
         sections += f'<h2 class="rv" style="margin-top:2.5rem">{group}</h2>{items}'
     return f'''{page_hero("FAQ", "Every fair question, answered straight",
     "The full list — booking, licensing, guarantees and the common problems. If yours isn&rsquo;t here, ask it on the quote form and you&rsquo;ll have an answer within two business hours.",
-    image="%%IMG:u_sparks%%", alt="Electrician at work, sparks from a grinder on a commercial job")}
+    image="%%IMG:u_sparks%%", alt="Sparks from a grinder on a commercial site")}
 <section class="faq" style="padding-top:0"><div class="wrap-narrow">{sections}
 <div class="chips" style="margin-top:2.5rem">
   <a class="chip" href="blog/safety-switch-tripping.html">Safety switch guide</a>
