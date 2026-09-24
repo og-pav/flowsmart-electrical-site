@@ -19,18 +19,58 @@
   var burger = document.querySelector(".nav-burger");
   var mobileNav = document.querySelector(".mobile-nav");
   if (burger && mobileNav) {
-    burger.addEventListener("click", function () {
-      var open = burger.getAttribute("aria-expanded") === "true";
-      burger.setAttribute("aria-expanded", String(!open));
-      mobileNav.hidden = open;
-      document.body.style.overflow = open ? "" : "hidden";
+    var navCloseTimer = null;
+
+    function openNav() {
+      clearTimeout(navCloseTimer);
+      mobileNav.hidden = false;
+      document.body.classList.add("nav-open");
+      document.body.style.overflow = "hidden";
+      burger.setAttribute("aria-expanded", "true");
+      burger.setAttribute("aria-label", "Close menu");
+      // next frame, so the transition has a start state to animate from
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { mobileNav.classList.add("is-in"); });
+      });
+    }
+
+    function closeNav() {
+      mobileNav.classList.remove("is-in");
+      document.body.classList.remove("nav-open");
+      document.body.style.overflow = "";
+      burger.setAttribute("aria-expanded", "false");
+      burger.setAttribute("aria-label", "Open menu");
+      // keep it in the flow until the fade finishes, then take it out
+      clearTimeout(navCloseTimer);
+      navCloseTimer = setTimeout(function () { mobileNav.hidden = true; }, 300);
+    }
+
+    function navIsOpen() { return burger.getAttribute("aria-expanded") === "true"; }
+
+    burger.addEventListener("click", function (e) {
+      e.preventDefault();
+      if (navIsOpen()) closeNav(); else openNav();
     });
+
+    /* Follow the link, but close the panel first so the destination page
+       never inherits a locked body or a half-faded overlay. */
     mobileNav.addEventListener("click", function (e) {
-      if (e.target.closest("a")) {
-        burger.setAttribute("aria-expanded", "false");
-        mobileNav.hidden = true;
-        document.body.style.overflow = "";
-      }
+      if (e.target.closest("a")) closeNav();
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && navIsOpen()) { closeNav(); burger.focus(); }
+    });
+
+    /* Rotating to landscape can cross the 900px breakpoint, which hides the
+       burger — without this the panel would be stuck open with no way out. */
+    window.addEventListener("resize", function () {
+      if (window.innerWidth > 900 && navIsOpen()) closeNav();
+    });
+
+    /* Back/forward cache restores can replay a stale open state. */
+    window.addEventListener("pageshow", function (e) {
+      if (e.persisted && navIsOpen()) closeNav();
     });
   }
 
