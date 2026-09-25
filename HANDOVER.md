@@ -35,7 +35,7 @@ Change the phone number in one place (`build.py → SITE`) and 19 pages update.
 | 4 | **Google Ads conversion label** on thank-you. | `assets/js/site.js`, commented TODO |
 | 5 | **DONE — Search Console verified** and sitemap submitted (26 URLs). Resubmit after any URL change. | `build.py → SITE["gsc"]` |
 | 6 | **Run `./localise-assets.sh` before DNS cutover.** Job photos currently hotlink the old WordPress site; when that site is replaced those URLs die. The script pulls every image local and rebuilds. Then compress (WebP ~82% quality ≈ 70% smaller). | project root |
-| 7 | **Confirm the email address.** `info@flowsmartelec.com.au` was decoded from the current site's contact page — verify it's monitored. | `build.py → SITE` |
+| 7 | **Confirm the email address.** `anthony@flowsmartelec.com.au` was decoded from the current site's contact page — verify it's monitored. | `build.py → SITE` |
 | 8 | **Team photo.** The About page uses a work photo with a marked caption; a real photo of Anthony converts better than almost anything else on a trade site. | `content.py → page_about` |
 | 9 | **Facebook / Instagram.** No Flowsmart social pages exist today (only Anthony's LinkedIn, which is linked). When the Meta Ads build creates them, add the URLs to the footer + schema `sameAs`. | `build.py → footer / business_node` |
 | 10 | **Braybrook & Melton contract references.** The commercial page and about page reference the 40-factory estate and school maintenance from your discovery notes. Kaisercraft and Vogue Hair Bar were already public on his old site; confirm Anthony is happy naming the others' details before launch. | `content.py` |
@@ -69,14 +69,14 @@ Change the phone number in one place (`build.py → SITE`) and 19 pages update.
 | Canonical tags | Absolute canonicals on every page |
 | Site favicon | Bolt SVG + apple-touch-icon |
 | Type to call | `tel:` links: header, hero, steps, final CTA, footer, sticky bar |
-| Number visible | 0433 348 403 across all templates |
+| Number visible | 0468 057 479 across all templates |
 | Form error messages | Per-field inline validation with human copy |
 | Opening hours | Footer, contact, final CTA + schema `openingHoursSpecification` |
 | Google Search Console | Verification meta tag placeholder (see swap list) |
 | Five blog posts | Switchboard costs, EV guide, safety switches, rental checks, choosing a sparky — all geo-targeted |
 | About page + story | Founding story, the 9-staff/6-vehicle history, licences |
 | Gallery per service | Each of the 4 service pages carries a captioned job gallery |
-| Visible contact email | info@flowsmartelec.com.au in footer + contact |
+| Visible contact email | anthony@flowsmartelec.com.au in footer + contact |
 | Working social links | LinkedIn (real) + Google Maps; FB/IG pending creation |
 | Compressed images | Photos served via CDN params (`q=80/w=1200`); compress locally after `localise-assets.sh` |
 | Cookie consent | Banner gates GA; "decline" sets nothing but the choice |

@@ -49,7 +49,7 @@ d.text((96, 392), "Answered the first time.", font=font(76), fill=VOLT)
 
 # footer strip
 d.line([(96, 508), (1104, 508)], fill=(52, 62, 50), width=2)
-d.text((96, 532), "Electricians · Melbourne's West  ·  REC 20672  ·  0433 348 403",
+d.text((96, 532), "Electricians · Melbourne's West  ·  REC 20672  ·  0468 057 479",
        font=font(30, bold=False), fill=MIST)
 img.save("assets/img/og-share.png", optimize=True)
 

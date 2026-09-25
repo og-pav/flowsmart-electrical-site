@@ -29,9 +29,9 @@ SITE = {
     "domain":      "https://flowsmartelec.com.au",   # canonical origin, no trailing slash
     "owner":       "Anthony Vella",
     "owner_first": "Anthony",
-    "phone":       "0433 348 403",
-    "phone_tel":   "+61433348403",
-    "email":       "info@flowsmartelec.com.au",
+    "phone":       "0468 057 479",
+    "phone_tel":   "+61468057479",
+    "email":       "anthony@flowsmartelec.com.au",
     "street":      "32 Adriana Ct",
     "locality":    "Rowsley",
     "region":      "VIC",
@@ -41,7 +41,7 @@ SITE = {
     "founded":     "2013",
     "rec":         "REC 20672",
     "licence":     "A Class Licence A44962",
-    "insurance":   "$5M public liability",
+    "insurance":   "$20M public liability",
     "ga":          "G-P18HNWECWE",            # GA4 measurement id (live)
     "gsc":         "lYJ4xY5yOkRVsYia_2qcDnOOr3vom4SuJlbe9sTxFf8",  # Search Console verification (live)
     # GoHighLevel form: leave "" to render the styled native form (redirects to
@@ -93,10 +93,12 @@ IMAGES = {
 }
 
 def img_src(key, depth=0):
+    """Prefer a local WebP (smallest), then a local JPEG, else the remote URL."""
     url, local = IMAGES[key]
-    local_path = ROOT / "assets" / "img" / "remote" / local
-    if local_path.exists():
-        return rel_prefix(depth) + f"assets/img/remote/{local}"
+    webp = local.rsplit(".", 1)[0] + ".webp"
+    for candidate in (webp, local):
+        if (ROOT / "assets" / "img" / "remote" / candidate).exists():
+            return rel_prefix(depth) + f"assets/img/remote/{candidate}"
     return url
 
 def rel_prefix(depth):
@@ -134,13 +136,26 @@ def wordmark(depth, reversed_=False):
   <span class="wm-text"><b>flowsmart</b><i>electrical</i></span>
 </a>'''
 
+def quote_href(page, depth):
+    """Where every 'Get a Free Quote' button points.
+
+    The GHL form renders in exactly two places — the landing page's final CTA
+    and the contact page — both anchored #quote. On either of those pages the
+    button is a same-page jump to the form; everywhere else it deep-links to
+    contact#quote so the visitor lands ON the form, not at the top of the page
+    with a scroll still ahead of them. (clean_urls drops the .html but keeps
+    the fragment, and html{scroll-padding-top} offsets the sticky header.)"""
+    if page["path"] == "get-a-free-quote.html":
+        return "#quote"
+    return rel_prefix(depth) + "get-a-free-quote.html#quote"
+
 def header(page, depth):
     p = rel_prefix(depth)
     links = [(p + "services.html", "Services"), (p + "areas.html", "Areas"),
              (p + "about.html", "About"), (p + "testimonials.html", "Reviews"),
              (p + "blog.html", "Blog"), (p + "contact.html", "Contact")]
     nav = "".join(f'<a class="nav-link" href="{h}">{t}</a>' for h, t in links)
-    cta_href = "#quote" if page.get("landing") else p + "contact.html"
+    cta_href = quote_href(page, depth)
     return f'''<header class="site-header" id="top">
   <div class="header-inner">
     {wordmark(depth)}
@@ -148,22 +163,27 @@ def header(page, depth):
     <div class="header-actions">
       <a class="header-phone" href="tel:{SITE['phone_tel']}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.7.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.7.1.3 0 .7-.2 1l-2.2 2.1Z"/></svg><span>{SITE['phone']}</span></a>
       <a class="btn btn-volt btn-header" href="{cta_href}">Get a Free Quote</a>
-      <button class="nav-burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <button class="nav-burger" type="button" aria-label="Open menu" aria-controls="mobile-nav" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </div>
-  <div class="mobile-nav" hidden>
-    <nav aria-label="Mobile">{nav}
-      <a class="nav-link" href="tel:{SITE['phone_tel']}">Call {SITE['phone']}</a>
-      <a class="btn btn-volt" href="{cta_href}">Get a Free Quote</a>
-    </nav>
-  </div>
-</header>'''
+</header>
+<!-- The mobile panel lives OUTSIDE <header> on purpose. The scrolled header
+     sets backdrop-filter, which makes it a containing block for fixed-position
+     descendants — a panel nested inside would be clipped to the 72px header
+     and render as an empty sliver. It also keeps the dark-header colour
+     overrides from cascading into the panel's links. -->
+<div class="mobile-nav" id="mobile-nav" hidden>
+  <nav aria-label="Mobile">{nav}
+    <a class="nav-link mn-call" href="tel:{SITE['phone_tel']}">Call {SITE['phone']}</a>
+    <a class="btn btn-volt" href="{cta_href}">Get a Free Quote</a>
+  </nav>
+</div>'''
 
 def sticky_cta(page, depth):
-    href = "#quote" if page.get("landing") else rel_prefix(depth) + "contact.html"
+    href = quote_href(page, depth)
     return f'''<div class="sticky-cta" role="complementary" aria-label="Quick contact">
-  <a class="sc-call" href="tel:{SITE['phone_tel']}">Call {SITE['owner_first']}</a>
-  <a class="sc-quote" href="{href}">Get a Free Quote</a>
+  <a class="sc-call" href="tel:{SITE['phone_tel']}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.7.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.7.1.3 0 .7-.2 1l-2.2 2.1Z"/></svg>Call {SITE['owner_first']}</a>
+  <a class="sc-quote" href="{href}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h14v16H5z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg>Free Quote</a>
 </div>'''
 
 AREA_PAGES = [
@@ -513,8 +533,14 @@ def main():
         keywords="commercial electrician Melbourne west, shop fitout electrician, factory maintenance electrician, warehouse lighting, three phase electrician, test and tag Melbourne", path="services/commercial-electrical-fitouts.html", crumb="Commercial & fitouts",
         crumbs=[("Services", "services.html")],
         title="Commercial Electricians & Fitouts, Melbourne's West | Flowsmart",
-        desc="Shop fitouts, factory maintenance, three-phase and test & tag across Melbourne's west — scheduled around your trading hours. REC 20672, $5M insured.",
+        desc="Shop fitouts, factory maintenance, three-phase and test & tag across Melbourne's west — scheduled around your trading hours. REC 20672, $20M insured.",
         faqs=content.COM_FAQS, body=content.page_commercial()))
+
+    A(dict(path="get-a-free-quote.html", crumb="Free quote",
+        keywords="free electrician quote Melbourne, electrician quote Melton, free quote electrician Bacchus Marsh, electrical quote Melbourne west, licensed electrician quote Victoria, emergency electrician quote",
+        title="Get a Free Electrical Quote | Flowsmart Electrical, Melbourne",
+        desc="Free, no-obligation quotes from a licensed electrician in Melbourne's west. Fixed written pricing, answered within two business hours, seven days a week.",
+        faqs=content.QUOTE_FAQS, body=content.page_quote()))
 
     A(dict(path="about.html", crumb="About",
         title="About Anthony Vella & Flowsmart Electrical | Since 2013",
@@ -571,8 +597,8 @@ def main():
         body=content.page_faq_hub()))
 
     A(dict(keywords="electrician near me, free electrical quote Melbourne, emergency electrician Melton, electrician Bacchus Marsh contact, book an electrician", path="contact.html", crumb="Contact",
-        title="Free Quotes: Contact Flowsmart Electrical | 0433 348 403",
-        desc="Get a free electrical quote answered within two business hours. Call 0433 348 403, email, or use the 60-second form. Melton, Bacchus Marsh & Melbourne's west.",
+        title="Free Quotes: Contact Flowsmart Electrical | 0468 057 479",
+        desc="Get a free electrical quote answered within two business hours. Call 0468 057 479, email, or use the 60-second form. Melton, Bacchus Marsh & Melbourne's west.",
         body=content.page_contact()))
 
     A(dict(path="thank-you.html", crumb="Thank you", noindex=True, no_breadcrumb=True,
@@ -628,7 +654,7 @@ Sitemap: {SITE['domain']}/sitemap.xml
 > Licensed electrical contractor (REC 20672) serving Melbourne's western suburbs
 > since 2013: Melton, Bacchus Marsh, Caroline Springs, Sunshine, Werribee,
 > Point Cook, Tarneit and surrounds. Owner-operated by Anthony Vella,
-> A Class Licence A44962, $5M public liability insurance.
+> A Class Licence A44962, $20M public liability insurance.
 > Phone {SITE['phone']} · {SITE['email']} · Hours: {SITE['hours_line']}.
 > Free quotes answered within two business hours, seven days a week.
 

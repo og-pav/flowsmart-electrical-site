@@ -41,7 +41,7 @@ LANDING_FAQS = [
     ("Do you charge a call-out fee?",
      "Quotes are free. For fault-finding and small repairs there&rsquo;s a standard call-out that&rsquo;s confirmed with you on the phone before anyone drives anywhere — you&rsquo;ll never discover a fee on the invoice."),
     ("Are you licensed and insured?",
-     "Yes. Flowsmart Electrical is a Registered Electrical Contractor (REC 20672), Anthony holds a Victorian A Class licence (A44962), and the business carries $5&nbsp;million public liability insurance. Every job is closed out with a Certificate of Electrical Safety."),
+     "Yes. Flowsmart Electrical is a Registered Electrical Contractor (REC 20672), Anthony holds a Victorian A Class licence (A44962), and the business carries $20&nbsp;million public liability insurance. Every job is closed out with a Certificate of Electrical Safety."),
     ("Can you install an EV charger at my house?",
      "Yes — home EV charging is one of our most requested jobs. Anthony checks your switchboard capacity first, recommends the right charger for your car and tariff, and installs it to standard. <a href='services/ev-charger-installation.html'>More on EV chargers</a>."),
     ("How do I know if my switchboard needs upgrading?",
@@ -134,7 +134,7 @@ def landing_body():
         <span class="proof-sep" aria-hidden="true"></span>
         <span class="proof tip" data-tip="Registered Electrical Contractor 20672 — checkable on the Energy Safe Victoria register">REC 20672</span>
         <span class="proof-sep" aria-hidden="true"></span>
-        <span class="proof">$5M insured</span>
+        <span class="proof">$20M insured</span>
       </div>
     </div>
 
@@ -253,7 +253,7 @@ def landing_body():
     <div class="bene-grid">
       <article class="bene-card bene-hero rv">
         <h3>The Flowsmart Guarantee</h3>
-        <p>If something&rsquo;s not right, %%OWNER%% comes back and makes it right — no charge, no argument. Every job is closed out with a Certificate of Electrical Safety and backed by $5M public liability insurance.</p>
+        <p>If something&rsquo;s not right, %%OWNER%% comes back and makes it right — no charge, no argument. Every job is closed out with a Certificate of Electrical Safety and backed by $20M public liability insurance.</p>
         <a class="btn btn-volt" href="#quote">Get a Free Quote</a>
       </article>
       <article class="bene-card rv"><h3>Two-hour response</h3><p>%%PROMISE%% Missed calls get returned the moment %%OWNER%% is off the tools.</p></article>
@@ -291,13 +291,29 @@ def landing_body():
 
 # ================================================================ subpages ==
 
-def page_hero(eyebrow, h1, lede, cta_label="Get a Free Quote", cta_href="%%REL%%contact.html",
+def page_hero(eyebrow, h1, lede, cta_label="Get a Free Quote", cta_href="%%REL%%contact.html#quote",
               image=None, alt="", tone="dark"):
     """Each page gets its own hero: dark band, its own photo, breadcrumbs inside.
     Falls back to a clean text-only band when no image suits the page."""
     visual = ""
     if image:
         visual = f'''<div class="ph-visual"><figure><img src="{image}" alt="{alt}" width="640" height="427" fetchpriority="high"></figure></div>'''
+
+    # The secondary link must never repeat the primary. When the button is
+    # already a tel: link (the contact page), offering "or call <same number>"
+    # beside it is two identical CTAs — so the secondary points at the form
+    # instead. Keeps the pair to two genuinely different actions.
+    if cta_href.startswith("tel:"):
+        secondary = '''<a class="hero-call" href="#quote">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 9h8M8 13h8M8 17h4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span>or <b>send the quote form</b></span>
+        </a>'''
+    else:
+        secondary = '''<a class="hero-call" href="tel:%%TEL%%">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.7.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.7.1.3 0 .7-.2 1l-2.2 2.1Z"/></svg>
+          <span>or call <b>%%PHONE%%</b></span>
+        </a>'''
+
     return f'''<section class="page-hero ph-{tone} {"ph-has-img" if image else "ph-no-img"}">
   <div class="ph-bg" aria-hidden="true"><span class="ph-mesh"></span><span class="ph-grain"></span><span class="hero-grid"></span></div>
   <div class="wrap ph-inner">
@@ -308,10 +324,7 @@ def page_hero(eyebrow, h1, lede, cta_label="Get a Free Quote", cta_href="%%REL%%
       <p class="lede">{lede}</p>
       <div class="hero-cta">
         <a class="btn btn-volt btn-lg" href="{cta_href}">{cta_label}</a>
-        <a class="hero-call" href="tel:%%TEL%%">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.7.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.7.1.3 0 .7-.2 1l-2.2 2.1Z"/></svg>
-          <span>or call <b>%%PHONE%%</b></span>
-        </a>
+        {secondary}
       </div>
     </div>
     {visual}
@@ -353,7 +366,7 @@ def cta_band(h="Ready when you are.", sub="Free quote, answered within two busin
   <div class="wrap cta-band-inner">
     <div><h2>{h}</h2><p>{sub}</p></div>
     <div class="cta-band-actions">
-      <a class="btn btn-volt btn-lg" href="%%REL%%contact.html">Get a Free Quote</a>
+      <a class="btn btn-volt btn-lg" href="%%REL%%contact.html#quote">Get a Free Quote</a>
       <a class="hero-call" href="tel:%%TEL%%">%%PHONE%%</a>
     </div>
   </div>
@@ -504,7 +517,7 @@ COM_FAQS = [
     ("Can we put you on a maintenance contract?",
      "That&rsquo;s how most commercial clients use Flowsmart — a schedule that suits the site, priority response between visits, and one contact who already knows your board. Flowsmart currently maintains sites from single shops to a 40-factory estate."),
     ("Are you insured for commercial sites?",
-     "$5M public liability, White Card, EWPA licence for elevated work platforms, and ACRS Master Cabler registration for structured cabling. Paperwork available before you ask."),
+     "$20M public liability, White Card, EWPA licence for elevated work platforms, and ACRS Master Cabler registration for structured cabling. Paperwork available before you ask."),
 ]
 def page_commercial():
     return svc_body(
@@ -569,7 +582,7 @@ def page_about():
         <li>A Class Electrical Licence A44962</li>
         <li>ACRS Master Cabler A032422 · EWPA 355176 · White Card 22302</li>
         <li>Refrigeration Handling Licence L126432</li>
-        <li>$5M public liability insurance · COES with every job</li>
+        <li>$20M public liability insurance · COES with every job</li>
       </ul>
     </div>
     <aside class="about-side">
@@ -721,7 +734,7 @@ _post("how-to-choose-an-electrician-melbourne-west",
 <h2>3. Ask what certificate you&rsquo;ll get</h2>
 <p>Notifiable electrical work in Victoria comes with a Certificate of Electrical Safety. The right answer to &ldquo;will I get a COES?&rdquo; is an unhesitating yes. It protects your insurance and your resale — and its absence protects the person who cut the corner.</p>
 <h2>4. Insurance, in numbers</h2>
-<p>Public liability should be stated without squirming ($5M is standard for a serious operator). If they&rsquo;re on your roof or in your ceiling, this is not a detail.</p>
+<p>Public liability should be stated without squirming — $5M is the floor for a serious operator, and anyone taking on commercial work should be carrying $20M. If they&rsquo;re on your roof or in your ceiling, this is not a detail.</p>
 <h2>5. Watch the response, not the reviews</h2>
 <p>Reviews matter — read <a href="../case-studies.html">ours</a> — but the strongest predictor of how your job will go is how the first 48 hours feel. Did they answer or call back fast? Confirm the visit? Show up when they said? An electrician who is sloppy while trying to win your work will not get sharper after you&rsquo;ve paid a deposit. (Flowsmart&rsquo;s standard: %%PROMISE%%)</p>''')
 
@@ -753,7 +766,7 @@ def blog_post_body(p):
     <div class="post-cta-card">
       <h2>Got this exact problem?</h2>
       <p>%%PROMISE%% Free quotes across Melbourne&rsquo;s west.</p>
-      <a class="btn btn-volt" href="../contact.html">Get a Free Quote</a>
+      <a class="btn btn-volt" href="../contact.html#quote">Get a Free Quote</a>
       <a class="hero-call" href="tel:%%TEL%%">%%PHONE%%</a>
     </div>
   </div>
@@ -766,7 +779,7 @@ def page_contact():
     image="%%IMG:u_office%%", alt="A modern office interior with integrated lighting")}
 <section class="contact-main">
   <div class="wrap contact-grid">
-    <div class="contact-form-col rv">
+    <div class="contact-form-col" id="quote">
       <h2>Request a free quote</h2>
       %%QUOTE_FORM%%
     </div>
@@ -863,7 +876,7 @@ def page_terms():
 <h2>Quotes</h2>
 <p>Written quotes are fixed for the scope described and valid for 30 days. If something unforeseeable emerges once work begins (for example concealed wiring damage), any variation is put to you in writing, with a price, before the additional work proceeds. No verbal variations, in either direction.</p>
 <h2>Doing the work</h2>
-<p>All work is performed by or under the direct supervision of a licensed A Class electrician, in accordance with AS/NZS 3000 (the Wiring Rules). Notifiable work is certified with a Certificate of Electrical Safety supplied to you on completion. Flowsmart holds $5M public liability insurance; documentation is available on request.</p>
+<p>All work is performed by or under the direct supervision of a licensed A Class electrician, in accordance with AS/NZS 3000 (the Wiring Rules). Notifiable work is certified with a Certificate of Electrical Safety supplied to you on completion. Flowsmart holds $20M public liability insurance; documentation is available on request.</p>
 <h2>Payment</h2>
 <p>Standard residential work is payable on completion — tap-to-pay card on site, bank transfer or invoice with 7-day terms. Commercial and contract work is invoiced per the agreed schedule. Materials for large jobs may require a deposit, stated on the quote.</p>
 <h2>Workmanship guarantee</h2>
@@ -1068,7 +1081,7 @@ FAQ_HUB = [
         ("What happens after I submit the quote form?", "It lands directly with Anthony — no call centre. You'll hear back with either a price or the two or three questions needed to give you one."),
     ]),
     ("The work", [
-        ("Are you licensed and insured?", "Registered Electrical Contractor 20672, A Class Licence A44962, $5M public liability. All checkable on the Energy Safe Victoria register — and you should check every trade you hire."),
+        ("Are you licensed and insured?", "Registered Electrical Contractor 20672, A Class Licence A44962, $20M public liability. All checkable on the Energy Safe Victoria register — and you should check every trade you hire."),
         ("Do I get a certificate?", "Every notifiable job is closed out with a Certificate of Electrical Safety (COES) — your proof for insurance and resale that the work meets standard."),
         ("Do you do small jobs?", "Yes. One powerpoint gets the same booking and the same certificate as a rewire — and small jobs bundle well, so keep a list."),
         ("What if something's not right afterwards?", "Anthony comes back and makes it right at no charge — the workmanship guarantee runs 12 months and sits alongside your Australian Consumer Law rights."),
@@ -1111,3 +1124,98 @@ def page_faq_hub():
 {cta_band()}'''
 
 FAQ_HUB_FLAT = [qa for _, qas in FAQ_HUB for qa in qas]
+
+
+# ---- dedicated conversion page: /get-a-free-quote ----
+def page_quote():
+    """Single-purpose landing page. Everything above the fold exists to get the
+    form filled; no service navigation, no cross-links out of the funnel until
+    after the form. Built to take Google Ads traffic as well as site traffic."""
+    return '''<section class="q-hero">
+  <div class="ph-bg" aria-hidden="true"><span class="ph-mesh"></span><span class="ph-grain"></span><span class="hero-grid"></span></div>
+  <div class="wrap q-grid">
+    <div class="q-head">
+      %%BREADCRUMBS%%
+      <p class="eyebrow eyebrow-light">Free quote &middot; No obligation</p>
+      <h1>Tell %%OWNER%% what needs doing.<br><em>Get a straight price back.</em></h1>
+      <p class="lede">No call centre, no &ldquo;from&rdquo; pricing, no pressure. A licensed electrician reads it, asks the right questions and gives you a real number.</p>
+
+    </div>
+
+    <div class="q-support">
+      <ul class="q-chips">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg><b>Answered or called back within two business hours</b></li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>Fixed written quotes &mdash; the price is the price</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>REC 20672 &middot; A Class A44962 &middot; $20M insured</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>Certificate of Electrical Safety on every notifiable job</li>
+      </ul>
+
+      <div class="q-alt">
+        <p>Rather just talk?</p>
+        <a class="q-tel" href="tel:%%TEL%%"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.7.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.7.1.3 0 .7-.2 1l-2.2 2.1Z"/></svg>%%PHONE%%</a>
+        <p class="q-hours">%%HOURS%%</p>
+      </div>
+    </div>
+
+    <div class="q-form-col" id="quote">
+      <div class="q-form-card">
+        <h2>Request your free quote</h2>
+        <p class="q-form-sub">Two minutes. The more detail, the sharper the price.</p>
+        %%QUOTE_FORM%%
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="q-next">
+  <div class="wrap">
+    <h2 class="center-h">What happens after you hit send</h2>
+    <div class="q-steps">
+      <div class="q-step rv">
+        <span class="q-step-n">01</span>
+        <h3>%%OWNER%% reads it himself</h3>
+        <p>Not a receptionist, not a bot. The electrician who&rsquo;d do the job is the one who sees your job first.</p>
+      </div>
+      <div class="q-step rv">
+        <span class="q-step-n">02</span>
+        <h3>You hear back within two business hours</h3>
+        <p>Seven days a week. Usually with a couple of real questions, because a price given without them is a guess.</p>
+      </div>
+      <div class="q-step rv">
+        <span class="q-step-n">03</span>
+        <h3>A fixed written quote</h3>
+        <p>What&rsquo;s included, what it costs, when he can start. No variations invented halfway through.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="q-proof">
+  <div class="wrap q-proof-grid">
+    <blockquote class="q-quote rv">
+      <p>&ldquo;Anthony quoted within the hour and started the next morning. Tidy work, explained everything, cleaned up after himself. Rare.&rdquo;</p>
+      <cite>Kaisercraft &mdash; shop fitout</cite>
+    </blockquote>
+    <blockquote class="q-quote rv">
+      <p>&ldquo;Called three sparkies. Anthony was the only one who actually turned up when he said he would.&rdquo;</p>
+      <cite>Vogue Hair Bar &mdash; salon rewire</cite>
+    </blockquote>
+    <div class="q-guarantee rv">
+      <h3>If it&rsquo;s not right, he comes back</h3>
+      <p>No charge, no argument, plus a 12-month workmanship guarantee on everything he installs. Tap-to-pay card on site, bank transfer or invoice.</p>
+    </div>
+  </div>
+</section>'''
+
+QUOTE_FAQS = [
+    ("Is the quote actually free?",
+     "Yes, and there is no obligation attached to it. Quoting is how you decide whether to hire someone \u2014 charging for it would be charging you to consider us."),
+    ("How fast will I hear back?",
+     "Within two business hours, seven days a week. If you send it at 11pm you will hear back in the morning, not three days later."),
+    ("Can you give me a price over the phone?",
+     "For straightforward work, often yes. For anything involving your switchboard, your meter box or a wall we cannot see inside, a proper look first is the difference between a real price and a number that changes later."),
+    ("Do you charge a call-out fee?",
+     "Quotes are free. For diagnostic work \u2014 chasing a fault rather than installing something \u2014 there is a call-out, and you will be told the figure before anyone is dispatched, not after."),
+    ("What areas do you cover?",
+     "Melton, Bacchus Marsh, Caroline Springs, Werribee, Point Cook, Sunshine, Braybrook and the rest of Melbourne\u2019s west. Based at Rowsley, five minutes from Bacchus Marsh."),
+]
