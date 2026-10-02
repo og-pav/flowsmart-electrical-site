@@ -9,8 +9,18 @@
 
   /* ---------------------------------------------------- sticky header --- */
   var header = document.querySelector(".site-header");
+  var root = document.documentElement, ticking = false;
   function onScroll() {
     if (header) header.classList.toggle("scrolled", window.scrollY > 80);
+    // reading-progress hairline under the header (CSS reads --sp, 0..1)
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(function () {
+        var max = root.scrollHeight - window.innerHeight;
+        root.style.setProperty("--sp", max > 0 ? Math.min(1, window.scrollY / max).toFixed(4) : 0);
+        ticking = false;
+      });
+    }
   }
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
@@ -90,6 +100,37 @@
     revealables.forEach(function (el) { io.observe(el); });
   } else {
     revealables.forEach(function (el) { el.classList.add("in"); });
+  }
+
+  /* -------------------------------------------------- stat counters --- */
+  /* The real figure is in the HTML (no-JS and crawlers see it); with motion
+     allowed it counts up from zero the first time it scrolls into view. */
+  var counters = [].slice.call(document.querySelectorAll("[data-count]"));
+  if (counters.length && !reduceMotion && "IntersectionObserver" in window) {
+    var runCount = function (el) {
+      var target = parseInt(el.getAttribute("data-count"), 10) || 0, t0 = null, dur = 1400;
+      function step(ts) {
+        if (t0 === null) t0 = ts;
+        var p = Math.min(1, (ts - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * e);
+        if (p < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    };
+    var cio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var el = entry.target;
+        if (entry.isIntersecting) { runCount(el); cio.unobserve(el); }
+        // jumped straight past it (anchor link, fast fling): show the real figure
+        else if (entry.boundingClientRect.top < 0) { el.textContent = el.getAttribute("data-count"); cio.unobserve(el); }
+      });
+    }, { threshold: 0.6 });
+    counters.forEach(function (el) {
+      // single digits counting up from zero look silly — only animate real counts
+      if ((parseInt(el.getAttribute("data-count"), 10) || 0) < 10) return;
+      if (el.getBoundingClientRect().top > window.innerHeight) el.textContent = "0";
+      cio.observe(el);
+    });
   }
 
   /* ---------------------------------------------------- FAQ accordion --- */
