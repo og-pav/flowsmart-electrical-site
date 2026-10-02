@@ -82,6 +82,7 @@ IMAGES = {
     "logo_svg":       ("https://flowsmartelec.com.au/wp-content/uploads/2023/05/FSE_SVG.svg", "fse-logo.svg"),
     "logo_svg_rev":   ("https://flowsmartelec.com.au/wp-content/uploads/2023/05/FSE_SVG_Reversed-03.svg", "fse-logo-reversed.svg"),
     # high-quality supplementary photography (Unsplash CDN, hotlink-intended, no watermark)
+    "u_hero":      ("https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1000&h=1150&q=80", "u_hero.jpg"),
     "u_drill":     ("https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1200&q=80", "u_drill.jpg"),
     "u_ev":        ("https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=1200&q=80", "u_ev.jpg"),
     "u_warehouse": ("https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=1200&q=80", "u_warehouse.jpg"),

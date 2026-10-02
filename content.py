@@ -28,9 +28,17 @@ def marquee_cards():
         cards += f'''<figure class="review-card">
   <div class="stars" aria-label="Five star review">★★★★★</div>
   <blockquote>{short}</blockquote>
-  <figcaption><b>{name}</b><span>Verified customer · Melbourne&rsquo;s west</span></figcaption>
+  <figcaption><span class="rv-av" aria-hidden="true">{name[0]}</span><span class="rv-who"><b>{name}</b><span>Verified customer · Melbourne&rsquo;s west</span></span></figcaption>
 </figure>'''
     return cards
+
+def suburb_ticker():
+    subs = ["Melton", "Bacchus Marsh", "Caroline Springs", "Sunshine", "Braybrook", "Werribee",
+            "Point Cook", "Hoppers Crossing", "Tarneit", "Truganina", "Deer Park", "Ballan"]
+    bolt = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg>'
+    one = "".join(f'<span class="tk-item">{bolt}{x}</span>' for x in subs)
+    # second copy is purely visual (seamless loop) — hide it from assistive tech
+    return f'<div class="tk-set">{one}</div><div class="tk-set" aria-hidden="true">{one}</div>'
 
 # ------------------------------------------------------------------ landing --
 LANDING_FAQS = [
@@ -91,8 +99,9 @@ def landing_body():
     for i, (kicker, h, body, feats, link, linktext, img, alt) in enumerate(rows):
         feats_html = "".join(f'<li>{f}</li>' for f in feats)
         rows_html += f'''<div class="svc-row {'svc-flip' if i % 2 else ''}">
-  <div class="svc-media rv-clip"><img src="{img}" alt="{alt}" loading="lazy" width="1200" height="800"></div>
+  <a class="svc-media rv-clip" href="{link}" tabindex="-1" aria-hidden="true"><img src="{img}" alt="{alt}" loading="lazy" width="1200" height="800"><span class="svc-chip"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>{feats[0]}</span></a>
   <div class="svc-copy rv">
+    <p class="svc-idx" aria-hidden="true">0{i + 1}<span>/04</span></p>
     <p class="eyebrow">{kicker}</p>
     <h3>{h}</h3>
     <p>{body}</p>
@@ -107,10 +116,22 @@ def landing_body():
   <div class="hero-bg" aria-hidden="true">
     <span class="hero-mesh"></span>
     <span class="hero-grain"></span>
-    <span class="hero-shape hs-1" data-depth="20"></span>
-    <span class="hero-shape hs-2" data-depth="36"></span>
-    <span class="hero-shape hs-3" data-depth="12"></span>
     <span class="hero-grid"></span>
+    <svg class="hero-circuit" viewBox="0 0 1440 760" preserveAspectRatio="xMidYMid slice">
+      <g class="hc-traces">
+        <path d="M-20 610 H300 l60 -60 H620 l40 40 H900"/>
+        <path d="M1460 140 H1180 l-50 50 H940 l-30 -30 H760"/>
+        <path d="M1460 700 H1240 l-40 -40 H1010"/>
+        <path d="M80 -20 V120 l50 50 V300"/>
+      </g>
+      <g class="hc-pulses">
+        <path pathLength="100" d="M-20 610 H300 l60 -60 H620 l40 40 H900"/>
+        <path pathLength="100" d="M1460 140 H1180 l-50 50 H940 l-30 -30 H760"/>
+        <path pathLength="100" d="M1460 700 H1240 l-40 -40 H1010"/>
+        <path pathLength="100" d="M80 -20 V120 l50 50 V300"/>
+      </g>
+      <g class="hc-nodes"><circle cx="900" cy="590" r="4"/><circle cx="760" cy="160" r="4"/><circle cx="1010" cy="660" r="4"/><circle cx="130" cy="300" r="4"/></g>
+    </svg>
   </div>
   <div class="hero-inner">
     <div class="hero-copy">
@@ -127,32 +148,32 @@ def landing_body():
           <span>or call %%OWNER%% — <b>%%PHONE%%</b></span>
         </a>
       </div>
-      <div class="proof-strip" data-hero>
-        <span class="proof"><b class="stars">★★★★★</b> 20+ Google reviews</span>
-        <span class="proof-sep" aria-hidden="true"></span>
-        <span class="proof">Since 2013</span>
-        <span class="proof-sep" aria-hidden="true"></span>
-        <span class="proof tip" data-tip="Registered Electrical Contractor 20672 — checkable on the Energy Safe Victoria register">REC 20672</span>
-        <span class="proof-sep" aria-hidden="true"></span>
-        <span class="proof">$20M insured</span>
-      </div>
+      <ul class="trust-row" data-hero aria-label="Why Flowsmart">
+        <li><span class="tr-val stars" aria-label="Five stars">★★★★★</span><span class="tr-lab">20+ Google reviews</span></li>
+        <li><span class="tr-val">13 yrs</span><span class="tr-lab">On the tools since 2013</span></li>
+        <li><span class="tr-val"><span class="tip" data-tip="Registered Electrical Contractor 20672 — checkable on the Energy Safe Victoria register">REC 20672</span></span><span class="tr-lab">Licensed contractor</span></li>
+        <li><span class="tr-val">$20M</span><span class="tr-lab">Public liability</span></li>
+      </ul>
     </div>
 
     <div class="hero-visual" data-hero>
+      <span class="hv-ring" aria-hidden="true"></span>
       <figure class="hv-main">
-        <img src="%%IMG:fse_kitchen%%" alt="An electrician's gloved hands wiring a distribution board" width="460" height="298" fetchpriority="high">
-      </figure>
-      <figure class="hv-sub">
-        <img src="%%IMG:fse_switch%%" alt="A warmly lit living room in a finished home" width="320" height="212" loading="lazy">
+        <img src="%%IMG:u_hero%%" alt="A licensed electrician in a hard hat and gloves working on a wall installation" width="1000" height="1150" fetchpriority="high">
       </figure>
       <div class="hv-card hv-card-1">
         <span class="hvc-num">2 hrs</span>
-        <span class="hvc-label">Answered or called back,<br>seven days</span>
+        <span class="hvc-label">Answered or called back,<br>seven days a week</span>
       </div>
       <div class="hv-card hv-card-2">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>
         <span class="hvc-label">Certificate of Electrical<br>Safety on every job</span>
       </div>
+      <figure class="hv-review">
+        <span class="stars" aria-label="Five star review">★★★★★</span>
+        <blockquote>&ldquo;Came on time, was very clean &mdash; even removed his shoes.&rdquo;</blockquote>
+        <figcaption><span class="hvr-av" aria-hidden="true">C</span>Colomba &middot; verified customer</figcaption>
+      </figure>
     </div>
   </div>
   <a class="hero-scroll" href="#problem" aria-label="Scroll to content">
@@ -160,12 +181,34 @@ def landing_body():
   </a>
 </section>
 
+<!-- 1b · SUBURB TICKER -->
+<div class="ticker" aria-label="Suburbs we cover">
+  <div class="ticker-track">{suburb_ticker()}</div>
+</div>
+
 <!-- 2 · THE PROBLEM -->
 <section class="problem" id="problem">
-  <div class="wrap-narrow">
-    <p class="problem-line rv">You call three electricians. One rings back — Thursday week, maybe.</p>
-    <p class="problem-line rv">Meanwhile the safety switch keeps tripping, the quote never lands, and a weekend job eats a month.</p>
-    <p class="problem-line problem-punch rv">Finding a sparky isn&rsquo;t hard. Finding one who <em>answers, quotes and finishes</em> is.</p>
+  <div class="wrap problem-grid">
+    <div class="problem-copy">
+      <p class="problem-line rv">You call three electricians. One rings back — Thursday week, maybe.</p>
+      <p class="problem-line rv">Meanwhile the safety switch keeps tripping, the quote never lands, and a weekend job eats a month.</p>
+      <p class="problem-line problem-punch rv">Finding a sparky isn&rsquo;t hard. Finding one who <em>answers, quotes and finishes</em> is.</p>
+    </div>
+    <div class="call-log rv" aria-hidden="true">
+      <p class="cl-head"><span>Recents</span><span>Today</span></p>
+      <div class="cl-item cl-miss" style="--d:0ms">
+        <span class="cl-ico"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.7.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.7.1.3 0 .7-.2 1l-2.2 2.1Z"/></svg></span>
+        <span class="cl-txt"><b>Sparky #1</b><small>No answer &middot; left a voicemail</small></span><span class="cl-time">8:05</span>
+      </div>
+      <div class="cl-item cl-miss" style="--d:140ms">
+        <span class="cl-ico"><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.7.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.7.1.3 0 .7-.2 1l-2.2 2.1Z"/></svg></span>
+        <span class="cl-txt"><b>Sparky #2</b><small>&ldquo;We&rsquo;ll get back to you&rdquo;</small></span><span class="cl-time">8:12</span>
+      </div>
+      <div class="cl-item cl-ok" style="--d:280ms">
+        <span class="cl-ico"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg></span>
+        <span class="cl-txt"><b>Flowsmart Electrical</b><small>Called back &middot; quote booked</small></span><span class="cl-time">9:40</span>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -184,10 +227,21 @@ def landing_body():
       <a class="btn btn-volt" href="#quote">Get a Free Quote</a>
     </div>
     <div class="shift-media">
-      <figure class="shift-img si-1 rv-clip"><img src="%%IMG:u_drill%%" alt="An electrician in safety gear installing a wall fitting" loading="lazy" width="800" height="600"></figure>
-      <figure class="shift-img si-2 rv-clip"><img src="%%IMG:fse_sparky%%" alt="Close-up of an electrician wiring a distribution board" loading="lazy" width="460" height="298"></figure>
-      <figure class="shift-img si-3 rv-clip"><img src="%%IMG:fse_kitchen%%" alt="A bright, warmly lit living space" loading="lazy" width="460" height="298"></figure>
+      <figure class="shift-img si-1 rv-clip"><img src="%%IMG:fse_commercial%%" alt="An electrician wiring breakers inside a commercial control panel" loading="lazy" width="460" height="298"></figure>
+      <figure class="shift-img si-2 rv-clip"><img src="%%IMG:fse_sparky%%" alt="A family home at dusk with its outdoor and verandah lighting on" loading="lazy" width="460" height="298"></figure>
+      <figure class="shift-img si-3 rv-clip"><img src="%%IMG:fse_switch%%" alt="A bright living room with pendant lighting in a finished home" loading="lazy" width="320" height="207"></figure>
+      <p class="shift-badge rv" style="--d:300ms"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>Floors covered &middot; shoes off &middot; mess gone</p>
     </div>
+  </div>
+</section>
+
+<!-- 3b · NUMBERS -->
+<section class="stats" aria-label="Flowsmart in numbers">
+  <div class="wrap stats-grid">
+    <div class="stat rv"><span class="stat-n"><span data-count="13">13</span>+</span><span class="stat-l">Years on the tools across Melbourne&rsquo;s west</span></div>
+    <div class="stat rv" style="--d:100ms"><span class="stat-n"><span data-count="2">2</span> hr</span><span class="stat-l">Response promise, seven days a week</span></div>
+    <div class="stat rv" style="--d:200ms"><span class="stat-n"><span data-count="100">100</span>%</span><span class="stat-l">Of jobs closed out with a safety certificate</span></div>
+    <div class="stat rv" style="--d:300ms"><span class="stat-n">$<span data-count="20">20</span>M</span><span class="stat-l">Public liability cover on every job</span></div>
   </div>
 </section>
 
@@ -222,9 +276,16 @@ def landing_body():
 
 <!-- 5 · SOCIAL PROOF -->
 <section class="reviews" id="reviews">
-  <div class="wrap">
-    <p class="eyebrow rv">Word of mouth, in writing</p>
-    <h2 class="rv">The reviews read like this because the jobs go like this</h2>
+  <div class="wrap rev-head">
+    <div>
+      <p class="eyebrow rv">Word of mouth, in writing</p>
+      <h2 class="rv">The reviews read like this because the jobs go like this</h2>
+    </div>
+    <a class="rating-card rv" href="testimonials.html">
+      <span class="rc-score">★★★★★</span>
+      <span class="rc-txt"><b>20+ five-star reviews</b><small>From homes and businesses across the west</small></span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+    </a>
   </div>
   <figure class="pull-quote rv">
     <blockquote>&ldquo;He quoted the job, came on time, was very clean — even removed his shoes — and did some other odd jobs around the house at no extra cost.&rdquo;</blockquote>
@@ -239,9 +300,45 @@ def landing_body():
 <!-- 6 · SERVICE DEEP-DIVE -->
 <section class="services" id="services">
   <div class="wrap">
-    <p class="eyebrow rv">What we do</p>
-    <h2 class="rv">Four things, done properly</h2>
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow rv">What we do</p>
+        <h2 class="rv">Four things, done properly</h2>
+      </div>
+      <a class="text-link rv" href="services.html">All services<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+    </div>
     {rows_html}
+  </div>
+</section>
+
+<!-- 6b · RECENT WORK -->
+<section class="work" id="work">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow rv">Recent work</p>
+        <h2 class="rv">Finished properly, photographed after</h2>
+      </div>
+      <a class="text-link rv" href="case-studies.html">See the case studies<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+    </div>
+    <div class="work-grid">
+      <a class="work-tile wt-a rv-clip" href="case-studies.html">
+        <img src="%%IMG:kaiser_1%%" alt="Kaisercraft shopfront with illuminated signage and store lighting installed by Flowsmart Electrical" loading="lazy" width="640" height="414">
+        <span class="wt-cap"><small>Commercial fitout</small><b>Kaisercraft warehouse &amp; store</b></span>
+      </a>
+      <a class="work-tile wt-b rv-clip" href="case-studies.html" style="--d:100ms">
+        <img src="%%IMG:vogue_3%%" alt="Vogue Hair Bar shopfront with interior lighting by Flowsmart Electrical" loading="lazy" width="427" height="640">
+        <span class="wt-cap"><small>Salon fitout</small><b>Vogue Hair Bar</b></span>
+      </a>
+      <a class="work-tile wt-c rv-clip" href="case-studies.html" style="--d:200ms">
+        <img src="%%IMG:vogue_2%%" alt="Salon styling stations with mirror lighting and power at Vogue Hair Bar" loading="lazy" width="640" height="427">
+        <span class="wt-cap"><small>Lighting &amp; power</small><b>Styling stations</b></span>
+      </a>
+      <a class="work-tile wt-d rv-clip" href="case-studies.html" style="--d:300ms">
+        <img src="%%IMG:vogue_4%%" alt="Feature globe chandelier installed in the Vogue Hair Bar salon" loading="lazy" width="640" height="427">
+        <span class="wt-cap"><small>Feature lighting</small><b>Statement chandelier</b></span>
+      </a>
+    </div>
   </div>
 </section>
 
@@ -252,25 +349,38 @@ def landing_body():
     <h2 class="rv">The boring stuff, guaranteed in writing</h2>
     <div class="bene-grid">
       <article class="bene-card bene-hero rv">
+        <span class="bene-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.6 3 8.3 7 10 4-1.7 7-5.4 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg></span>
         <h3>The Flowsmart Guarantee</h3>
         <p>If something&rsquo;s not right, %%OWNER%% comes back and makes it right — no charge, no argument. Every job is closed out with a Certificate of Electrical Safety and backed by $20M public liability insurance.</p>
         <a class="btn btn-volt" href="#quote">Get a Free Quote</a>
       </article>
-      <article class="bene-card rv"><h3>Two-hour response</h3><p>%%PROMISE%% Missed calls get returned the moment %%OWNER%% is off the tools.</p></article>
-      <article class="bene-card rv"><h3>Written quotes that hold</h3><p>The price you approve is the price you pay. Variations only ever happen with your say-so, in writing, before the work.</p></article>
-      <article class="bene-card rv"><h3>Licensed &amp; checkable</h3><p><span class="tip" data-tip="Search 'Flowsmart' on the Energy Safe Victoria contractor register to verify">REC 20672</span> · A Class Licence A44962 · ACRS Master Cabler. Look us up before you let anyone near your board — you should do that with every trade.</p></article>
-      <article class="bene-card rv"><h3>Clean-site habit</h3><p>Floors covered, shoes off, mess gone. It&rsquo;s in the reviews because it happens on every job, not just the ones being watched.</p></article>
-      <article class="bene-card rv"><h3>Easy payment</h3><p>Tap-to-pay card on site, bank transfer or invoice — whatever suits. No deposit for standard residential work.</p></article>
+      <article class="bene-card rv"><span class="bene-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><h3>Two-hour response</h3><p>%%PROMISE%% Missed calls get returned the moment %%OWNER%% is off the tools.</p></article>
+      <article class="bene-card rv"><span class="bene-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span><h3>Written quotes that hold</h3><p>The price you approve is the price you pay. Variations only ever happen with your say-so, in writing, before the work.</p></article>
+      <article class="bene-card rv"><span class="bene-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="m8.5 13.5-1.5 7 5-2.5 5 2.5-1.5-7"/></svg></span><h3>Licensed &amp; checkable</h3><p><span class="tip" data-tip="Search 'Flowsmart' on the Energy Safe Victoria contractor register to verify">REC 20672</span> · A Class Licence A44962 · ACRS Master Cabler. Look us up before you let anyone near your board — you should do that with every trade.</p></article>
+      <article class="bene-card rv"><span class="bene-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></span><h3>Clean-site habit</h3><p>Floors covered, shoes off, mess gone. It&rsquo;s in the reviews because it happens on every job, not just the ones being watched.</p></article>
+      <article class="bene-card rv"><span class="bene-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h3"/></svg></span><h3>Easy payment</h3><p>Tap-to-pay card on site, bank transfer or invoice — whatever suits. No deposit for standard residential work.</p></article>
     </div>
   </div>
 </section>
 
 <!-- 8 · FAQ -->
-<section class="faq" id="faq">
-  <div class="wrap-narrow">
-    <p class="eyebrow rv">Fair questions</p>
-    <h2 class="rv">Things people ask before they book</h2>
-    {faq_items}
+<section class="faq faq-split-sec" id="faq">
+  <div class="wrap faq-split">
+    <div class="faq-aside">
+      <p class="eyebrow rv">Fair questions</p>
+      <h2 class="rv">Things people ask before they book</h2>
+      <div class="ask-card rv">
+        <span class="ask-av" aria-hidden="true">A</span>
+        <div>
+          <b>Still got a question?</b>
+          <p>Ask %%OWNER%% directly &mdash; he&rsquo;ll give you a straight answer, not a sales pitch.</p>
+          <a class="ask-tel" href="tel:%%TEL%%"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.7.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.7.1.3 0 .7-.2 1l-2.2 2.1Z"/></svg>%%PHONE%%</a>
+        </div>
+      </div>
+    </div>
+    <div class="faq-list">
+      {faq_items}
+    </div>
   </div>
 </section>
 
@@ -282,6 +392,11 @@ def landing_body():
       <p class="eyebrow eyebrow-light">Free quote · No obligation</p>
       <h2>One call. One quote.<br>Done properly.</h2>
       <p>Tell %%OWNER%% what needs doing and he&rsquo;ll come back to you within two business hours — seven days a week, %%HOURS%%.</p>
+      <ul class="final-ticks">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>Free, no-obligation written quote</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>Reply within two business hours</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>Licensed REC 20672 &middot; $20M insured</li>
+      </ul>
       <a class="final-phone" href="tel:%%TEL%%"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.7.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.7.1.3 0 .7-.2 1l-2.2 2.1Z"/></svg>%%PHONE%%</a>
       <p class="final-fine">Prefer email? <a href="mailto:%%EMAIL%%">%%EMAIL%%</a></p>
     </div>
@@ -326,6 +441,12 @@ def page_hero(eyebrow, h1, lede, cta_label="Get a Free Quote", cta_href="%%REL%%
         <a class="btn btn-volt btn-lg" href="{cta_href}">{cta_label}</a>
         {secondary}
       </div>
+      <ul class="ph-trust" aria-label="Why Flowsmart">
+        <li><span class="stars" aria-hidden="true">★★★★★</span> 20+ reviews</li>
+        <li>REC 20672</li>
+        <li>$20M insured</li>
+        <li>2-hr response</li>
+      </ul>
     </div>
     {visual}
   </div>
@@ -419,12 +540,12 @@ def page_residential():
         ["Powerpoints, USB points &amp; rewiring", "Fans, downlights &amp; feature lighting",
          "Oven, stove &amp; appliance circuits", "Smoke alarms to AS 3786",
          "Safety checks &amp; fault-finding", "New builds &amp; multi-unit developments"],
-        [("%%IMG:fse_kitchen%%", "Kitchen with finished downlighting and appliance circuits installed by Flowsmart Electrical", "Kitchen lighting &amp; appliance circuits"),
+        [("%%IMG:fse_switch%%", "Bright living room with pendant lighting and new powerpoints in a finished home", "Living-area lighting &amp; power"),
          ("%%IMG:u_lounge%%", "Living room lamp and wall lighting installed as part of a residential lighting plan", "Living-area lighting plan"),
-         ("%%IMG:fse_sparky%%", "Anthony from Flowsmart Electrical fault-finding at a residential switchboard", "Fault-finding at the board"),
+         ("%%IMG:fse_kitchen%%", "Gloved hands wiring circuit breakers during fault-finding at a switchboard", "Fault-finding at the board"),
          ("%%IMG:u_pendant%%", "Matte pendant light hanging in a renovated room", "Pendant &amp; feature lighting"),
          ("%%IMG:u_drill%%", "Licensed electrician fixing off a wall-mounted installation", "Install work, fixed off properly"),
-         ("%%IMG:fse_switch%%", "Modern switchboard with labelled safety switches after an upgrade", "Boards labelled &amp; tested")],
+         ("%%IMG:fse_sparky%%", "Family home at dusk with verandah and outdoor lighting switched on", "Outdoor &amp; verandah lighting")],
         "Recent residential work",
         RES_FAQS,
         [("Switchboard upgrades", "switchboard-upgrades.html"),
@@ -458,9 +579,9 @@ def page_switchboards():
         ["Full board replacement &amp; relabelling", "Safety switches (RCDs) on every circuit",
          "Surge protection", "Underground mains &amp; consumer mains",
          "Meter isolation &amp; coordination", "Same-day test, tag &amp; certificate"],
-        [("%%IMG:fse_switch%%", "Upgraded residential switchboard with labelled safety switches", "After: labelled, protected, certified"),
+        [("%%IMG:fse_kitchen%%", "Circuit breakers being wired into a new switchboard enclosure", "New board, wired breaker by breaker"),
          ("%%IMG:u_test%%", "Multimeter verification of circuits during a switchboard upgrade", "Every circuit verified under load"),
-         ("%%IMG:fse_sparky%%", "Electrician working through circuits at a home switchboard", "Methodical, circuit by circuit"),
+         ("%%IMG:fse_commercial%%", "Electrician working through colour-coded circuits in a distribution panel", "Methodical, circuit by circuit"),
          ("%%IMG:u_drill%%", "Electrician mounting hardware during an electrical upgrade", "Mounted, fixed and sealed properly")],
         "Board upgrades, before and after",
         SB_FAQS,
@@ -468,7 +589,7 @@ def page_switchboards():
          ("Why safety switches trip", "../blog/safety-switch-tripping.html"),
          ("Residential electrical", "residential-electrician.html"),
          ("EV chargers need board capacity", "ev-charger-installation.html")],
-        hero_img="%%IMG:fse_switch%%", hero_alt="A living area with layered lighting")
+        hero_img="%%IMG:fse_kitchen%%", hero_alt="Gloved hands wiring circuit breakers into a new switchboard")
 
 # ---- EV ----
 EV_FAQS = [
@@ -497,7 +618,7 @@ def page_ev():
          "Supply &amp; install or install-only", "COES certificate with every install"],
         [("%%IMG:u_ev%%", "Electric vehicle charging via a wall-mounted home charging point", "Home charging, done properly"),
          ("%%IMG:u_test%%", "Circuit testing before commissioning an EV charger", "Commissioned under load, not guessed"),
-         ("%%IMG:fse_switch%%", "Switchboard prepared with a dedicated protected EV circuit", "Dedicated circuit at the board")],
+         ("%%IMG:fse_kitchen%%", "Breakers being fitted at a switchboard to add a dedicated circuit", "Dedicated circuit at the board")],
         "EV charging installs",
         EV_FAQS,
         [("The home EV charging guide", "../blog/ev-charger-installation-home-guide.html"),
@@ -548,8 +669,8 @@ def page_commercial():
 # ---- services hub ----
 def page_services_hub():
     cards = [
-        ("Residential electrical", "Powerpoints to full rewires — clean, certified home electrical.", "services/residential-electrician.html", "%%IMG:fse_kitchen%%", "Finished kitchen electrical work by Flowsmart"),
-        ("Switchboard upgrades", "Replace the old fuse board before it fails you.", "services/switchboard-upgrades.html", "%%IMG:fse_switch%%", "Upgraded switchboard with safety switches"),
+        ("Residential electrical", "Powerpoints to full rewires — clean, certified home electrical.", "services/residential-electrician.html", "%%IMG:fse_switch%%", "Bright living room with pendant lighting in a finished home"),
+        ("Switchboard upgrades", "Replace the old fuse board before it fails you.", "services/switchboard-upgrades.html", "%%IMG:fse_kitchen%%", "Circuit breakers being wired into a switchboard"),
         ("EV charger installation", "Wake up to a full battery, on off-peak or solar rates.", "services/ev-charger-installation.html", "%%IMG:u_ev%%", "EV charging at a home charge point"),
         ("Commercial &amp; factories", "Fitouts and maintenance scheduled around your trade.", "services/commercial-electrical-fitouts.html", "%%IMG:kaiser_1%%", "Commercial warehouse electrical fitout"),
     ]
@@ -633,7 +754,7 @@ def page_case_studies():
       </div>
     </article>
     <article class="cs rv">
-      <div class="cs-media rv-clip"><img src="%%IMG:fse_switch%%" alt="An industrial control panel with colour-coded wiring" loading="lazy" width="460" height="298"></div>
+      <div class="cs-media rv-clip"><img src="%%IMG:fse_commercial%%" alt="An industrial control panel with colour-coded wiring" loading="lazy" width="460" height="298"></div>
       <div class="cs-body">
         <p class="eyebrow">Residential · Big job, quoted properly</p>
         <h2>The 45-minute quote</h2>
@@ -1056,7 +1177,7 @@ def page_testimonials():
         cards += f'''<figure class="review-card rv" style="width:auto">
   <div class="stars" aria-label="Five star review">★★★★★</div>
   <blockquote>{body}</blockquote>
-  <figcaption><b>{name}</b><span>Verified customer · Melbourne&rsquo;s west</span></figcaption>
+  <figcaption><span class="rv-av" aria-hidden="true">{name[0]}</span><span class="rv-who"><b>{name}</b><span>Verified customer · Melbourne&rsquo;s west</span></span></figcaption>
 </figure>'''
     return f'''{page_hero("Reviews", "What customers say when the job&rsquo;s done",
     "Every word below is verbatim from a real Flowsmart customer. The shoes-off thing comes up more than once — that tells you most of it.",
