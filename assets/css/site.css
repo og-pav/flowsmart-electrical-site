@@ -1369,3 +1369,20 @@ body.nav-open .site-header::after{display:none}
 .header-phone{white-space:nowrap}
 .hvc-label{white-space:nowrap}
 @media (max-width:1120px) and (min-width:901px){ .header-phone span{display:none} }
+
+/* Sticky mobile CTA, take 3: no fade, no blur. A clean solid bar with a
+   hairline top edge — the frosted gradient smeared whatever was scrolling
+   behind it and read as a rendering glitch rather than a deliberate surface. */
+.sticky-cta{
+  background:var(--ink);
+  -webkit-backdrop-filter:none; backdrop-filter:none;
+  border-top:1px solid rgba(231,237,227,.10);
+  box-shadow:0 -2px 8px rgba(16,22,15,.08);
+  padding:.65rem var(--gut) calc(.65rem + env(safe-area-inset-bottom));
+  pointer-events:auto;
+}
+.sc-call{background:var(--ink-2); border-color:rgba(237,242,233,.38); box-shadow:none}
+.sc-quote{box-shadow:0 4px 14px rgba(134,192,73,.35)}
+@media (max-width:900px){
+  .footer-fine{padding-bottom:calc(1.4rem + var(--sticky-h) + 1.4rem + env(safe-area-inset-bottom))}
+}
