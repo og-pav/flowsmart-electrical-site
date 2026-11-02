@@ -195,27 +195,44 @@
   function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   function read(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 
+  /* --- Google tag (Ads + GA4) loads in <head> under Consent Mode: it sets no
+     cookies until the visitor accepts, so conversions still count (modelled)
+     for visitors who ignore or decline the banner. --- */
+  function gtagSafe() { if (typeof window.gtag === "function") window.gtag.apply(null, arguments); }
+
+  /* thank-you page → lead conversion (GA4 + Google Ads) */
+  if ((document.body.getAttribute("data-page") || "") === "thank-you.html") {
+    gtagSafe("event", "generate_lead", { currency: "AUD" });
+    if (window.FSE_AW_LEAD) gtagSafe("event", "conversion", { send_to: window.FSE_AW_LEAD, value: 1.0, currency: "AUD" });
+  }
+
+  /* GHL inline form shows its own thank-you message (no redirect), so count the
+     lead when the form iframe reports the submission ("set-sticky-contacts"). */
+  var ghlLeadSent = false;
+  window.addEventListener("message", function (e) {
+    if (ghlLeadSent || !/(leadconnectorhq|msgsndr)\.com$/.test((e.origin || "").replace(/:\d+$/, ""))) return;
+    if (!Array.isArray(e.data) || e.data[0] !== "set-sticky-contacts") return;
+    ghlLeadSent = true;
+    gtagSafe("event", "generate_lead", { currency: "AUD", form: "ghl_inline" });
+    if (window.FSE_AW_LEAD) gtagSafe("event", "conversion", { send_to: window.FSE_AW_LEAD, value: 1.0, currency: "AUD" });
+  });
+
+  /* phone number taps/clicks → call conversion (GA4 + Google Ads) */
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="tel:"]');
+    if (!a) return;
+    gtagSafe("event", "phone_click", { link_url: a.getAttribute("href") });
+    if (window.FSE_AW_CALL) gtagSafe("event", "conversion", { send_to: window.FSE_AW_CALL, value: 1.0, currency: "AUD" });
+  });
+
   var loaded = false;
   function loadTracking() {
     if (loaded) return;                      // never double-load
     loaded = true;
-    /* --- Google Analytics 4 --- */
-    if (window.FSE_GA && window.FSE_GA.indexOf("XXXX") === -1) {
-      var s = document.createElement("script");
-      s.async = true;
-      s.src = "https://www.googletagmanager.com/gtag/js?id=" + window.FSE_GA;
-      document.head.appendChild(s);
-      window.dataLayer = window.dataLayer || [];
-      window.gtag = function () { window.dataLayer.push(arguments); };
-      window.gtag("js", new Date());
-      window.gtag("config", window.FSE_GA, { anonymize_ip: true });
-      /* thank-you page → lead conversion */
-      if ((document.body.getAttribute("data-page") || "") === "thank-you.html") {
-        window.gtag("event", "generate_lead", { currency: "AUD" });
-        // TODO Google Ads: uncomment + fill once the Ads account exists
-        // window.gtag("event", "conversion", { send_to: "AW-XXXXXXXXX/XXXXXXX" });
-      }
-    }
+    gtagSafe("consent", "update", {
+      ad_storage: "granted", analytics_storage: "granted",
+      ad_user_data: "granted", ad_personalization: "granted"
+    });
     /* --- GoHighLevel external tracking (lead source attribution) --- */
     if (window.FSE_GHL_TRACK) {
       var g = document.createElement("script");

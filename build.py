@@ -43,6 +43,9 @@ SITE = {
     "licence":     "A Class Licence A44962",
     "insurance":   "$20M public liability",
     "ga":          "G-P18HNWECWE",            # GA4 measurement id (live)
+    "aw":          "AW-18506051568",          # Google Ads tag (Flowsmart CID 419-011-0895)
+    "aw_lead":     "AW-18506051568/F9RgCO_br7AdEPDfr_hE",  # conversion: Lead form submit - website and landing pages
+    "aw_call":     "AW-18506051568/znBVCPXbr7AdEPDfr_hE",  # conversion: Phone number click - website and landing pages
     "gsc":         "lYJ4xY5yOkRVsYia_2qcDnOOr3vom4SuJlbe9sTxFf8",  # Search Console verification (live)
     # GoHighLevel form: leave "" to render the styled native form (redirects to
     # /thank-you). Paste the GHL form id to embed the real inline form.
@@ -392,8 +395,15 @@ def render(page):
 <link rel="stylesheet" href="{p}assets/css/site.css?v={ASSET_V}">
 {gsap}
 <script defer src="{p}assets/js/site.js?v={ASSET_V}"></script>
-<!-- GA4 loads only after cookie consent; configured in site.js -->
-<script>window.FSE_GA="{SITE['ga']}";window.FSE_GHL_TRACK="{SITE['ghl_tracking']}";</script>
+<!-- Google tag (Google Ads + GA4) with Consent Mode v2: no cookies until the
+     visitor accepts the banner; site.js grants consent and fires conversions. -->
+<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}
+var fseC=null;try{{fseC=localStorage.getItem("fse-consent");}}catch(e){{}}var fseG=fseC==="yes"?"granted":"denied";
+gtag("consent","default",{{ad_storage:fseG,analytics_storage:fseG,ad_user_data:fseG,ad_personalization:fseG,wait_for_update:500}});
+gtag("set","ads_data_redaction",fseG==="denied");gtag("set","url_passthrough",true);
+gtag("js",new Date());gtag("config","{SITE['ga']}",{{anonymize_ip:true}});gtag("config","{SITE['aw']}");
+window.FSE_GA="{SITE['ga']}";window.FSE_AW_LEAD="{SITE['aw_lead']}";window.FSE_AW_CALL="{SITE['aw_call']}";window.FSE_GHL_TRACK="{SITE['ghl_tracking']}";</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id={SITE['aw']}"></script>
 <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
 </head>
 <body class="{body_class}" data-page="{page['path']}">
