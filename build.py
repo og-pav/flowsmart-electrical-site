@@ -444,6 +444,7 @@ def quote_form(variant="landing"):
     if SITE["ghl_form_id"]:
         # GoHighLevel inline embed, exactly as supplied by GHL. form_embed.js
         # auto-resizes the iframe, so the inline height is only the starting size.
+        # The inline script passes ad click IDs and UTMs into the form's hidden fields.
         fid = SITE["ghl_form_id"]
         return f'''<div class="ghl-wrap">
 <iframe
@@ -465,6 +466,10 @@ def quote_form(variant="landing"):
     data-cookie-consent-provider="auto"
     title="Flowsmart Electrical EMBED Form">
 </iframe>
+<script>(function(){{var K=['gclid','gbraid','wbraid','utm_source','utm_medium','utm_campaign','utm_term','utm_content'],q=new URLSearchParams(location.search),a={{}};
+try{{a=JSON.parse(sessionStorage.getItem('fs_attr')||'{{}}')}}catch(e){{}}
+K.forEach(function(k){{var v=q.get(k);if(v)a[k]=v}});try{{sessionStorage.setItem('fs_attr',JSON.stringify(a))}}catch(e){{}}
+var f=document.getElementById('inline-{fid}'),u=new URL(f.src),n=0;K.forEach(function(k){{if(a[k]){{u.searchParams.set(k,a[k]);n++}}}});if(n)f.src=u.toString();}})();</script>
 <script src="https://link.msgsndr.com/js/form_embed.js"></script>
 </div>'''
     return f'''<form class="quote-form" novalidate data-redirect="/thank-you" aria-label="Request a free quote">
