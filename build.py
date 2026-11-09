@@ -349,6 +349,12 @@ def render(page):
     if page.get("faqs"): schema["@graph"].append(faq_schema(page["faqs"]))
     for extra in page.get("schema_extra", []):
         schema["@graph"].append(extra)
+    # Pages with the GHL quote form open connections to the form's servers early.
+    form_hints = ""
+    if SITE["ghl_form_id"] and "%%QUOTE_FORM%%" in page["body"]:
+        form_hints = ('<link rel="preconnect" href="https://api.leadconnectorhq.com">\n'
+                      '<link rel="preconnect" href="https://link.msgsndr.com">\n'
+                      '<link rel="preconnect" href="https://stcdn.leadconnectorhq.com" crossorigin>\n')
     gsap = ""
     if page.get("landing"):
         gsap = ('<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>\n'
@@ -389,7 +395,7 @@ def render(page):
 <meta name="theme-color" content="#10160F">
 <link rel="icon" href="{p}assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{p}assets/img/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
+{form_hints}<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{p}assets/css/site.css?v={ASSET_V}">
@@ -445,12 +451,19 @@ def quote_form(variant="landing"):
         # GoHighLevel inline embed, exactly as supplied by GHL. form_embed.js
         # auto-resizes the iframe, so the inline height is only the starting size.
         # The inline script passes ad click IDs and UTMs into the form's hidden fields.
+        # 9 Nov 2026 (Pav): load the form as fast as possible and show "Please wait while
+        # the form loads." above it. The iframe has no src in the HTML; the inline script
+        # sets it exactly once (with click IDs and UTMs already on it), so ad clicks no longer
+        # load the form twice. The wait line hides when the iframe finishes loading.
         fid = SITE["ghl_form_id"]
-        return f'''<div class="ghl-wrap">
+        base = f"https://api.leadconnectorhq.com/widget/form/{fid}"
+        return f'''<div class="ghl-wrap" id="quote-form">
+<p class="ghl-wait" id="ghl-wait-{fid}" role="status"><span class="ghl-spin" aria-hidden="true"></span>Please wait while the form loads.</p>
 <iframe
-    src="https://api.leadconnectorhq.com/widget/form/{fid}"
     style="width:100%;height:1164px;border:none;border-radius:8px"
     id="inline-{fid}"
+    loading="eager"
+    fetchpriority="high"
     data-layout="{{'id':'INLINE'}}"
     data-trigger-type="alwaysShow"
     data-trigger-value=""
@@ -469,8 +482,11 @@ def quote_form(variant="landing"):
 <script>(function(){{var K=['gclid','gbraid','wbraid','utm_source','utm_medium','utm_campaign','utm_term','utm_content'],q=new URLSearchParams(location.search),a={{}};
 try{{a=JSON.parse(sessionStorage.getItem('fs_attr')||'{{}}')}}catch(e){{}}
 K.forEach(function(k){{var v=q.get(k);if(v)a[k]=v}});try{{sessionStorage.setItem('fs_attr',JSON.stringify(a))}}catch(e){{}}
-var f=document.getElementById('inline-{fid}'),u=new URL(f.src),n=0;K.forEach(function(k){{if(a[k]){{u.searchParams.set(k,a[k]);n++}}}});if(n)f.src=u.toString();}})();</script>
-<script src="https://link.msgsndr.com/js/form_embed.js"></script>
+var f=document.getElementById('inline-{fid}'),w=document.getElementById('ghl-wait-{fid}'),u=new URL('{base}');K.forEach(function(k){{if(a[k])u.searchParams.set(k,a[k])}});
+f.addEventListener('load',function(){{if(f.getAttribute('src'))setTimeout(function(){{w.className+=' is-done'}},300)}});
+f.src=u.toString();}})();</script>
+<noscript><iframe src="{base}" style="width:100%;height:1164px;border:none" title="Flowsmart Electrical EMBED Form"></iframe></noscript>
+<script async src="https://link.msgsndr.com/js/form_embed.js"></script>
 </div>'''
     return f'''<form class="quote-form" novalidate data-redirect="/thank-you" aria-label="Request a free quote">
   <div class="qf-field">

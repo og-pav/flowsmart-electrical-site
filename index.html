@@ -32,13 +32,16 @@
 <meta name="theme-color" content="#10160F">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://api.leadconnectorhq.com">
+<link rel="preconnect" href="https://link.msgsndr.com">
+<link rel="preconnect" href="https://stcdn.leadconnectorhq.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css?v=f241bbd4">
+<link rel="stylesheet" href="assets/css/site.css?v=4206eaad">
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script defer src="assets/js/site.js?v=f241bbd4"></script>
+<script defer src="assets/js/site.js?v=4206eaad"></script>
 <!-- Google tag (Google Ads + GA4) with Consent Mode v2: no cookies until the
      visitor accepts the banner; site.js grants consent and fires conversions. -->
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
@@ -464,7 +467,7 @@ window.FSE_GA="G-P18HNWECWE";window.FSE_AW_LEAD="AW-18506051568/F9RgCO_br7AdEPDf
 </section>
 
 <!-- 9 · FINAL CTA + INQUIRY -->
-<section class="final-cta" id="quote">
+<section class="final-cta">
   <div class="glow-ring" aria-hidden="true"></div>
   <div class="wrap final-grid">
     <div class="final-copy rv">
@@ -479,11 +482,13 @@ window.FSE_GA="G-P18HNWECWE";window.FSE_AW_LEAD="AW-18506051568/F9RgCO_br7AdEPDf
       <a class="final-phone" href="tel:+61468057479"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.7.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.7.1.3 0 .7-.2 1l-2.2 2.1Z"/></svg>0468 057 479</a>
       <p class="final-fine">Prefer email? <a href="mailto:anthony@flowsmartelec.com.au">anthony@flowsmartelec.com.au</a></p>
     </div>
-    <div class="final-form rv"><div class="ghl-wrap">
+    <div class="final-form rv" id="quote"><div class="ghl-wrap" id="quote-form">
+<p class="ghl-wait" id="ghl-wait-2kexV7DvSR7t6gwNMNaH" role="status"><span class="ghl-spin" aria-hidden="true"></span>Please wait while the form loads.</p>
 <iframe
-    src="https://api.leadconnectorhq.com/widget/form/2kexV7DvSR7t6gwNMNaH"
     style="width:100%;height:1164px;border:none;border-radius:8px"
     id="inline-2kexV7DvSR7t6gwNMNaH"
+    loading="eager"
+    fetchpriority="high"
     data-layout="{'id':'INLINE'}"
     data-trigger-type="alwaysShow"
     data-trigger-value=""
@@ -502,8 +507,11 @@ window.FSE_GA="G-P18HNWECWE";window.FSE_AW_LEAD="AW-18506051568/F9RgCO_br7AdEPDf
 <script>(function(){var K=['gclid','gbraid','wbraid','utm_source','utm_medium','utm_campaign','utm_term','utm_content'],q=new URLSearchParams(location.search),a={};
 try{a=JSON.parse(sessionStorage.getItem('fs_attr')||'{}')}catch(e){}
 K.forEach(function(k){var v=q.get(k);if(v)a[k]=v});try{sessionStorage.setItem('fs_attr',JSON.stringify(a))}catch(e){}
-var f=document.getElementById('inline-2kexV7DvSR7t6gwNMNaH'),u=new URL(f.src),n=0;K.forEach(function(k){if(a[k]){u.searchParams.set(k,a[k]);n++}});if(n)f.src=u.toString();})();</script>
-<script src="https://link.msgsndr.com/js/form_embed.js"></script>
+var f=document.getElementById('inline-2kexV7DvSR7t6gwNMNaH'),w=document.getElementById('ghl-wait-2kexV7DvSR7t6gwNMNaH'),u=new URL('https://api.leadconnectorhq.com/widget/form/2kexV7DvSR7t6gwNMNaH');K.forEach(function(k){if(a[k])u.searchParams.set(k,a[k])});
+f.addEventListener('load',function(){if(f.getAttribute('src'))setTimeout(function(){w.className+=' is-done'},300)});
+f.src=u.toString();})();</script>
+<noscript><iframe src="https://api.leadconnectorhq.com/widget/form/2kexV7DvSR7t6gwNMNaH" style="width:100%;height:1164px;border:none" title="Flowsmart Electrical EMBED Form"></iframe></noscript>
+<script async src="https://link.msgsndr.com/js/form_embed.js"></script>
 </div></div>
   </div>
 </section>

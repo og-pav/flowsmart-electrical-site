@@ -875,6 +875,12 @@ body.nav-open .cookie-bar{display:none !important}
 .ghl-wrap{background:var(--card); border-radius:var(--r); box-shadow:var(--sh-2); padding:.5rem; overflow:hidden}
 .ghl-wrap iframe{display:block; width:100%; border:0; border-radius:8px; min-height:520px}
 .final-form .ghl-wrap{background:var(--card)}
+/* 9 Nov 2026: shown above the GHL form until its iframe has loaded */
+.ghl-wait{display:flex; align-items:center; gap:.65rem; margin:.25rem .25rem .5rem; padding:.75rem .9rem; border-radius:8px; background:#F1F6E9; color:#10160F; font-weight:600; font-size:1rem; line-height:1.35}
+.ghl-wait.is-done{display:none}
+.ghl-spin{flex:none; width:18px; height:18px; border-radius:50%; border:2.5px solid rgba(16,22,15,.18); border-top-color:#10160F; animation:ghlspin .8s linear infinite}
+@keyframes ghlspin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.ghl-spin{animation:none}}
 
 @media (max-width:900px){
   .hero-inner{grid-template-columns:1fr}

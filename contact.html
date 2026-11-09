@@ -32,12 +32,15 @@
 <meta name="theme-color" content="#10160F">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://api.leadconnectorhq.com">
+<link rel="preconnect" href="https://link.msgsndr.com">
+<link rel="preconnect" href="https://stcdn.leadconnectorhq.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css?v=f241bbd4">
+<link rel="stylesheet" href="assets/css/site.css?v=4206eaad">
 
-<script defer src="assets/js/site.js?v=f241bbd4"></script>
+<script defer src="assets/js/site.js?v=4206eaad"></script>
 <!-- Google tag (Google Ads + GA4) with Consent Mode v2: no cookies until the
      visitor accepts the banner; site.js grants consent and fires conversions. -->
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
@@ -107,11 +110,13 @@ window.FSE_GA="G-P18HNWECWE";window.FSE_AW_LEAD="AW-18506051568/F9RgCO_br7AdEPDf
   <div class="wrap contact-grid">
     <div class="contact-form-col" id="quote">
       <h2>Request a free quote</h2>
-      <div class="ghl-wrap">
+      <div class="ghl-wrap" id="quote-form">
+<p class="ghl-wait" id="ghl-wait-2kexV7DvSR7t6gwNMNaH" role="status"><span class="ghl-spin" aria-hidden="true"></span>Please wait while the form loads.</p>
 <iframe
-    src="https://api.leadconnectorhq.com/widget/form/2kexV7DvSR7t6gwNMNaH"
     style="width:100%;height:1164px;border:none;border-radius:8px"
     id="inline-2kexV7DvSR7t6gwNMNaH"
+    loading="eager"
+    fetchpriority="high"
     data-layout="{'id':'INLINE'}"
     data-trigger-type="alwaysShow"
     data-trigger-value=""
@@ -130,8 +135,11 @@ window.FSE_GA="G-P18HNWECWE";window.FSE_AW_LEAD="AW-18506051568/F9RgCO_br7AdEPDf
 <script>(function(){var K=['gclid','gbraid','wbraid','utm_source','utm_medium','utm_campaign','utm_term','utm_content'],q=new URLSearchParams(location.search),a={};
 try{a=JSON.parse(sessionStorage.getItem('fs_attr')||'{}')}catch(e){}
 K.forEach(function(k){var v=q.get(k);if(v)a[k]=v});try{sessionStorage.setItem('fs_attr',JSON.stringify(a))}catch(e){}
-var f=document.getElementById('inline-2kexV7DvSR7t6gwNMNaH'),u=new URL(f.src),n=0;K.forEach(function(k){if(a[k]){u.searchParams.set(k,a[k]);n++}});if(n)f.src=u.toString();})();</script>
-<script src="https://link.msgsndr.com/js/form_embed.js"></script>
+var f=document.getElementById('inline-2kexV7DvSR7t6gwNMNaH'),w=document.getElementById('ghl-wait-2kexV7DvSR7t6gwNMNaH'),u=new URL('https://api.leadconnectorhq.com/widget/form/2kexV7DvSR7t6gwNMNaH');K.forEach(function(k){if(a[k])u.searchParams.set(k,a[k])});
+f.addEventListener('load',function(){if(f.getAttribute('src'))setTimeout(function(){w.className+=' is-done'},300)});
+f.src=u.toString();})();</script>
+<noscript><iframe src="https://api.leadconnectorhq.com/widget/form/2kexV7DvSR7t6gwNMNaH" style="width:100%;height:1164px;border:none" title="Flowsmart Electrical EMBED Form"></iframe></noscript>
+<script async src="https://link.msgsndr.com/js/form_embed.js"></script>
 </div>
     </div>
     <aside class="contact-side">

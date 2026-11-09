@@ -385,7 +385,7 @@ def landing_body():
 </section>
 
 <!-- 9 · FINAL CTA + INQUIRY -->
-<section class="final-cta" id="quote">
+<section class="final-cta">
   <div class="glow-ring" aria-hidden="true"></div>
   <div class="wrap final-grid">
     <div class="final-copy rv">
@@ -400,7 +400,7 @@ def landing_body():
       <a class="final-phone" href="tel:%%TEL%%"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.7.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.7.1.3 0 .7-.2 1l-2.2 2.1Z"/></svg>%%PHONE%%</a>
       <p class="final-fine">Prefer email? <a href="mailto:%%EMAIL%%">%%EMAIL%%</a></p>
     </div>
-    <div class="final-form rv">%%QUOTE_FORM%%</div>
+    <div class="final-form rv" id="quote">%%QUOTE_FORM%%</div>
   </div>
 </section>'''
 
