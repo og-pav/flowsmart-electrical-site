@@ -895,16 +895,36 @@ def blog_post_body(p):
 
 # ---- contact ----
 def page_contact():
-    return f'''{page_hero("Contact · Free quotes", "Tell %%OWNER%% what needs doing",
-    "Form, phone or email — whichever suits. Either way: %%PROMISE%%", cta_label="Call %%PHONE%%", cta_href="tel:%%TEL%%",
-    image="%%IMG:u_office%%", alt="A modern office interior with integrated lighting")}
-<section class="contact-main">
-  <div class="wrap contact-grid">
-    <div class="contact-form-col" id="quote">
-      <h2>Request a free quote</h2>
+    # 11 Nov 2026 (Pav): the form is the first thing on the page (it replaces the hero
+    # photo and "Call" button). Mobile order: headline, form, then the trust points.
+    return f'''<section class="page-hero ph-dark ph-form-hero">
+  <div class="ph-bg" aria-hidden="true"><span class="ph-mesh"></span><span class="ph-grain"></span><span class="hero-grid"></span></div>
+  <div class="wrap ph-inner">
+    <div class="ph-copy">
+      %%BREADCRUMBS%%
+      <p class="eyebrow eyebrow-light">Contact · Free quotes</p>
+      <h1>Tell %%OWNER%% what needs doing</h1>
+    </div>
+    <div class="ph-formcard" id="quote">
       %%QUOTE_FORM%%
     </div>
-    <aside class="contact-side">
+    <div class="ph-more">
+      <p class="lede">Form, phone or email — whichever suits. Either way: %%PROMISE%%</p>
+      <ul class="ph-trust" aria-label="Why Flowsmart">
+        <li><span class="stars" aria-hidden="true">★★★★★</span> 20+ reviews</li>
+        <li>REC 20672</li>
+        <li>$20M insured</li>
+        <li>2-hr response</li>
+      </ul>
+      <a class="hero-call ph-more-call" href="tel:%%TEL%%">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.7.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.7.1.3 0 .7-.2 1l-2.2 2.1Z"/></svg>
+        <span>Rather talk? Call <b>%%PHONE%%</b></span>
+      </a>
+    </div>
+  </div>
+</section>
+<section class="contact-main">
+  <div class="wrap contact-side-grid">
       <div class="side-card rv">
         <h3>Direct lines</h3>
         <p class="big-tel"><a href="tel:%%TEL%%">%%PHONE%%</a></p>
@@ -917,7 +937,6 @@ def page_contact():
         <p>32 Adriana Ct, Rowsley VIC 3340 — five minutes from Bacchus Marsh, thirty from the West Gate.</p>
         <p><a class="text-link" href="https://www.google.com/maps/dir/?api=1&amp;destination=32+Adriana+Ct+Rowsley+VIC+3340" target="_blank" rel="noopener">Get directions<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a></p>
       </div>
-    </aside>
   </div>
   <div class="wrap map-wrap rv">
     <iframe title="Map showing the Flowsmart Electrical service base at Rowsley, Victoria" src="https://maps.google.com/maps?q=32%20Adriana%20Ct%2C%20Rowsley%20VIC%203340&z=11&output=embed" loading="lazy" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -1280,8 +1299,6 @@ def page_quote():
 
     <div class="q-form-col" id="quote">
       <div class="q-form-card">
-        <h2>Request your free quote</h2>
-        <p class="q-form-sub">Two minutes. The more detail, the sharper the price.</p>
         %%QUOTE_FORM%%
       </div>
     </div>

@@ -1392,3 +1392,36 @@ body.nav-open .site-header::after{display:none}
 @media (max-width:900px){
   .footer-fine{padding-bottom:calc(1.4rem + var(--sticky-h) + 1.4rem + env(safe-area-inset-bottom))}
 }
+
+/* 11 Nov 2026: contact page, form-first hero. Mobile: headline, form, trust points. */
+.ph-form-hero .ph-inner{grid-template-columns:minmax(0,1fr) minmax(0,540px); grid-template-areas:"copy form" "more form"; grid-template-rows:auto 1fr; align-items:start; row-gap:1.4rem}
+.ph-form-hero .ph-copy{grid-area:copy}
+.ph-form-hero .ph-formcard{grid-area:form; color:var(--body-c)}
+.ph-form-hero .ph-more{grid-area:more}
+.ph-form-hero .ph-more .lede{margin-top:0}
+.ph-form-hero .ph-trust{margin-top:1.2rem}
+.ph-form-hero .ph-more-call{display:inline-flex; align-items:center; gap:.5rem; margin-top:1.2rem; color:#E7EDE3; text-decoration:none}
+.ph-form-hero .ph-more-call svg{width:18px; height:18px; fill:var(--volt)}
+.ph-form-hero .ghl-wrap{box-shadow:0 26px 60px rgba(0,0,0,.45), 0 0 0 1px rgba(231,237,227,.10)}
+.contact-side-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:var(--gap)}
+.contact-side-grid .side-card{margin-bottom:0}
+@media (max-width:900px){
+  .ph-form-hero{padding-top:calc(var(--head-h) + 1.25rem)}
+  .ph-form-hero .ph-inner{grid-template-columns:1fr; grid-template-areas:"copy" "form" "more"; row-gap:1.1rem}
+  .ph-form-hero .breadcrumbs{display:none}
+  .ph-form-hero .ghl-wrap{margin:0 -6px}
+  .contact-side-grid{grid-template-columns:1fr}
+}
+
+/* 11 Nov 2026: free-quote page, form-first. The GHL form carries its own
+   "Request your free quote" heading, so the card is just a frame around it,
+   and on phones the intro paragraph and breadcrumbs give way to the form. */
+.q-form-card{padding:0; background:none; border:0; box-shadow:none}
+.q-form-col .ghl-wrap{box-shadow:0 8px 24px rgba(0,0,0,.28), 0 24px 64px rgba(0,0,0,.24)}
+@media (max-width:900px){
+  .q-hero{padding-top:calc(var(--head-h) + 1.25rem)}
+  .q-head .breadcrumbs,.q-head .lede{display:none}
+  .q-grid{gap:1.2rem}
+  .q-head h1{margin-bottom:0}
+  .q-form-col .ghl-wrap{margin:0 -6px}
+}
