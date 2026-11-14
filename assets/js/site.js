@@ -213,8 +213,25 @@
     if (ghlLeadSent || !/(leadconnectorhq|msgsndr)\.com$/.test((e.origin || "").replace(/:\d+$/, ""))) return;
     if (!Array.isArray(e.data) || e.data[0] !== "set-sticky-contacts") return;
     ghlLeadSent = true;
+    /* 14 Nov 2026: the message carries the new contact (email, phone, name, postcode, id).
+       Pass them as user_data for Google Ads enhanced conversions (iPhone clicks often hide
+       the click ID) and use the GHL contact id as transaction_id so a lead counts once.
+       gtag only uses user_data when the visitor has accepted cookies (ad_user_data). */
+    var c = {};
+    try { c = JSON.parse(e.data[2] || "{}") || {}; } catch (x) { c = {}; }
+    var ud = {}, em = String(c.email || "").trim().toLowerCase(), ph = String(c.phone || "").replace(/[^\d+]/g, "");
+    if (/^0[2-478]\d{8}$/.test(ph)) ph = "+61" + ph.slice(1); else if (/^61\d{9}$/.test(ph)) ph = "+" + ph;
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) ud.email = em;
+    if (/^\+\d{9,15}$/.test(ph)) ud.phone_number = ph;
+    if (c.first_name || c.last_name) ud.address = { first_name: String(c.first_name || "").trim().toLowerCase(), last_name: String(c.last_name || "").trim().toLowerCase(), postal_code: String(c.postal_code || "").trim(), country: "AU" };
+    if (ud.email || ud.phone_number || ud.address) gtagSafe("set", "user_data", ud);
+    var tid = String(c.id || e.data[4] || "");
     gtagSafe("event", "generate_lead", { currency: "AUD", form: "ghl_inline" });
-    if (window.FSE_AW_LEAD) gtagSafe("event", "conversion", { send_to: window.FSE_AW_LEAD, value: 1.0, currency: "AUD" });
+    if (window.FSE_AW_LEAD) {
+      var cv = { send_to: window.FSE_AW_LEAD, value: 1.0, currency: "AUD" };
+      if (tid) cv.transaction_id = tid;
+      gtagSafe("event", "conversion", cv);
+    }
   });
 
   /* phone number taps/clicks → call conversion (GA4 + Google Ads) */

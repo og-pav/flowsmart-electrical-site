@@ -702,9 +702,11 @@ body.nav-open .cookie-bar{display:none !important}
 .cookie-toast.is-in{opacity:1; transform:translateX(-50%) translateY(0)}
 .cookie-toast svg{width:16px;height:16px;fill:none;stroke:var(--volt);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 @media (max-width:560px){
-  .cookie-bar{flex-direction:column; align-items:stretch; text-align:left}
+  /* compact on phones so it does not sit over the quote form fields */
+  .cookie-bar{flex-direction:column; align-items:stretch; text-align:left; gap:.6rem; padding:.75rem .9rem; width:calc(100% - 1.2rem)}
+  .cookie-bar p{flex:0 0 auto; font-size:.82rem; line-height:1.4}
   .cookie-bar > div{width:100%}
-  .cookie-bar > div .btn{flex:1}
+  .cookie-bar > div .btn{flex:1; padding:.5rem .8rem}
 }
 
 /* ------------------------------------------------------- responsive ---- */
@@ -751,7 +753,9 @@ body.nav-open .cookie-bar{display:none !important}
 
 /* shared atmospherics */
 .hero-mesh, .ph-mesh{
-  position:absolute; inset:-30%;
+  /* fixed px top/bottom (not %): a % inset moved the mesh whenever the hero grew as the
+     quote form loaded, which Google counted as a full-screen layout shift on mobile */
+  position:absolute; top:-260px; bottom:-260px; left:-30%; right:-30%;
   background:
     radial-gradient(42% 48% at 78% 12%, rgba(134,192,73,.30), transparent 62%),
     radial-gradient(34% 44% at 8%  78%, rgba(183,227,110,.14), transparent 62%),
