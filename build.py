@@ -460,7 +460,7 @@ def quote_form(variant="landing"):
         base = f"https://api.leadconnectorhq.com/widget/form/{fid}"
         return f'''<div class="ghl-wrap" id="quote-form">
 <p class="ghl-wait" id="ghl-wait-{fid}" role="status"><span class="ghl-spin" aria-hidden="true"></span>Please wait while the form loads.</p>
-<iframe
+<div class="ghl-frame"><iframe
     style="width:100%;height:1164px;border:none;border-radius:8px"
     id="inline-{fid}"
     loading="eager"
@@ -485,7 +485,7 @@ try{{a=JSON.parse(sessionStorage.getItem('fs_attr')||'{{}}')}}catch(e){{}}
 K.forEach(function(k){{var v=q.get(k);if(v)a[k]=v}});try{{sessionStorage.setItem('fs_attr',JSON.stringify(a))}}catch(e){{}}
 var f=document.getElementById('inline-{fid}'),w=document.getElementById('ghl-wait-{fid}'),u=new URL('{base}');K.forEach(function(k){{if(a[k])u.searchParams.set(k,a[k])}});
 f.addEventListener('load',function(){{if(f.getAttribute('src'))setTimeout(function(){{w.className+=' is-done'}},300)}});
-f.src=u.toString();}})();</script>
+f.src=u.toString();}})();</script></div>
 <noscript><iframe src="{base}" style="width:100%;height:1164px;border:none" title="Flowsmart Electrical EMBED Form"></iframe></noscript>
 <script async src="https://link.msgsndr.com/js/form_embed.js"></script>
 </div>'''

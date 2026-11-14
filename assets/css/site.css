@@ -876,11 +876,15 @@ body.nav-open .cookie-bar{display:none !important}
 .page-hero + section{padding-top:clamp(2.5rem,5vw,4.5rem)}
 
 /* --------------------------------------------------- GHL form frame --- */
-.ghl-wrap{background:var(--card); border-radius:var(--r); box-shadow:var(--sh-2); padding:.5rem; overflow:hidden}
+.ghl-wrap{position:relative; background:var(--card); border-radius:var(--r); box-shadow:var(--sh-2); padding:.5rem; overflow:hidden}
+/* 14 Nov 2026: form_embed.js lifts the iframe out of the page (position:absolute; left:-9999px)
+   while it initialises, so content under the form jumped. Hold the form's finished phone-width
+   height (~1420-1440px). The wait line overlays the form so hiding it moves nothing. */
+@media (max-width:900px){.ghl-frame{position:relative; min-height:1440px}}
 .ghl-wrap iframe{display:block; width:100%; border:0; border-radius:8px; min-height:520px}
 .final-form .ghl-wrap{background:var(--card)}
 /* 9 Nov 2026: shown above the GHL form until its iframe has loaded */
-.ghl-wait{display:flex; align-items:center; gap:.65rem; margin:.25rem .25rem .5rem; padding:.75rem .9rem; border-radius:8px; background:#F1F6E9; color:#10160F; font-weight:600; font-size:1rem; line-height:1.35}
+.ghl-wait{position:absolute; z-index:2; top:.75rem; left:.75rem; right:.75rem; box-shadow:0 2px 10px rgba(16,22,15,.08); display:flex; align-items:center; gap:.65rem; margin:0; padding:.75rem .9rem; border-radius:8px; background:#F1F6E9; color:#10160F; font-weight:600; font-size:1rem; line-height:1.35}
 .ghl-wait.is-done{display:none}
 .ghl-spin{flex:none; width:18px; height:18px; border-radius:50%; border:2.5px solid rgba(16,22,15,.18); border-top-color:#10160F; animation:ghlspin .8s linear infinite}
 @keyframes ghlspin{to{transform:rotate(360deg)}}
