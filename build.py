@@ -456,11 +456,14 @@ def quote_form(variant="landing"):
         # the form loads." above it. The iframe has no src in the HTML; the inline script
         # sets it exactly once (with click IDs and UTMs already on it), so ad clicks no longer
         # load the form twice. The wait line hides when the iframe finishes loading.
+        # 14 Nov 2026: the iframe's parent div carries the id "inline-<form id>-wrapper", so
+        # form_embed.js leaves the iframe in place. Without it the script moves the iframe into
+        # a wrapper of its own, which reloads the form and shifts the page on phones.
         fid = SITE["ghl_form_id"]
         base = f"https://api.leadconnectorhq.com/widget/form/{fid}"
         return f'''<div class="ghl-wrap" id="quote-form">
 <p class="ghl-wait" id="ghl-wait-{fid}" role="status"><span class="ghl-spin" aria-hidden="true"></span>Please wait while the form loads.</p>
-<div class="ghl-frame"><iframe
+<div class="ghl-frame" id="inline-{fid}-wrapper"><iframe
     style="width:100%;height:1164px;border:none;border-radius:8px"
     id="inline-{fid}"
     loading="eager"
