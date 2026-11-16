@@ -8,6 +8,15 @@
    gutter, gap, pad and type size is a clamp().
    ============================================================ */
 
+/* Self-hosted variable fonts (latin). Preloaded in <head>; swap keeps text
+   visible while they load. Replaces the Google Fonts round trips. */
+@font-face{font-family:"Space Grotesk"; src:url("../fonts/space-grotesk-var-latin.woff2") format("woff2");
+  font-weight:300 700; font-style:normal; font-display:swap;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Inter"; src:url("../fonts/inter-var-latin.woff2") format("woff2");
+  font-weight:100 900; font-style:normal; font-display:swap;
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+
 :root{
   /* colour */
   --volt:       #86C049;   /* brand green — CTAs & key moments ONLY */
@@ -17,7 +26,7 @@
   --ink-2:      #1B241A;   /* raised dark surface */
   --pine:       #2E3B2A;
   --body-c:     #3D463B;
-  --mist:       #7C8676;
+  --mist:       #646E5F;
   --line:       #E3E8DE;
   --paper:      #FAFBF7;
   --card:       #FFFFFF;
@@ -123,7 +132,7 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--volt); outline-offs
 .wm-spark{width:clamp(20px,2vw,26px); height:auto; fill:var(--volt); flex:none}
 .wm-text{font-family:var(--f-head); font-size:clamp(1.15rem,1rem + .6vw,1.45rem); letter-spacing:-.03em; line-height:1}
 .wm-text b{font-weight:700; color:var(--ink)}
-.wm-text i{font-style:normal; font-weight:700; color:var(--volt); margin-left:.28em}
+.wm-text i{font-style:normal; font-weight:700; color:var(--volt)}
 .wm-rev .wm-text b{color:#fff}
 
 /* ----------------------------------------------------------- header ---- */
@@ -1433,3 +1442,70 @@ body.nav-open .site-header::after{display:none}
   .q-head h1{margin-bottom:0}
   .q-form-col .ghl-wrap{margin:0 -6px}
 }
+
+
+/* ============================================================
+   NOV 2026 — SEO / speed pass
+   ============================================================ */
+/* Hero animates in with CSS alone (GSAP removed): the headline paints on the
+   first frame instead of waiting for a script, which was holding back LCP. */
+[data-hero]{opacity:1; transform:none; animation:heroIn .65s cubic-bezier(.22,.7,.3,1) both}
+.hero-copy > [data-hero]:nth-child(2){animation-delay:.08s}
+.hero-copy > [data-hero]:nth-child(3){animation-delay:.16s}
+.hero-copy > [data-hero]:nth-child(4){animation-delay:.24s}
+.hero-visual[data-hero]{animation-delay:.12s}
+@keyframes heroIn{from{opacity:0; transform:translateY(18px)}to{opacity:1; transform:none}}
+@media (prefers-reduced-motion: reduce){ [data-hero]{animation:none} }
+
+/* keyword line now lives inside the H1, styled exactly as the old pill */
+.hero h1 .hero-badge{display:flex; width:fit-content; line-height:1.4; margin:0 0 1.4rem; font-weight:600}
+.hero h1 .h1-main{display:block}
+
+/* real photo: square crop shows the Flowsmart van and Anthony */
+.hv-main{aspect-ratio:1/1}
+.hv-card-2{top:4%; right:-5%}
+@media (max-width:900px){ .hv-card-2{display:none} }
+
+/* EV row: drawn panel instead of a stock photo */
+.svc-illus{display:flex; align-items:center; justify-content:center; background:
+  radial-gradient(70% 80% at 30% 20%, rgba(134,192,73,.22), transparent 60%), var(--ink)}
+.svc-illus::after{display:none}
+.ev-art{width:62%; max-width:320px; height:auto}
+.ev-unit{fill:var(--ink-2); stroke:rgba(231,237,227,.35); stroke-width:2}
+.ev-screen{fill:rgba(134,192,73,.18); stroke:var(--volt); stroke-width:1.5}
+.ev-bolt{fill:var(--volt)}
+.ev-cable{fill:none; stroke:var(--spark); stroke-width:6; stroke-linecap:round}
+.ev-plug{fill:var(--volt)}
+.ev-spec{position:absolute; right:1.1rem; top:1rem; text-align:right; color:#C9D3C3;
+  font-family:var(--f-head); font-size:.9rem; line-height:1.5}
+.ev-spec b{color:#fff; font-size:1.1rem}
+
+/* home: areas we cover */
+.home-areas{padding:var(--sec-pad) 0; background:var(--paper)}
+.home-areas-lede{max-width:62ch; margin:1rem 0 0; font-size:var(--fs-lede)}
+.area-links{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--gap); margin-top:clamp(1.6rem,3vw,2.4rem)}
+.area-links a{display:flex; flex-direction:column; gap:.3rem; padding:1.2rem 1.3rem; border-radius:var(--r);
+  background:var(--card); border:1px solid var(--line); box-shadow:var(--sh-1); text-decoration:none;
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease}
+.area-links a:hover{transform:translateY(-3px); box-shadow:var(--sh-2); border-color:rgba(134,192,73,.55)}
+.area-links b{font-family:var(--f-head); color:var(--ink); font-size:1.08rem}
+.area-links span{font-size:.88rem; color:var(--mist)}
+@media (max-width:900px){ .area-links{grid-template-columns:1fr 1fr} }
+@media (max-width:560px){ .area-links{grid-template-columns:1fr} }
+
+/* area pages */
+.area-svcs{padding:0 0 var(--sec-pad)}
+.area-svc-grid{grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:clamp(1.6rem,3vw,2.4rem)}
+.area-svc h3{font-size:1.2rem}
+.area-svc .text-link{margin-top:.2rem}
+.area-choose{padding:var(--sec-pad) 0; background:var(--wash)}
+.area-choose .svc-side{background:var(--card)}
+.area-choose .chips .chip{font-size:.85rem; padding:.45rem .85rem}
+.area-reviews{padding:var(--sec-pad) 0 0}
+.area-reviews .q-proof-grid{margin-top:clamp(1.6rem,3vw,2.4rem)}
+@media (max-width:900px){ .area-svc-grid{grid-template-columns:1fr} }
+
+/* small-text green on light backgrounds: a deeper shade of the brand green
+   so eyebrow labels pass WCAG AA contrast (4.5:1) */
+.eyebrow{color:#4A7A23}
+.hero .eyebrow,.eyebrow-light,.page-hero .eyebrow,.q-hero .eyebrow,.final-cta .eyebrow{color:var(--spark)}
