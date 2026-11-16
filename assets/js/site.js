@@ -1,6 +1,6 @@
 /* Flowsmart Electrical — shared behaviour.
-   IntersectionObserver reveals everywhere; GSAP adds hero polish on the
-   landing page only (and degrades silently if the CDN is unreachable). */
+   IntersectionObserver reveals everywhere; the landing hero animates in CSS,
+   so no third-party animation library sits in front of first paint. */
 (function () {
   "use strict";
   document.documentElement.classList.remove("no-js");
@@ -316,88 +316,6 @@
     });
   }
 
-  /* ----------------------------------------------- landing: GSAP layer --- */
-  if (!document.body.classList.contains("landing") || reduceMotion) {
-    // static hero for subpages / reduced motion
-    document.querySelectorAll("[data-hero]").forEach(function (el) {
-      el.style.opacity = 1; el.style.transform = "none";
-    });
-    return;
-  }
-  function heroFallback() {
-    document.querySelectorAll("[data-hero]").forEach(function (el, i) {
-      el.style.transition = "opacity .6s ease " + i * 120 + "ms, transform .6s cubic-bezier(.22,.7,.3,1) " + i * 120 + "ms";
-      requestAnimationFrame(function () { el.style.opacity = 1; el.style.transform = "none"; });
-    });
-  }
-  function forceHeroVisible() {
-    document.querySelectorAll("[data-hero]").forEach(function (el) {
-      el.style.opacity = 1; el.style.transform = "none";
-    });
-  }
-
-  /* The hero must never wait on third-party assets (the GHL form iframe can
-     delay window.load by seconds). Start as soon as the DOM is ready, give the
-     GSAP CDN a short grace period, and hard-reveal if anything goes wrong. */
-  var heroStarted = false;
-
-  /* Watchdog: whatever happens above, the hero is visible within 2.6s. It is
-     never cleared, and it only acts on elements still hidden — so it also
-     rescues a tween frozen by a backgrounded tab (rAF is paused there). */
-  setTimeout(function () {
-    document.querySelectorAll("[data-hero]").forEach(function (el) {
-      if (parseFloat(getComputedStyle(el).opacity) < 0.99) {
-        if (window.gsap) gsap.killTweensOf(el);
-        el.style.opacity = 1; el.style.transform = "none";
-      }
-    });
-  }, 2600);
-
-  function startHero() {
-    if (heroStarted) return;
-    heroStarted = true;
-
-    /* No point animating a hero nobody can see — a background tab would freeze
-       the tween half-done and show a blank hero on focus. */
-    if (document.hidden) { forceHeroVisible(); return; }
-
-    if (!window.gsap) { heroFallback(); return; }
-
-    gsap.to("[data-hero]", {
-      opacity: 1, y: 0, duration: 0.55, ease: "power3.out", stagger: 0.13
-    });
-
-    var shapes = [].slice.call(document.querySelectorAll(".hero-shape"));
-    if (shapes.length && window.matchMedia("(pointer:fine)").matches) {
-      var heroEl = document.querySelector(".hero");
-      if (heroEl) heroEl.addEventListener("mousemove", function (e) {
-        var cx = e.clientX / window.innerWidth - 0.5;
-        var cy = e.clientY / window.innerHeight - 0.5;
-        shapes.forEach(function (s) {
-          var d = parseFloat(s.getAttribute("data-depth") || 12);
-          gsap.to(s, { x: cx * d, y: cy * d, duration: 1.1, ease: "power2.out", overwrite: "auto" });
-        });
-      });
-    }
-
-    if (window.ScrollTrigger) {
-      gsap.registerPlugin(ScrollTrigger);
-      gsap.utils.toArray(".pull-quote blockquote").forEach(function (q) {
-        gsap.from(q, { y: 40, opacity: 0, duration: 0.9, ease: "power3.out",
-          scrollTrigger: { trigger: q, start: "top 82%", once: true } });
-      });
-      gsap.utils.toArray(".step-num").forEach(function (n) {
-        gsap.from(n, { scale: 1.4, opacity: 0, duration: 0.8, ease: "power3.out",
-          scrollTrigger: { trigger: n, start: "top 85%", once: true } });
-      });
-    }
-  }
-
-  /* poll briefly for the deferred GSAP bundle, then go regardless */
-  var waited = 0;
-  (function waitForGsap() {
-    if (window.gsap || waited >= 900) { startHero(); return; }
-    waited += 60;
-    setTimeout(waitForGsap, 60);
-  })();
+  /* The landing hero animates in with CSS (see site.css, "heroIn"); nothing
+     here has to run before it can paint. */
 })();
