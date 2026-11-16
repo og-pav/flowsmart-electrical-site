@@ -300,10 +300,17 @@
   if (consent === "yes") {
     loadTracking();
   } else if (bar && consent !== "no") {
-    setTimeout(function () {
+    // shown after the page has painted, so the banner never competes with the
+    // hero for the browser's "largest paint" measurement
+    var barShown = false;
+    var showBar = function () {
+      if (barShown) return; barShown = true;
       bar.hidden = false;
       requestAnimationFrame(function () { bar.classList.add("is-in"); });
-    }, 1000);
+    };
+    if (document.readyState === "complete") setTimeout(showBar, 1200);
+    else window.addEventListener("load", function () { setTimeout(showBar, 1200); });
+    setTimeout(showBar, 6000);   // a slow third-party iframe can hold "load" back
     bar.addEventListener("click", function (e) {
       var b = e.target.closest("[data-cookie]");
       if (!b) return;
