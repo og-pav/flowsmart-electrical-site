@@ -9,6 +9,23 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 
+def minify_assets():
+    """Write site.min.css / site.min.js next to the sources. Pages load the
+    minified copies; the readable files stay the ones you edit."""
+    try:
+        import rcssmin, rjsmin
+    except ImportError:  # no minifier installed: ship the readable files
+        for src, dst in (("assets/css/site.css", "assets/css/site.min.css"),
+                         ("assets/js/site.js", "assets/js/site.min.js")):
+            (ROOT / dst).write_bytes((ROOT / src).read_bytes())
+        return
+    css = (ROOT / "assets/css/site.css").read_text(encoding="utf-8")
+    js = (ROOT / "assets/js/site.js").read_text(encoding="utf-8")
+    (ROOT / "assets/css/site.min.css").write_text(rcssmin.cssmin(css), encoding="utf-8")
+    (ROOT / "assets/js/site.min.js").write_text(rjsmin.jsmin(js), encoding="utf-8")
+
+minify_assets()
+
 def asset_version():
     """Short hash of the shared CSS+JS, appended to their URLs so a deploy can
     never be masked by a stale browser cache."""
@@ -21,6 +38,7 @@ def asset_version():
     return h.hexdigest()[:8]
 
 ASSET_V = asset_version()
+SITEMAP_LASTMOD = "2026-11-16"   # bump when page content changes
 
 # ---------------------------------------------------------------- config ---
 SITE = {
@@ -68,10 +86,6 @@ AREAS = ["Melton", "Bacchus Marsh", "Caroline Springs", "Sunshine", "Braybrook",
 # pulled a copy into assets/img/remote/, the local file is used instead.
 IMAGES = {
     # real photos from the existing site (Anthony's own jobs + originals)
-    "fse_kitchen":    ("https://flowsmartelec.com.au/wp-content/uploads/2023/05/misc-862342412-480w.jpg", "fse_kitchen.jpg"),
-    "fse_sparky":     ("https://flowsmartelec.com.au/wp-content/uploads/2023/05/misc-722215405-480w.jpg", "fse_sparky.jpg"),
-    "fse_commercial": ("https://flowsmartelec.com.au/wp-content/uploads/2023/05/misc-556416247-480w.jpg", "fse_commercial.jpg"),
-    "fse_switch":     ("https://flowsmartelec.com.au/wp-content/uploads/2023/05/misc-900217718-320w.jpg", "fse_switch.jpg"),
     "kaiser_1":       ("https://flowsmartelec.com.au/wp-content/uploads/2023/05/IMG_1861-640w.jpg", "kaiser_1.jpg"),
     "kaiser_2":       ("https://flowsmartelec.com.au/wp-content/uploads/2023/05/IMG_1864-480w.jpg", "kaiser_2.jpg"),
     "vogue_1":        ("https://flowsmartelec.com.au/wp-content/uploads/2023/05/IMG_1856-e1683691260556.jpg", "vogue_1.jpg"),
@@ -84,20 +98,28 @@ IMAGES = {
     "vogue_8":        ("https://flowsmartelec.com.au/wp-content/uploads/2023/05/IMG_1847.jpg", "vogue_8.jpg"),
     "logo_svg":       ("https://flowsmartelec.com.au/wp-content/uploads/2023/05/FSE_SVG.svg", "fse-logo.svg"),
     "logo_svg_rev":   ("https://flowsmartelec.com.au/wp-content/uploads/2023/05/FSE_SVG_Reversed-03.svg", "fse-logo-reversed.svg"),
-    # high-quality supplementary photography (Unsplash CDN, hotlink-intended, no watermark)
-    "u_hero":      ("https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1000&h=1150&q=80", "u_hero.jpg"),
-    "u_drill":     ("https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1200&q=80", "u_drill.jpg"),
-    "u_ev":        ("https://images.unsplash.com/photo-1593941707882-a5bba14938c7?auto=format&fit=crop&w=1200&q=80", "u_ev.jpg"),
-    "u_warehouse": ("https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=1200&q=80", "u_warehouse.jpg"),
-    "u_lounge":    ("https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1200&q=80", "u_lounge.jpg"),
-    "u_pendant":   ("https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&w=1200&q=80", "u_pendant.jpg"),
-    "u_test":      ("https://images.unsplash.com/photo-1517420704952-d9f39e95b43e?auto=format&fit=crop&w=1200&q=80", "u_test.jpg"),
-    "u_office":    ("https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80", "u_office.jpg"),
-    "u_sparks":    ("https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=1200&q=80", "u_sparks.jpg"),
 }
+
+# Real job photos from Anthony (sent by text, Nov 2026). No stock or AI images
+# anywhere on the site: every photo is Flowsmart's own work. Each has a 1400px
+# and a 700px WebP; render() adds the srcset so phones fetch the small one.
+JOBS = {
+    "j_van":     "flowsmart-electrical-van-commercial-job",
+    "j_team":    "flowsmart-electricians-switchboard-install",
+    "j_roughin": "electrician-rough-in-wiring-renovation",
+    "j_mains":   "commercial-main-switchboard-metering",
+    "j_kitchen_led":     "kitchen-led-strip-lighting-cooktop",
+    "j_kitchen_pendant": "kitchen-pendant-downlight-installation",
+}
+HERO_IMG = "flowsmart-electrical-van-commercial-job-hero"   # square crop, 600/900 WebP
+OG_IMG = "assets/img/jobs/flowsmart-electrical-og.jpg"       # 1200x630 share image
 
 def img_src(key, depth=0):
     """Prefer a local WebP (smallest), then a local JPEG, else the remote URL."""
+    if key == "j_hero":
+        return rel_prefix(depth) + f"assets/img/jobs/{HERO_IMG}-900.webp"
+    if key in JOBS:
+        return rel_prefix(depth) + f"assets/img/jobs/{JOBS[key]}-1400.webp"
     url, local = IMAGES[key]
     webp = local.rsplit(".", 1)[0] + ".webp"
     for candidate in (webp, local):
@@ -135,9 +157,9 @@ def wordmark(depth, reversed_=False):
     """Evolved two-tone wordmark derived from the extracted FSE logo
     (lowercase bold, ink + volt green, spark glyph)."""
     tone = "wm-rev" if reversed_ else ""
-    return f'''<a class="wordmark {tone}" href="{rel_prefix(depth)}index.html" aria-label="Flowsmart Electrical — home">
+    return f'''<a class="wordmark {tone}" href="{rel_prefix(depth)}index.html">
   <svg class="wm-spark" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.4 1.5 4.2 13.7h5.3L9 22.5l9.8-13h-5.6l.2-8z"/></svg>
-  <span class="wm-text"><b>flowsmart</b><i>electrical</i></span>
+  <span class="wm-text"><b>flowsmart</b> <i>electrical</i></span>
 </a>'''
 
 def quote_href(page, depth):
@@ -165,7 +187,7 @@ def header(page, depth):
     {wordmark(depth)}
     <nav class="main-nav" aria-label="Main">{nav}</nav>
     <div class="header-actions">
-      <a class="header-phone" href="tel:{SITE['phone_tel']}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.7.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.7.1.3 0 .7-.2 1l-2.2 2.1Z"/></svg><span>{SITE['phone']}</span></a>
+      <a class="header-phone" href="tel:{SITE['phone_tel']}" aria-label="Call {SITE['phone']}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.7 15.7 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.2.4 2.4.6 3.7.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.6 21 3 13.4 3 4c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.7.1.3 0 .7-.2 1l-2.2 2.1Z"/></svg><span>{SITE['phone']}</span></a>
       <a class="btn btn-volt btn-header" href="{cta_href}">Get a Free Quote</a>
       <button class="nav-burger" type="button" aria-label="Open menu" aria-controls="mobile-nav" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
@@ -259,7 +281,12 @@ def business_node():
         "legalName": SITE["legal"],
         "url": SITE["domain"] + "/",
         "logo": SITE["domain"] + "/assets/img/og-share.png",
-        "image": SITE["domain"] + "/assets/img/og-share.png",
+        "image": [SITE["domain"] + "/" + OG_IMG] +
+                 [SITE["domain"] + f"/assets/img/jobs/{v}-1400.webp" for v in JOBS.values()],
+        "hasMap": SITE["gbp"],
+        "knowsAbout": ["Switchboard upgrades", "Safety switches (RCDs)", "EV charger installation",
+                       "House rewiring", "LED lighting", "Three-phase power", "Commercial fitouts",
+                       "Certificate of Electrical Safety"],
         "telephone": SITE["phone_tel"],
         "email": SITE["email"],
         "foundingDate": SITE["founded"],
@@ -328,7 +355,7 @@ def render(page):
     p = rel_prefix(depth)
     canonical = SITE["domain"] + "/" + clean_path(page["path"])
     robots = '<meta name="robots" content="noindex,nofollow">' if page.get("noindex") else ""
-    og_img = SITE["domain"] + "/assets/img/og-share.png"
+    og_img = SITE["domain"] + "/" + OG_IMG
     site_node = {
         "@type": "WebSite", "@id": SITE["domain"] + "/#website",
         "url": SITE["domain"] + "/", "name": SITE["name"],
@@ -341,7 +368,7 @@ def render(page):
         "isPartOf": {"@id": SITE["domain"] + "/#website"},
         "about": {"@id": SITE["domain"] + "/#business"},
         "inLanguage": "en-AU",
-        "primaryImageOfPage": {"@type": "ImageObject", "url": SITE["domain"] + "/assets/img/og-share.png"},
+        "primaryImageOfPage": {"@type": "ImageObject", "url": og_img, "width": 1200, "height": 630},
     }
     schema = {"@context": "https://schema.org", "@graph": [business_node(), site_node, page_node]}
     bc = breadcrumb_schema(page, depth)
@@ -355,10 +382,13 @@ def render(page):
         form_hints = ('<link rel="preconnect" href="https://api.leadconnectorhq.com">\n'
                       '<link rel="preconnect" href="https://link.msgsndr.com">\n'
                       '<link rel="preconnect" href="https://stcdn.leadconnectorhq.com" crossorigin>\n')
-    gsap = ""
+    # The landing hero photo is the LCP element on phones: fetch it first.
+    hero_preload = ""
     if page.get("landing"):
-        gsap = ('<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>\n'
-                '<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>')
+        hj = f"{p}assets/img/jobs/{HERO_IMG}"
+        hero_preload = (f'<link rel="preload" as="image" href="{hj}-900.webp" '
+                        f'imagesrcset="{hj}-600.webp 600w, {hj}-900.webp 900w" '
+                        f'imagesizes="(max-width: 900px) 84vw, 450px" fetchpriority="high">\n')
     body_class = "landing" if page.get("landing") else "subpage"
     body = page["body"]
     doc = f'''<!doctype html>
@@ -386,7 +416,7 @@ def render(page):
 <meta property="og:image" content="{og_img}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Flowsmart Electrical — licensed electricians, Melbourne's west">
+<meta property="og:image:alt" content="Anthony from Flowsmart Electrical beside the Flowsmart van on a job">
 <meta property="og:locale" content="en_AU">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{html.escape(page["title"])}">
@@ -395,13 +425,10 @@ def render(page):
 <meta name="theme-color" content="#10160F">
 <link rel="icon" href="{p}assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{p}assets/img/apple-touch-icon.png">
-{form_hints}<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
-<link rel="stylesheet" href="{p}assets/css/site.css?v={ASSET_V}">
-{gsap}
-<script defer src="{p}assets/js/site.js?v={ASSET_V}"></script>
+{form_hints}<link rel="preload" href="{p}assets/fonts/space-grotesk-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="{p}assets/fonts/inter-var-latin.woff2" as="font" type="font/woff2" crossorigin>
+{hero_preload}<link rel="stylesheet" href="{p}assets/css/site.min.css?v={ASSET_V}">
+<script defer src="{p}assets/js/site.min.js?v={ASSET_V}"></script>
 <!-- Google tag (Google Ads + GA4) with Consent Mode v2: no cookies until the
      visitor accepts the banner; site.js grants consent and fires conversions. -->
 <script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}
@@ -410,7 +437,9 @@ gtag("consent","default",{{ad_storage:fseG,analytics_storage:fseG,ad_user_data:f
 gtag("set","ads_data_redaction",fseG==="denied");gtag("set","url_passthrough",true);
 gtag("js",new Date());gtag("config","{SITE['ga']}",{{anonymize_ip:true}});gtag("config","{SITE['aw']}");
 window.FSE_GA="{SITE['ga']}";window.FSE_AW_LEAD="{SITE['aw_lead']}";window.FSE_AW_CALL="{SITE['aw_call']}";window.FSE_GHL_TRACK="{SITE['ghl_tracking']}";</script>
-<script async src="https://www.googletagmanager.com/gtag/js?id={SITE['aw']}"></script>
+<script>(function(){{var d=false;function g(){{if(d)return;d=true;var s=document.createElement("script");s.async=true;s.src="https://www.googletagmanager.com/gtag/js?id={SITE['aw']}";document.head.appendChild(s);}}
+if(document.readyState==="complete")setTimeout(g,1);else window.addEventListener("load",function(){{setTimeout(g,1);}});setTimeout(g,3500);
+["pointerdown","keydown","touchstart","scroll"].forEach(function(e){{window.addEventListener(e,g,{{once:true,passive:true}});}});}})();</script>
 <script type="application/ld+json">{json.dumps(schema, ensure_ascii=False)}</script>
 </head>
 <body class="{body_class}" data-page="{page['path']}">
@@ -437,6 +466,15 @@ window.FSE_GA="{SITE['ga']}";window.FSE_AW_LEAD="{SITE['aw_lead']}";window.FSE_A
               .replace("%%HOURS%%", SITE["hours_line"])
               .replace("%%REL%%", p))
     doc = re.sub(r"%%IMG:([a-z0-9_]+)%%", lambda m: img_src(m.group(1), depth), doc)
+    # an <img> may carry its own sizes="" for small slots (collage, tiles)
+    doc = re.sub(r'<img ([^>]*?)src="([^"]*assets/img/jobs/[a-z0-9-]+?)-1400\.webp"([^>]*)>',
+                 lambda m: (f'<img {m.group(1)}src="{m.group(2)}-1400.webp" srcset="{m.group(2)}-400.webp 400w, '
+                            f'{m.group(2)}-700.webp 700w, {m.group(2)}-1400.webp 1400w"'
+                            + ('' if 'sizes=' in m.group(1) + m.group(3) else ' sizes="(max-width: 900px) 100vw, 50vw"')
+                            + m.group(3) + '>'), doc)
+    doc = re.sub(r'<img src="([^"]*assets/img/jobs/[a-z0-9-]+?-hero)-900\.webp"',
+                 lambda m: (f'<img src="{m.group(1)}-900.webp" srcset="{m.group(1)}-600.webp 600w, '
+                            f'{m.group(1)}-900.webp 900w" sizes="(max-width: 900px) 84vw, 450px"'), doc)
     doc = clean_urls(doc)
     out = ROOT / page["path"]
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -461,13 +499,19 @@ def quote_form(variant="landing"):
         # a wrapper of its own, which reloads the form and shifts the page on phones.
         fid = SITE["ghl_form_id"]
         base = f"https://api.leadconnectorhq.com/widget/form/{fid}"
+        # 16 Nov 2026: on the home page the form sits at the very bottom, and loading
+        # it eagerly cost ~5 MB and 400 ms of main-thread time before anyone scrolled.
+        # There it starts loading when the visitor is within ~1.5 screens of it (or
+        # on any tap/scroll toward #quote), so it is ready on arrival. The quote,
+        # contact and ad landing pages keep the eager load.
+        lazy = variant == "index.html"
         return f'''<div class="ghl-wrap" id="quote-form">
 <p class="ghl-wait" id="ghl-wait-{fid}" role="status"><span class="ghl-spin" aria-hidden="true"></span>Please wait while the form loads.</p>
 <div class="ghl-frame" id="inline-{fid}-wrapper"><iframe
     style="width:100%;height:1164px;border:none;border-radius:8px"
     id="inline-{fid}"
-    loading="eager"
-    fetchpriority="high"
+    loading="{'lazy' if lazy else 'eager'}"
+    {'' if lazy else 'fetchpriority="high"'}
     data-layout="{{'id':'INLINE'}}"
     data-trigger-type="alwaysShow"
     data-trigger-value=""
@@ -488,9 +532,9 @@ try{{a=JSON.parse(sessionStorage.getItem('fs_attr')||'{{}}')}}catch(e){{}}
 K.forEach(function(k){{var v=q.get(k);if(v)a[k]=v}});try{{sessionStorage.setItem('fs_attr',JSON.stringify(a))}}catch(e){{}}
 var f=document.getElementById('inline-{fid}'),w=document.getElementById('ghl-wait-{fid}'),u=new URL('{base}');K.forEach(function(k){{if(a[k])u.searchParams.set(k,a[k])}});
 f.addEventListener('load',function(){{if(f.getAttribute('src'))setTimeout(function(){{w.className+=' is-done'}},300)}});
-f.src=u.toString();}})();</script></div>
+function go(){{if(f.getAttribute('src'))return;f.src=u.toString();var e=document.createElement('script');e.async=true;e.src='https://link.msgsndr.com/js/form_embed.js';document.body.appendChild(e);}}
+{'if("IntersectionObserver" in window){var io=new IntersectionObserver(function(x){if(x[0].isIntersecting){io.disconnect();go();}},{rootMargin:"1500px 0px"});io.observe(f);document.addEventListener("click",function(ev){var l=ev.target.closest&&ev.target.closest("a[href$=\'#quote\']");if(l)go();});}else go();' if lazy else 'go();'}}})();</script></div>
 <noscript><iframe src="{base}" style="width:100%;height:1164px;border:none" title="Flowsmart Electrical EMBED Form"></iframe></noscript>
-<script async src="https://link.msgsndr.com/js/form_embed.js"></script>
 </div>'''
     return f'''<form class="quote-form" novalidate data-redirect="/thank-you" aria-label="Request a free quote">
   <div class="qf-field">
@@ -524,14 +568,14 @@ def main():
     A = pages.append
 
     A(dict(path="index.html", landing=True,
-        title="Flowsmart Electrical | Electricians, Melbourne's West",
-        desc="Licensed electricians across Melbourne's west since 2013. Switchboards, EV chargers, rewires, commercial fitouts. Free quotes answered within two business hours.",
+        title="Electrician Bacchus Marsh & Melton | Flowsmart Electrical",
+        desc="Local licensed electrician for Bacchus Marsh, Melton and Melbourne's west since 2013. Switchboards, EV chargers, rewires, commercial. Free quotes: 0468 057 479.",
         faqs=content.LANDING_FAQS,
         schema_extra=content.review_schema(),
         body=content.landing_body()))
 
     A(dict(path="services.html", crumb="Services",
-        title="Electrical Services | Flowsmart Electrical, Melbourne's West",
+        title="Electrical Services Melton & Bacchus Marsh | Flowsmart",
         desc="Residential electrical, switchboard upgrades, EV charger installation and commercial fitouts across Melton, Bacchus Marsh and Melbourne's western suburbs.",
         body=content.page_services_hub()))
 
@@ -544,7 +588,7 @@ def main():
             "Powerpoints, rewires, lighting, fans, smoke alarms and fault-finding for homes across Melbourne's west."),
         keywords="residential electrician Melton, home electrician Melbourne west, powerpoint installation, house rewiring Melbourne, smoke alarm installation Victoria, ceiling fan installation, downlight installation, electrical fault finding", path="services/residential-electrician.html", crumb="Residential",
         crumbs=[("Services", "services.html")],
-        title="Residential Electrician Melton & Melbourne's West | Flowsmart",
+        title="Residential Electrician Melton & Bacchus Marsh | Flowsmart",
         desc="Home electrical done clean and certified: powerpoints, rewires, lighting, fans, smoke alarms and fault-finding across Melton, Bacchus Marsh and the west.",
         faqs=content.RES_FAQS, body=content.page_residential()))
 
@@ -552,23 +596,23 @@ def main():
             "Replacement of old fuse boards with modern switchboards and RCD safety switches, tested and certified."),
         keywords="switchboard upgrade Melbourne, fuse box replacement, safety switch installation, RCD installation Victoria, switchboard cost Melbourne, ceramic fuse replacement, consumer mains upgrade", path="services/switchboard-upgrades.html", crumb="Switchboard upgrades",
         crumbs=[("Services", "services.html")],
-        title="Switchboard Upgrades Melbourne's West | Flowsmart Electrical",
-        desc="Replace old fuse boards with modern boards and safety switches on every circuit. Fixed written quotes, same-day certification, Melbourne's western suburbs.",
+        title="Switchboard Upgrades Melbourne – Melton & Bacchus Marsh",
+        desc="Switchboard upgrades in Melbourne's west: fuse boards replaced, safety switches on every circuit, fixed written quotes, certified same day. Melton, Bacchus Marsh.",
         faqs=content.SB_FAQS, body=content.page_switchboards()))
 
     A(dict(schema_extra=service_node("EV charger installation",
             "Home electric vehicle charger supply and installation, including switchboard capacity assessment."),
         keywords="EV charger installation Melbourne, home EV charger, 7kW charger install, Tesla charger installation Victoria, electric car charger Point Cook, solar EV charging", path="services/ev-charger-installation.html", crumb="EV charger installation",
         crumbs=[("Services", "services.html")],
-        title="EV Charger Installation Melbourne's West | Flowsmart Electrical",
-        desc="Home EV chargers sized to your car, switchboard and tariff. Capacity checks first, clean installs, solar-aware setups. Melton to Point Cook.",
+        title="EV Charger Installation Bacchus Marsh, Melton & Point Cook",
+        desc="Home EV charger installation in Bacchus Marsh, Melton, Point Cook and Melbourne's west. Switchboard capacity checked first, clean installs, solar-aware. Free quote.",
         faqs=content.EV_FAQS, body=content.page_ev()))
 
     A(dict(schema_extra=service_node("Commercial electrical and fitouts",
             "Shop and office fitouts, factory and warehouse maintenance, three-phase power, test and tag."),
         keywords="commercial electrician Melbourne west, shop fitout electrician, factory maintenance electrician, warehouse lighting, three phase electrician, test and tag Melbourne", path="services/commercial-electrical-fitouts.html", crumb="Commercial & fitouts",
         crumbs=[("Services", "services.html")],
-        title="Commercial Electricians & Fitouts, Melbourne's West | Flowsmart",
+        title="Commercial Electrician Melbourne West | Fitouts | Flowsmart",
         desc="Shop fitouts, factory maintenance, three-phase and test & tag across Melbourne's west — scheduled around your trading hours. REC 20672, $20M insured.",
         faqs=content.COM_FAQS, body=content.page_commercial()))
 
@@ -604,7 +648,7 @@ def main():
                 "author": {"@type": "Person", "name": SITE["owner"]},
                 "publisher": {"@id": SITE["domain"] + "/#business"},
                 "mainEntityOfPage": SITE["domain"] + f"/blog/{p['slug']}.html",
-                "image": SITE["domain"] + "/assets/img/og-share.png"}],
+                "image": SITE["domain"] + "/" + OG_IMG}],
             body=content.blog_post_body(p)))
 
     A(dict(keywords="electrician Melton, electrician Werribee, electrician Point Cook, electrician Caroline Springs, electrician Sunshine, electrician Braybrook, electrician Bacchus Marsh", path="areas.html", crumb="Areas",
@@ -618,6 +662,11 @@ def main():
             path=f"areas/{a['slug']}.html", crumb=a["name"],
             crumbs=[("Areas", "areas.html")],
             title=a["title"], desc=a["desc"],
+            schema_extra=[{"@type": "Service", "name": f"Electrician in {a['name']}",
+                "serviceType": "Electrician", "provider": {"@id": SITE["domain"] + "/#business"},
+                "areaServed": {"@type": "City", "name": a["name"].replace(" & ", ", ").split(", ")[0],
+                               "containedInPlace": {"@type": "State", "name": "Victoria"}},
+                "url": SITE["domain"] + f"/areas/{a['slug']}"}],
             faqs=a["faqs"], body=content.area_page(a)))
 
     A(dict(keywords="Flowsmart Electrical reviews, electrician reviews Melbourne west, trusted electrician Melton", path="testimonials.html", crumb="Reviews",
@@ -677,11 +726,21 @@ Sitemap: {SITE['domain']}/sitemap.xml
         if page.get("noindex"):
             continue
         loc = SITE["domain"] + "/" + clean_path(page["path"])
-        pr = "1.0" if page["path"] == "index.html" else ("0.9" if page["path"] in ("contact.html", "services.html") else "0.7")
-        urls += f"  <url><loc>{loc}</loc><lastmod>2026-08-20</lastmod><priority>{pr}</priority></url>\n"
+        top = ("contact.html", "services.html", "get-a-free-quote.html",
+               "areas/electrician-melton.html", "areas/electrician-bacchus-marsh.html")
+        pr = "1.0" if page["path"] == "index.html" else ("0.9" if page["path"] in top else "0.7")
+        # image sitemap: the real job photos each page shows (helps Google Images)
+        built = (ROOT / page["path"]).read_text(encoding="utf-8")
+        imgs = []
+        for src in re.findall(r'<img src="(?:\.\./)*(assets/img/(?:jobs|remote)/[^"]+)"', built):
+            if src not in imgs:
+                imgs.append(src)
+        img_xml = "".join(f"<image:image><image:loc>{SITE['domain']}/{x}</image:loc></image:image>" for x in imgs[:10])
+        urls += f"  <url><loc>{loc}</loc><lastmod>{SITEMAP_LASTMOD}</lastmod><priority>{pr}</priority>{img_xml}</url>\n"
     (ROOT / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + urls + "</urlset>\n",
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+        'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n' + urls + "</urlset>\n",
         encoding="utf-8")
 
     # llms.txt

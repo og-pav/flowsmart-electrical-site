@@ -3,35 +3,122 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/home", "destination": "/", "permanent": true },
-    { "source": "/home/", "destination": "/", "permanent": true },
-
-    { "source": "/about-us", "destination": "/about", "permanent": true },
-    { "source": "/about-us/", "destination": "/about", "permanent": true },
-
-    { "source": "/contact-us", "destination": "/contact", "permanent": true },
-    { "source": "/contact-us/", "destination": "/contact", "permanent": true },
-
-    { "source": "/residential", "destination": "/services/residential-electrician", "permanent": true },
-    { "source": "/residential/", "destination": "/services/residential-electrician", "permanent": true },
-
-    { "source": "/commercial", "destination": "/services/commercial-electrical-fitouts", "permanent": true },
-    { "source": "/commercial/", "destination": "/services/commercial-electrical-fitouts", "permanent": true },
-
-    { "source": "/gallery", "destination": "/case-studies", "permanent": true },
-    { "source": "/gallery/", "destination": "/case-studies", "permanent": true }
+    {
+      "source": "/home",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/home/",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/about-us",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/about-us/",
+      "destination": "/about",
+      "permanent": true
+    },
+    {
+      "source": "/contact-us",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/contact-us/",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/residential",
+      "destination": "/services/residential-electrician",
+      "permanent": true
+    },
+    {
+      "source": "/residential/",
+      "destination": "/services/residential-electrician",
+      "permanent": true
+    },
+    {
+      "source": "/commercial",
+      "destination": "/services/commercial-electrical-fitouts",
+      "permanent": true
+    },
+    {
+      "source": "/commercial/",
+      "destination": "/services/commercial-electrical-fitouts",
+      "permanent": true
+    },
+    {
+      "source": "/gallery",
+      "destination": "/case-studies",
+      "permanent": true
+    },
+    {
+      "source": "/gallery/",
+      "destination": "/case-studies",
+      "permanent": true
+    }
   ],
   "headers": [
     {
       "source": "/assets/img/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/assets/fonts/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
       ]
     },
     {
       "source": "/assets/(css|js)/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        }
       ]
     }
   ]

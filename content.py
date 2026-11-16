@@ -74,32 +74,39 @@ def landing_body():
          "Your home, sorted end to end",
          "Powerpoints, rewires, fans, downlights and feature lighting, smoke alarms, oven and stove installs, fault-finding — plus the safety checks that catch problems before they cost you. Anthony treats your place like his own. Shoes off at the door is standard, not a favour.",
          ["Powerpoints, rewiring &amp; fault-finding", "Lighting, fans &amp; downlights", "Smoke alarms &amp; safety checks"],
-         "services/residential-electrician.html", "See residential work", "%%IMG:u_lounge%%",
-         "Warm living room lit by lamps and downlights — the kind of lighting work Flowsmart installs in homes across Melbourne's west"),
+         "services/residential-electrician.html", "See residential work", "%%IMG:j_kitchen_pendant%%",
+         "Kitchen with a linear pendant light and LED downlights installed by Flowsmart Electrical"),
         ("Switchboard upgrades &amp; safety",
          "The upgrade that protects everything else",
          "Old boards with ceramic fuses are the biggest electrical fire risk in western-suburbs homes. Flowsmart replaces them with modern boards and safety switches on every circuit — tested, tagged and certified the same day.",
          ["Full board replacements", "Safety switches (RCDs) on every circuit", "Underground mains &amp; metering"],
-         "services/switchboard-upgrades.html", "See switchboard work", "%%IMG:u_test%%",
-         "Multimeter testing live wiring at a switchboard — every Flowsmart board upgrade is tested circuit by circuit"),
+         "services/switchboard-upgrades.html", "See switchboard work", "%%IMG:j_team%%",
+         "Two Flowsmart electricians in front of a newly installed switchboard"),
         ("EV charger installation",
          "Charge overnight, drive on sunlight prices",
          "A proper home charger turns an EV from a compromise into a no-brainer. Anthony sizes your switchboard, recommends the right unit for your car and tariff, and installs it clean — cable runs you don&rsquo;t notice, on a circuit that won&rsquo;t trip the house.",
          ["7kW home chargers, single or three phase", "Switchboard capacity assessment", "Off-peak &amp; solar-aware setups"],
-         "services/ev-charger-installation.html", "See EV charger installs", "%%IMG:u_ev%%",
-         "Electric vehicle plugged into a home charging point — Flowsmart installs EV chargers across Melbourne's west"),
+         "services/ev-charger-installation.html", "See EV charger installs", None,
+         ""),
         ("Commercial &amp; factories",
          "Fitouts and maintenance that don&rsquo;t stop trade",
          "From a 40-factory industrial estate to a hair salon fitout finished for opening day, Flowsmart runs commercial jobs around your trading hours, not ours. Cabling, lighting, three-phase power, test-and-tag and scheduled maintenance.",
          ["Shop &amp; office fitouts", "Warehouse &amp; factory maintenance", "Test &amp; tag, compliance, emergency work"],
-         "services/commercial-electrical-fitouts.html", "See commercial work", "%%IMG:u_warehouse%%",
-         "High-bay lighting in a warehouse aisle — Flowsmart maintains factories and warehouses across the western suburbs"),
+         "services/commercial-electrical-fitouts.html", "See commercial work", "%%IMG:j_mains%%",
+         "A new main switchboard and metering cabinet installed by Flowsmart on a commercial site"),
     ]
     rows_html = ""
     for i, (kicker, h, body, feats, link, linktext, img, alt) in enumerate(rows):
         feats_html = "".join(f'<li>{f}</li>' for f in feats)
+        if img:
+            media = f'''<a class="svc-media rv-clip" href="{link}" tabindex="-1" aria-hidden="true"><img src="{img}" alt="{alt}" loading="lazy" width="1400" height="1050"><span class="svc-chip"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>{feats[0]}</span></a>'''
+        else:  # drawn panel — no stock photography on this site
+            media = f'''<a class="svc-media svc-illus rv-clip" href="{link}" tabindex="-1" aria-hidden="true">
+  <svg class="ev-art" viewBox="0 0 400 300"><rect x="150" y="40" width="100" height="160" rx="18" class="ev-unit"/><rect x="170" y="64" width="60" height="34" rx="6" class="ev-screen"/><path d="M196 116l-12 22h14l-6 20 18-28h-14l8-14z" class="ev-bolt"/><path d="M200 200v24c0 18 14 30 32 30h70" class="ev-cable"/><rect x="300" y="240" width="34" height="28" rx="6" class="ev-plug"/></svg>
+  <span class="ev-spec"><b>7&nbsp;kW</b> single phase<br><b>22&nbsp;kW</b> three phase</span>
+  <span class="svc-chip"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>{feats[0]}</span></a>'''
         rows_html += f'''<div class="svc-row {'svc-flip' if i % 2 else ''}">
-  <a class="svc-media rv-clip" href="{link}" tabindex="-1" aria-hidden="true"><img src="{img}" alt="{alt}" loading="lazy" width="1200" height="800"><span class="svc-chip"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg>{feats[0]}</span></a>
+  {media}
   <div class="svc-copy rv">
     <p class="svc-idx" aria-hidden="true">0{i + 1}<span>/04</span></p>
     <p class="eyebrow">{kicker}</p>
@@ -135,11 +142,8 @@ def landing_body():
   </div>
   <div class="hero-inner">
     <div class="hero-copy">
-      <p class="hero-badge" data-hero>
-        <span class="hb-dot" aria-hidden="true"></span>
-        Licensed electricians · Melbourne&rsquo;s west
-      </p>
-      <h1 data-hero>Power done properly.<br><em>Answered the first time.</em></h1>
+      <h1 data-hero><span class="hero-badge"><span class="hb-dot" aria-hidden="true"></span>Electrician · Bacchus Marsh &amp; Melton</span>
+        <span class="h1-main">Power done properly.<br><em>Answered the first time.</em></span></h1>
       <p class="hero-sub" data-hero>Thirteen years on the tools across Melton, Bacchus Marsh and Melbourne&rsquo;s west. One electrician who picks up the phone, turns up when he said he would, and leaves your place cleaner than he found it.</p>
       <div class="hero-cta" data-hero>
         <a class="btn btn-volt btn-lg" href="#quote">Get a Free Quote</a>
@@ -159,7 +163,7 @@ def landing_body():
     <div class="hero-visual" data-hero>
       <span class="hv-ring" aria-hidden="true"></span>
       <figure class="hv-main">
-        <img src="%%IMG:u_hero%%" alt="A licensed electrician in a hard hat and gloves working on a wall installation" width="1000" height="1150" fetchpriority="high">
+        <img src="%%IMG:j_hero%%" alt="Anthony from Flowsmart Electrical beside the Flowsmart van on a commercial job" width="900" height="900" fetchpriority="high">
       </figure>
       <div class="hv-card hv-card-1">
         <span class="hvc-num">2 hrs</span>
@@ -227,9 +231,9 @@ def landing_body():
       <a class="btn btn-volt" href="#quote">Get a Free Quote</a>
     </div>
     <div class="shift-media">
-      <figure class="shift-img si-1 rv-clip"><img src="%%IMG:fse_commercial%%" alt="An electrician wiring breakers inside a commercial control panel" loading="lazy" width="460" height="298"></figure>
-      <figure class="shift-img si-2 rv-clip"><img src="%%IMG:fse_sparky%%" alt="A family home at dusk with its outdoor and verandah lighting on" loading="lazy" width="460" height="298"></figure>
-      <figure class="shift-img si-3 rv-clip"><img src="%%IMG:fse_switch%%" alt="A bright living room with pendant lighting in a finished home" loading="lazy" width="320" height="207"></figure>
+      <figure class="shift-img si-1 rv-clip"><img sizes="(max-width: 900px) 80vw, 480px" src="%%IMG:j_roughin%%" alt="A Flowsmart electrician running new wiring through a wall frame during a renovation" loading="lazy" width="1400" height="1266"></figure>
+      <figure class="shift-img si-2 rv-clip"><img sizes="(max-width: 900px) 45vw, 260px" src="%%IMG:j_team%%" alt="Two Flowsmart electricians in front of a newly installed switchboard" loading="lazy" width="1050" height="1400"></figure>
+      <figure class="shift-img si-3 rv-clip"><img sizes="(max-width: 900px) 45vw, 260px" src="%%IMG:j_kitchen_led%%" alt="Kitchen with LED strip lighting under the cabinets, wired by Flowsmart" loading="lazy" width="1400" height="1050"></figure>
       <p class="shift-badge rv" style="--d:300ms"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>Floors covered &middot; shoes off &middot; mess gone</p>
     </div>
   </div>
@@ -322,21 +326,21 @@ def landing_body():
       <a class="text-link rv" href="case-studies.html">See the case studies<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
     </div>
     <div class="work-grid">
-      <a class="work-tile wt-a rv-clip" href="case-studies.html">
-        <img src="%%IMG:kaiser_1%%" alt="Kaisercraft shopfront with illuminated signage and store lighting installed by Flowsmart Electrical" loading="lazy" width="640" height="414">
-        <span class="wt-cap"><small>Commercial fitout</small><b>Kaisercraft warehouse &amp; store</b></span>
+      <a class="work-tile wt-a rv-clip" href="services/residential-electrician.html">
+        <img sizes="(max-width: 900px) 100vw, 600px" src="%%IMG:j_kitchen_pendant%%" alt="Kitchen with a linear pendant light and LED downlights installed by Flowsmart Electrical" loading="lazy" width="1400" height="1050">
+        <span class="wt-cap"><small>Residential</small><b>Kitchen pendant &amp; downlights</b></span>
       </a>
       <a class="work-tile wt-b rv-clip" href="case-studies.html" style="--d:100ms">
         <img src="%%IMG:vogue_3%%" alt="Vogue Hair Bar shopfront with interior lighting by Flowsmart Electrical" loading="lazy" width="427" height="640">
         <span class="wt-cap"><small>Salon fitout</small><b>Vogue Hair Bar</b></span>
       </a>
       <a class="work-tile wt-c rv-clip" href="case-studies.html" style="--d:200ms">
-        <img src="%%IMG:vogue_2%%" alt="Salon styling stations with mirror lighting and power at Vogue Hair Bar" loading="lazy" width="640" height="427">
-        <span class="wt-cap"><small>Lighting &amp; power</small><b>Styling stations</b></span>
+        <img src="%%IMG:kaiser_1%%" alt="Kaisercraft shopfront with illuminated signage and store lighting installed by Flowsmart Electrical" loading="lazy" width="640" height="414">
+        <span class="wt-cap"><small>Commercial fitout</small><b>Kaisercraft store</b></span>
       </a>
-      <a class="work-tile wt-d rv-clip" href="case-studies.html" style="--d:300ms">
-        <img src="%%IMG:vogue_4%%" alt="Feature globe chandelier installed in the Vogue Hair Bar salon" loading="lazy" width="640" height="427">
-        <span class="wt-cap"><small>Feature lighting</small><b>Statement chandelier</b></span>
+      <a class="work-tile wt-d rv-clip" href="services/switchboard-upgrades.html" style="--d:300ms">
+        <img sizes="(max-width: 900px) 50vw, 300px" src="%%IMG:j_mains%%" alt="A new main switchboard and metering cabinet installed by Flowsmart on a commercial site" loading="lazy" width="1050" height="1400">
+        <span class="wt-cap"><small>Commercial</small><b>Main switchboard &amp; metering</b></span>
       </a>
     </div>
   </div>
@@ -359,6 +363,28 @@ def landing_body():
       <article class="bene-card rv"><span class="bene-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="5"/><path d="m8.5 13.5-1.5 7 5-2.5 5 2.5-1.5-7"/></svg></span><h3>Licensed &amp; checkable</h3><p><span class="tip" data-tip="Search 'Flowsmart' on the Energy Safe Victoria contractor register to verify">REC 20672</span> · A Class Licence A44962 · ACRS Master Cabler. Look us up before you let anyone near your board — you should do that with every trade.</p></article>
       <article class="bene-card rv"><span class="bene-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg></span><h3>Clean-site habit</h3><p>Floors covered, shoes off, mess gone. It&rsquo;s in the reviews because it happens on every job, not just the ones being watched.</p></article>
       <article class="bene-card rv"><span class="bene-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h3"/></svg></span><h3>Easy payment</h3><p>Tap-to-pay card on site, bank transfer or invoice — whatever suits. No deposit for standard residential work.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- 7b · AREAS -->
+<section class="home-areas" id="areas">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow rv">Local to the west</p>
+        <h2 class="rv">Your local electrician in Bacchus Marsh, Melton and beyond</h2>
+      </div>
+      <a class="text-link rv" href="areas.html">All service areas<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
+    </div>
+    <p class="home-areas-lede rv">Based at Rowsley, five minutes from Bacchus Marsh and fifteen from Melton, so the van is close when something trips. Pick your suburb for local jobs, prices and answers.</p>
+    <div class="area-links rv">
+      <a href="areas/electrician-bacchus-marsh.html"><b>Electrician Bacchus Marsh</b><span>Darley, Maddingley, Hopetoun Park, Ballan</span></a>
+      <a href="areas/electrician-melton.html"><b>Electrician Melton</b><span>Melton South, Kurunjang, Cobblebank, Thornhill Park</span></a>
+      <a href="areas/electrician-caroline-springs.html"><b>Electrician Caroline Springs</b><span>Burnside, Taylors Hill, Hillside, Deer Park</span></a>
+      <a href="areas/electrician-point-cook.html"><b>Electrician Point Cook</b><span>Williams Landing, Altona Meadows, Seabrook</span></a>
+      <a href="areas/electrician-werribee.html"><b>Electrician Werribee</b><span>Hoppers Crossing, Tarneit, Wyndham Vale</span></a>
+      <a href="areas/electrician-sunshine-braybrook.html"><b>Electrician Sunshine &amp; Braybrook</b><span>Albion, Ardeer, Maidstone</span></a>
     </div>
   </div>
 </section>
@@ -472,7 +498,7 @@ def faq_block(faqs, title="Fair questions"):
 
 def gallery(items, caption):
     figs = "".join(
-        f'''<figure class="g-item rv-clip"><img src="{src}" alt="{alt}" loading="lazy" width="640" height="427"><figcaption>{cap}</figcaption></figure>'''
+        f'''<figure class="g-item rv-clip"><img sizes="(max-width: 640px) 100vw, (max-width: 1080px) 50vw, 400px" src="{src}" alt="{alt}" loading="lazy" width="640" height="427"><figcaption>{cap}</figcaption></figure>'''
         for src, alt, cap in items)
     return f'''<section class="gallery-sec">
   <div class="wrap">
@@ -540,19 +566,17 @@ def page_residential():
         ["Powerpoints, USB points &amp; rewiring", "Fans, downlights &amp; feature lighting",
          "Oven, stove &amp; appliance circuits", "Smoke alarms to AS 3786",
          "Safety checks &amp; fault-finding", "New builds &amp; multi-unit developments"],
-        [("%%IMG:fse_switch%%", "Bright living room with pendant lighting and new powerpoints in a finished home", "Living-area lighting &amp; power"),
-         ("%%IMG:u_lounge%%", "Living room lamp and wall lighting installed as part of a residential lighting plan", "Living-area lighting plan"),
-         ("%%IMG:fse_kitchen%%", "Gloved hands wiring circuit breakers during fault-finding at a switchboard", "Fault-finding at the board"),
-         ("%%IMG:u_pendant%%", "Matte pendant light hanging in a renovated room", "Pendant &amp; feature lighting"),
-         ("%%IMG:u_drill%%", "Licensed electrician fixing off a wall-mounted installation", "Install work, fixed off properly"),
-         ("%%IMG:fse_sparky%%", "Family home at dusk with verandah and outdoor lighting switched on", "Outdoor &amp; verandah lighting")],
+        [("%%IMG:j_kitchen_pendant%%", "Kitchen with a linear pendant light and LED downlights installed by Flowsmart", "Kitchen pendant &amp; downlights"),
+         ("%%IMG:j_kitchen_led%%", "LED strip lighting under kitchen cabinets above a gas cooktop", "LED strip lighting &amp; appliance circuits"),
+         ("%%IMG:j_roughin%%", "A Flowsmart electrician running new wiring through a wall frame during a renovation", "Rough-in wiring during a renovation"),
+         ("%%IMG:j_team%%", "Two Flowsmart electricians in front of a newly installed switchboard", "New switchboard, installed and signed off")],
         "Recent residential work",
         RES_FAQS,
         [("Switchboard upgrades", "switchboard-upgrades.html"),
          ("EV charger installation", "ev-charger-installation.html"),
          ("What a switchboard upgrade costs", "../blog/switchboard-upgrade-cost-melbourne.html"),
          ("Rental safety checks in Victoria", "../blog/rental-electrical-safety-checks-victoria.html")],
-        hero_img="%%IMG:u_lounge%%", hero_alt="A warmly lit lounge room in the evening")
+        hero_img="%%IMG:j_kitchen_pendant%%", hero_alt="Kitchen with a linear pendant light and LED downlights installed by Flowsmart")
 
 # ---- switchboards ----
 SB_FAQS = [
@@ -579,17 +603,16 @@ def page_switchboards():
         ["Full board replacement &amp; relabelling", "Safety switches (RCDs) on every circuit",
          "Surge protection", "Underground mains &amp; consumer mains",
          "Meter isolation &amp; coordination", "Same-day test, tag &amp; certificate"],
-        [("%%IMG:fse_kitchen%%", "Circuit breakers being wired into a new switchboard enclosure", "New board, wired breaker by breaker"),
-         ("%%IMG:u_test%%", "Multimeter verification of circuits during a switchboard upgrade", "Every circuit verified under load"),
-         ("%%IMG:fse_commercial%%", "Electrician working through colour-coded circuits in a distribution panel", "Methodical, circuit by circuit"),
-         ("%%IMG:u_drill%%", "Electrician mounting hardware during an electrical upgrade", "Mounted, fixed and sealed properly")],
+        [("%%IMG:j_team%%", "Two Flowsmart electricians in front of a newly installed switchboard", "New switchboard, installed and labelled"),
+         ("%%IMG:j_mains%%", "A new main switchboard and metering cabinet on a commercial site", "Main switchboard &amp; metering"),
+         ("%%IMG:j_roughin%%", "New circuits being run through a wall frame back to the board", "Circuits run back to the new board")],
         "Board upgrades, before and after",
         SB_FAQS,
         [("What upgrades cost in 2026", "../blog/switchboard-upgrade-cost-melbourne.html"),
          ("Why safety switches trip", "../blog/safety-switch-tripping.html"),
          ("Residential electrical", "residential-electrician.html"),
          ("EV chargers need board capacity", "ev-charger-installation.html")],
-        hero_img="%%IMG:fse_kitchen%%", hero_alt="Gloved hands wiring circuit breakers into a new switchboard")
+        hero_img="%%IMG:j_team%%", hero_alt="Two Flowsmart electricians in front of a newly installed switchboard")
 
 # ---- EV ----
 EV_FAQS = [
@@ -616,16 +639,16 @@ def page_ev():
         ["7kW single-phase &amp; 11–22kW three-phase installs", "Switchboard capacity assessment first",
          "Dedicated protected circuit", "Solar-aware &amp; off-peak configurations",
          "Supply &amp; install or install-only", "COES certificate with every install"],
-        [("%%IMG:u_ev%%", "Electric vehicle charging via a wall-mounted home charging point", "Home charging, done properly"),
-         ("%%IMG:u_test%%", "Circuit testing before commissioning an EV charger", "Commissioned under load, not guessed"),
-         ("%%IMG:fse_kitchen%%", "Breakers being fitted at a switchboard to add a dedicated circuit", "Dedicated circuit at the board")],
+        [("%%IMG:j_team%%", "Two Flowsmart electricians in front of a newly installed switchboard", "Board capacity checked before any charger goes in"),
+         ("%%IMG:j_mains%%", "A main switchboard and metering cabinet on site", "Supply and metering checked for the extra load"),
+         ("%%IMG:j_van%%", "Anthony from Flowsmart Electrical beside the Flowsmart van", "Quoted, installed and certified by Flowsmart")],
         "EV charging installs",
         EV_FAQS,
         [("The home EV charging guide", "../blog/ev-charger-installation-home-guide.html"),
          ("Switchboard upgrades", "switchboard-upgrades.html"),
          ("What upgrades cost", "../blog/switchboard-upgrade-cost-melbourne.html"),
          ("Residential electrical", "residential-electrician.html")],
-        hero_img="%%IMG:u_ev%%", hero_alt="An electric vehicle charging from a wall-mounted home charger")
+        hero_img="%%IMG:j_van%%", hero_alt="Anthony from Flowsmart Electrical beside the Flowsmart van on a job")
 
 # ---- commercial ----
 COM_FAQS = [
@@ -656,8 +679,8 @@ def page_commercial():
          ("%%IMG:kaiser_2%%", "Completed commercial electrical installation inside the Kaisercraft site", "Kaisercraft — completed install"),
          ("%%IMG:vogue_4%%", "Salon lighting and power installed at Vogue Hair Bar", "Vogue Hair Bar fitout"),
          ("%%IMG:vogue_2%%", "Feature lighting at the Vogue Hair Bar salon fitout", "Feature lighting, salon floor"),
-         ("%%IMG:u_warehouse%%", "High-bay LED lighting down a warehouse aisle", "High-bay LED conversions"),
-         ("%%IMG:u_office%%", "Modern office fitout with glass partitions and integrated lighting", "Office fitouts &amp; partition power")],
+         ("%%IMG:j_mains%%", "A new main switchboard and metering cabinet on a commercial site", "Main switchboard &amp; metering"),
+         ("%%IMG:j_van%%", "Anthony from Flowsmart Electrical beside the Flowsmart van at a commercial job", "On site at a commercial build")],
         "Commercial jobs on the board",
         COM_FAQS,
         [("Kaisercraft &amp; Vogue case studies", "../case-studies.html"),
@@ -669,18 +692,18 @@ def page_commercial():
 # ---- services hub ----
 def page_services_hub():
     cards = [
-        ("Residential electrical", "Powerpoints to full rewires — clean, certified home electrical.", "services/residential-electrician.html", "%%IMG:fse_switch%%", "Bright living room with pendant lighting in a finished home"),
-        ("Switchboard upgrades", "Replace the old fuse board before it fails you.", "services/switchboard-upgrades.html", "%%IMG:fse_kitchen%%", "Circuit breakers being wired into a switchboard"),
-        ("EV charger installation", "Wake up to a full battery, on off-peak or solar rates.", "services/ev-charger-installation.html", "%%IMG:u_ev%%", "EV charging at a home charge point"),
+        ("Residential electrical", "Powerpoints to full rewires — clean, certified home electrical.", "services/residential-electrician.html", "%%IMG:j_kitchen_pendant%%", "Kitchen with a linear pendant light and LED downlights installed by Flowsmart"),
+        ("Switchboard upgrades", "Replace the old fuse board before it fails you.", "services/switchboard-upgrades.html", "%%IMG:j_team%%", "Two Flowsmart electricians in front of a newly installed switchboard"),
+        ("EV charger installation", "Wake up to a full battery, on off-peak or solar rates.", "services/ev-charger-installation.html", "%%IMG:j_van%%", "Anthony from Flowsmart Electrical beside the Flowsmart van"),
         ("Commercial &amp; factories", "Fitouts and maintenance scheduled around your trade.", "services/commercial-electrical-fitouts.html", "%%IMG:kaiser_1%%", "Commercial warehouse electrical fitout"),
     ]
     cards_html = "".join(f'''<a class="svc-card rv" href="{h}">
-  <div class="svc-card-img"><img src="{img}" alt="{alt}" loading="lazy" width="640" height="420"></div>
+  <div class="svc-card-img"><img sizes="(max-width: 900px) 100vw, 600px" src="{img}" alt="{alt}" loading="lazy" width="640" height="420"></div>
   <div class="svc-card-body"><h2>{t}</h2><p>{d}</p><span class="text-link">View service &amp; gallery<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></div>
 </a>''' for t, d, h, img, alt in cards)
     return f'''{page_hero("Services", "Electrical services across Melbourne&rsquo;s west",
     "Four core services, one standard: answered fast, quoted in writing, finished certified. Every service page includes a gallery of real jobs.",
-    image="%%IMG:u_drill%%", alt="An electrician fixing off a wall-mounted installation")}
+    image="%%IMG:j_roughin%%", alt="A Flowsmart electrician running new wiring through a wall frame during a renovation")}
 <section class="svc-hub"><div class="wrap svc-hub-grid">{cards_html}</div></section>
 {cta_band("Not sure which service you need?", "Describe the job in plain words — %%OWNER%% will tell you what it actually requires.")}'''
 
@@ -688,7 +711,7 @@ def page_services_hub():
 def page_about():
     return f'''{page_hero("About Flowsmart", "The sparky who answers his phone",
     "Flowsmart Electrical is %%OWNER%% — an A Class licensed electrician who has wired everything from weatherboard rewires to a 40-factory estate since 2013.",
-    image="%%IMG:fse_commercial%%", alt="An electrician working inside an industrial control panel")}
+    image="%%IMG:j_van%%", alt="Anthony Vella of Flowsmart Electrical beside the Flowsmart van on a commercial job")}
 <section class="about-main">
   <div class="wrap about-grid">
     <div class="about-copy rv">
@@ -754,7 +777,7 @@ def page_case_studies():
       </div>
     </article>
     <article class="cs rv">
-      <div class="cs-media rv-clip"><img src="%%IMG:fse_commercial%%" alt="An industrial control panel with colour-coded wiring" loading="lazy" width="460" height="298"></div>
+      <div class="cs-media rv-clip"><img src="%%IMG:j_mains%%" alt="A new main switchboard and metering cabinet on a commercial site" loading="lazy" width="1050" height="1400"></div>
       <div class="cs-body">
         <p class="eyebrow">Residential · Big job, quoted properly</p>
         <h2>The 45-minute quote</h2>
@@ -870,7 +893,7 @@ def page_blog_hub():
 </a>'''
     return f'''{page_hero("The Flowsmart blog", "Straight answers about home &amp; commercial electrical",
     "No filler, no scare tactics — the guides %%OWNER%% wishes every customer read before calling any electrician, including him.",
-    image="%%IMG:u_pendant%%", alt="A pendant light hanging in a renovated room")}
+    image="%%IMG:j_kitchen_led%%", alt="Kitchen with LED strip lighting under the cabinets, wired by Flowsmart")}
 <section class="post-list"><div class="wrap post-grid">{cards}</div></section>
 {cta_band()}'''
 
@@ -1032,10 +1055,11 @@ def page_terms():
 # ================================================================ areas =====
 
 AREA_DATA = [
-    dict(img="%%IMG:fse_switch%%", slug="electrician-melton", name="Melton",
-        title="Electrician in Melton | Flowsmart Electrical",
-        desc="Local electrician for Melton, Melton South, Kurunjang and Thornhill Park. Switchboards, safety switches, EV chargers. Free quotes, two-hour response.",
-        h1="Your electrician in Melton",
+    dict(img="%%IMG:j_kitchen_pendant%%", img_alt="Kitchen with a linear pendant light and LED downlights installed by Flowsmart", slug="electrician-melton", name="Melton",
+        suburbs=['Melton', 'Melton South', 'Melton West', 'Kurunjang', 'Brookfield', 'Harkness', 'Weir Views', 'Thornhill Park', 'Cobblebank', 'Strathtulloh', 'Rockbank', 'Aintree', 'Toolern Vale', 'Exford', 'Eynesbury'],
+        title="Electrician Melton – Local, Licensed &amp; Fast | Flowsmart",
+        desc="Licensed electrician in Melton, Melton South, Kurunjang, Thornhill Park and Cobblebank. Switchboards, safety switches, EV chargers. Free quotes — call 0468 057 479.",
+        h1="Electrician in Melton who answers the first time",
         lede="From 1970s brick veneers in Melton South to brand-new builds in Thornhill Park and Weir Views — Flowsmart has wired, fixed and certified homes across Melton for over a decade.",
         body='''<p>Melton is really two electrical jobs wearing one postcode. The established streets — Melton South, Kurunjang, parts of Melton West — carry housing stock from the 70s and 80s, which means original switchboards with ceramic fuses, circuits sized for one TV and a kettle, and safety switches that simply don&rsquo;t exist. It&rsquo;s the single suburb where Flowsmart replaces the most boards, and the <a href="../blog/switchboard-upgrade-cost-melbourne.html">upgrade cost guide</a> was written largely off Melton jobs.</p>
 <p>Then there&rsquo;s the growth corridor: Thornhill Park, Weir Views, Harkness, Cobblebank. New homes, but builders wire to minimum spec — so the common calls are extra powerpoints where the plan put none, EV charger circuits the garage was never provisioned for, and shed power for the block that finally got its shed.</p>
@@ -1047,10 +1071,11 @@ AREA_DATA = [
             ("Do you service Melton businesses?", "Yes — shops, offices and schools. Flowsmart has run scheduled school maintenance in Melton for years and takes on commercial maintenance contracts across the suburb."),
             ("Which nearby areas do you also cover?", "Everything around Melton: Bacchus Marsh, Caroline Springs, Rockbank, Cobblebank, Harkness, Kurunjang, Toolern Vale and out to Ballan."),
         ]),
-    dict(img="%%IMG:u_drill%%", slug="electrician-bacchus-marsh", name="Bacchus Marsh",
-        title="Electrician in Bacchus Marsh | Flowsmart Electrical",
-        desc="Bacchus Marsh's closest licensed electrician — five minutes away at Rowsley. Older-home rewires, shed power, switchboards, EV chargers. Free quotes.",
-        h1="Bacchus Marsh&rsquo;s local electrician",
+    dict(img="%%IMG:j_van%%", img_alt="Anthony from Flowsmart Electrical beside the Flowsmart van on a commercial job", slug="electrician-bacchus-marsh", name="Bacchus Marsh",
+        suburbs=['Bacchus Marsh', 'Darley', 'Maddingley', 'Hopetoun Park', 'Rowsley', 'Merrimu', 'Parwan', 'Long Forest', 'Coimadai', 'Pentland Hills', 'Ballan', 'Myrniong', 'Gordon', 'Balliang'],
+        title="Electrician Bacchus Marsh – 5 Mins Away | Flowsmart",
+        desc="Bacchus Marsh electrician five minutes away at Rowsley. Rewires, switchboards, shed and acreage power, EV chargers. Same-day urgent faults. Call 0468 057 479.",
+        h1="Bacchus Marsh electrician, five minutes up the road",
         lede="Flowsmart is based at Rowsley, five minutes up the road — which makes Anthony about the closest licensed sparky Bacchus Marsh has.",
         body='''<p>Bacchus Marsh electrical work has a character of its own. The town centre and Darley carry genuinely old housing — weatherboards and period brick where a &ldquo;quick powerpoint&rdquo; can reveal cloth-insulated wiring that should have retired decades ago. Anthony quotes these jobs on-site, honestly: sometimes it&rsquo;s a simple add, sometimes the right answer is staged rewiring, and you&rsquo;ll know which before any work starts.</p>
 <p>Out past the town grid it turns semi-rural — acreage on Gisborne Road, hobby farms toward Balliang, properties running pumps, sheds and machinery. That&rsquo;s three-phase territory: shed sub-boards, long underground runs, and power that has to survive a working property, not just a lounge room.</p>
@@ -1062,8 +1087,9 @@ AREA_DATA = [
             ("Do you cover Darley, Maddingley and Hopetoun Park?", "Yes — all of greater Bacchus Marsh, plus Ballan, Gordon, Myrniong and the properties between."),
             ("Will I get a certificate for the work?", "Every notifiable job is closed out with a Certificate of Electrical Safety — it matters for insurance on older homes especially."),
         ]),
-    dict(img="%%IMG:u_lounge%%", slug="electrician-caroline-springs", name="Caroline Springs",
-        title="Electrician in Caroline Springs | Flowsmart Electrical",
+    dict(img="%%IMG:j_kitchen_led%%", img_alt="Kitchen with LED strip lighting under the cabinets and a gas cooktop, wired by Flowsmart", slug="electrician-caroline-springs", name="Caroline Springs",
+        suburbs=['Caroline Springs', 'Burnside', 'Burnside Heights', 'Taylors Hill', 'Hillside', 'Deer Park', 'Ravenhall', 'Plumpton', 'Fraser Rise'],
+        title="Electrician Caroline Springs – Local &amp; Licensed | Flowsmart",
         desc="Electrician for Caroline Springs, Burnside and Taylors Hill. EV chargers, extra circuits, fans and lighting for 2000s family homes. Free written quotes.",
         h1="Your electrician in Caroline Springs",
         lede="Caroline Springs homes are young enough to be safe and old enough to be outgrown. Most of what Flowsmart does here is making 2000s houses keep up with 2026 families.",
@@ -1077,8 +1103,9 @@ AREA_DATA = [
             ("Do you cover Burnside and Taylors Hill?", "Yes — Caroline Springs, Burnside, Burnside Heights, Taylors Hill, Ravenhall and Deer Park are all standard patch."),
             ("How quickly do you respond here?", "The standard promise applies: answered or called back within two business hours, seven days. Caroline Springs is twenty minutes from base."),
         ]),
-    dict(img="%%IMG:u_test%%", slug="electrician-werribee", name="Werribee",
-        title="Electrician in Werribee | Flowsmart Electrical",
+    dict(img="%%IMG:j_team%%", img_alt="Two Flowsmart electricians in front of a newly installed switchboard", slug="electrician-werribee", name="Werribee",
+        suburbs=['Werribee', 'Werribee South', 'Hoppers Crossing', 'Wyndham Vale', 'Manor Lakes', 'Tarneit', 'Truganina', 'Williams Landing'],
+        title="Electrician Werribee – Local &amp; Licensed | Flowsmart",
         desc="Werribee and Wyndham electrician: rental safety checks, switchboards, fault-finding and commercial work from Hoppers Crossing to Werribee South.",
         h1="Your electrician in Werribee",
         lede="Half of Werribee&rsquo;s electrical work is keeping older homes safe; the other half is keeping Wyndham&rsquo;s rentals compliant. Flowsmart does both, in writing.",
@@ -1092,8 +1119,9 @@ AREA_DATA = [
             ("Do you cover Hoppers Crossing, Tarneit and Manor Lakes?", "All of Wyndham: Hoppers Crossing, Tarneit, Truganina, Wyndham Vale, Manor Lakes, Werribee South and Point Cook."),
             ("Do you do commercial work in Werribee?", "Yes — shopfronts, offices, and rural-commercial properties in Werribee South. Maintenance contracts available."),
         ]),
-    dict(img="%%IMG:u_ev%%", slug="electrician-point-cook", name="Point Cook",
-        title="Electrician in Point Cook | Flowsmart Electrical",
+    dict(img="%%IMG:j_roughin%%", img_alt="A Flowsmart electrician running new wiring through a wall frame during a renovation", slug="electrician-point-cook", name="Point Cook",
+        suburbs=['Point Cook', 'Williams Landing', 'Altona Meadows', 'Seabrook', 'Laverton', 'Sanctuary Lakes'],
+        title="Electrician Point Cook – EV Chargers &amp; More | Flowsmart",
         desc="Point Cook electrician for EV chargers, solar-aware wiring, smart home circuits and new-estate electrical. Free quotes, two-hour response.",
         h1="Your electrician in Point Cook",
         lede="Point Cook is the newest patch Flowsmart covers — and the one moving fastest toward EVs, solar and smart homes. The wiring should keep up with the postcode.",
@@ -1107,8 +1135,9 @@ AREA_DATA = [
             ("Do you cover Sanctuary Lakes and Williams Landing?", "Yes — Point Cook, Sanctuary Lakes, Seabrook, Altona Meadows, Williams Landing and across to Tarneit and Truganina."),
             ("What does a smart home rough-in involve?", "Mostly good planning: neutral-at-switch wiring, hub locations, and circuits that isolate cleanly. Cheapest done early — talk to Anthony before the renovation plaster goes up."),
         ]),
-    dict(img="%%IMG:u_warehouse%%", slug="electrician-sunshine-braybrook", name="Sunshine & Braybrook",
-        title="Electrician in Sunshine & Braybrook | Flowsmart Electrical",
+    dict(img="%%IMG:j_mains%%", img_alt="A new main switchboard and metering cabinet installed on a commercial site", slug="electrician-sunshine-braybrook", name="Sunshine & Braybrook",
+        suburbs=['Sunshine', 'Sunshine North', 'Sunshine West', 'Albion', 'Ardeer', 'Braybrook', 'Maidstone', 'Tottenham'],
+        title="Electrician Sunshine &amp; Braybrook – Local | Flowsmart",
         desc="Sunshine and Braybrook electrician: pre-war rewires, switchboard upgrades and factory maintenance — including a 40-factory Braybrook estate.",
         h1="Your electrician in Sunshine &amp; Braybrook",
         lede="The oldest homes on Flowsmart&rsquo;s run and its biggest industrial contract share these two postcodes. Sunshine work is where the full toolkit comes out.",
@@ -1124,6 +1153,59 @@ AREA_DATA = [
         ]),
 ]
 
+def area_extras(a):
+    """Services, suburbs, reviews and a how-to-choose guide for an area page.
+    Links use plain descriptive anchors ("switchboard upgrades in Melton") so
+    each service page is tied to the suburb in the link itself."""
+    n = a["name"]
+    svcs = [
+        ("Switchboard upgrades", "../services/switchboard-upgrades.html",
+         f"Old fuse boards out, safety switches on every circuit, tested and certified the same day. Fixed written quote before work starts."),
+        ("EV charger installation", "../services/ev-charger-installation.html",
+         f"Home chargers sized to your car, tariff and switchboard. Capacity is checked first, so the charger never trips the house."),
+        ("Residential electrical", "../services/residential-electrician.html",
+         f"Powerpoints, rewires, lighting, fans, smoke alarms and fault-finding for homes in {n}, quoted in writing."),
+        ("Commercial &amp; factories", "../services/commercial-electrical-fitouts.html",
+         f"Shop and office fitouts, three-phase, test and tag and scheduled maintenance for {n} businesses, around your trading hours."),
+    ]
+    cards = "".join(f'''<a class="post-card area-svc rv" href="{h}"><h3>{t} in {n}</h3><p>{d}</p><span class="text-link">Learn more<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></span></a>''' for t, h, d in svcs)
+    chips = "".join(f'<span class="chip">{x}</span>' for x in a.get("suburbs", []))
+    revs = "".join(f'''<figure class="q-quote rv"><p>&ldquo;{b if len(b) < 200 else b[:197].rsplit(" ", 1)[0] + "…"}&rdquo;</p><cite>{nm} · verified customer</cite></figure>'''
+                   for nm, b, _ in REVIEWS[:3])
+    return f'''<section class="area-svcs">
+  <div class="wrap">
+    <p class="eyebrow rv">Services in {n}</p>
+    <h2 class="rv">What Flowsmart does in {n}</h2>
+    <div class="post-grid area-svc-grid">{cards}</div>
+  </div>
+</section>
+<section class="area-choose">
+  <div class="wrap svc-detail-grid">
+    <div class="rv">
+      <h2>Looking for the best electrician in {n}?</h2>
+      <p>&ldquo;Best&rdquo; comes down to four things you can check before anyone touches your switchboard:</p>
+      <ul class="ticks">
+        <li><b>A licence you can look up.</b> Flowsmart is a Registered Electrical Contractor (REC 20672) and Anthony holds an A Class licence (A44962). Check both on the Energy Safe Victoria register.</li>
+        <li><b>Insurance that covers the job.</b> $20 million public liability, on every job, residential or commercial.</li>
+        <li><b>A written price before work starts.</b> The quote you approve is the invoice you pay. Changes only happen with your say-so, in writing.</li>
+        <li><b>A certificate at the end.</b> Every notifiable job is closed out with a Certificate of Electrical Safety, your proof the work meets the standard.</li>
+      </ul>
+      <p>Add the fact that calls are answered or returned within two business hours, seven days a week, and you have why {n} customers keep the number. <a href="../testimonials.html">Read the reviews</a>.</p>
+    </div>
+    <aside class="svc-side rv">
+      <h3>Suburbs we cover around {n}</h3>
+      <div class="chips">{chips}</div>
+    </aside>
+  </div>
+</section>
+<section class="area-reviews">
+  <div class="wrap">
+    <p class="eyebrow rv">Word of mouth</p>
+    <h2 class="rv">What customers say about Flowsmart</h2>
+    <div class="q-proof-grid">{revs}</div>
+  </div>
+</section>'''
+
 def area_page(a):
     faqs_html = ""
     for i, (q, ans) in enumerate(a["faqs"]):
@@ -1135,7 +1217,7 @@ def area_page(a):
   <div class="faq-a" id="afaq-{i}"><p>{ans}</p></div>
 </div>'''
     return f'''{page_hero("Electrician · " + a["name"], a["h1"], a["lede"],
-        image=a.get("img", "%%IMG:fse_sparky%%"), alt="Electrical work of the kind Flowsmart carries out in " + a["name"])}
+        image=a.get("img", "%%IMG:j_van%%"), alt=a.get("img_alt", "Flowsmart Electrical on the job"))}
 <section class="svc-detail">
   <div class="wrap svc-detail-grid">
     <div class="rv">
@@ -1154,6 +1236,7 @@ def area_page(a):
     </aside>
   </div>
 </section>
+{area_extras(a)}
 <section class="faq">
   <div class="wrap-narrow">
     <p class="eyebrow rv">{a["name"]} questions</p>
@@ -1182,7 +1265,7 @@ def page_areas_hub():
 </a>'''
     return f'''{page_hero("Service areas", "One patch: Melbourne&rsquo;s west",
     "Based at Rowsley, working from Ballan to the bay. Every area page below is written from real jobs in that suburb — not a template with the name swapped.",
-    image="%%IMG:u_test%%", alt="A multimeter being used to test live circuits")}
+    image="%%IMG:j_team%%", alt="Two Flowsmart electricians in front of a newly installed switchboard")}
 <section class="post-list"><div class="wrap post-grid">{cards}</div></section>
 <section class="related"><div class="wrap"><p class="eyebrow">Also covered</p>
 <div class="chips"><span class="chip">Hoppers Crossing</span><span class="chip">Tarneit</span><span class="chip">Truganina</span><span class="chip">Deer Park</span><span class="chip">Ballan</span><span class="chip">Gordon</span><span class="chip">Rockbank</span><span class="chip">Wyndham Vale</span><span class="chip">Altona Meadows</span><span class="chip">Maidstone</span></div>
@@ -1253,7 +1336,7 @@ def page_faq_hub():
         sections += f'<h2 class="rv" style="margin-top:2.5rem">{group}</h2>{items}'
     return f'''{page_hero("FAQ", "Every fair question, answered straight",
     "The full list — booking, licensing, guarantees and the common problems. If yours isn&rsquo;t here, ask it on the quote form and you&rsquo;ll have an answer within two business hours.",
-    image="%%IMG:u_sparks%%", alt="Sparks from a grinder on a commercial site")}
+    image="%%IMG:j_roughin%%", alt="A Flowsmart electrician running new wiring through a wall frame during a renovation")}
 <section class="faq" style="padding-top:0"><div class="wrap-narrow">{sections}
 <div class="chips" style="margin-top:2.5rem">
   <a class="chip" href="blog/safety-switch-tripping.html">Safety switch guide</a>
