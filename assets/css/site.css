@@ -1454,7 +1454,10 @@ body.nav-open .site-header::after{display:none}
 .hero-copy > [data-hero]:nth-child(3){animation-delay:.16s}
 .hero-copy > [data-hero]:nth-child(4){animation-delay:.24s}
 .hero-visual[data-hero]{animation-delay:.12s}
-@keyframes heroIn{from{opacity:0; transform:translateY(18px)}to{opacity:1; transform:none}}
+/* transform only, never opacity: an element that starts at opacity 0 is not
+   counted when it first paints, which let the late cookie banner become the
+   page's "largest paint" on phones (LCP 5.4s in PageSpeed). */
+@keyframes heroIn{from{transform:translateY(14px)}to{transform:none}}
 @media (prefers-reduced-motion: reduce){ [data-hero]{animation:none} }
 
 /* keyword line now lives inside the H1, styled exactly as the old pill */
