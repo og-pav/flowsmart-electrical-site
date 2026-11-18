@@ -62,8 +62,8 @@ SITE = {
     "insurance":   "$20M public liability",
     "ga":          "G-P18HNWECWE",            # GA4 measurement id (live)
     "aw":          "AW-18506051568",          # Google Ads tag (Flowsmart CID 419-011-0895)
-    "aw_lead":     "AW-18506051568/F9RgCO_br7AdEPDfr_hE",  # conversion: Lead form submit - website and landing pages
-    "aw_call":     "AW-18506051568/znBVCPXbr7AdEPDfr_hE",  # conversion: Phone number click - website and landing pages
+    "aw_lead":     "AW-18506051568/UVArCPPJ0rodEPDfr_hE",  # conversion: Lead form submit - website and landing pages
+    "aw_call":     "AW-18506051568/Ev5pCPDJ0rodEPDfr_hE",  # conversion: Phone number click - website and landing pages
     "gsc":         "lYJ4xY5yOkRVsYia_2qcDnOOr3vom4SuJlbe9sTxFf8",  # Search Console verification (live)
     # GoHighLevel form: leave "" to render the styled native form (redirects to
     # /thank-you). Paste the GHL form id to embed the real inline form.
