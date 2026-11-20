@@ -889,7 +889,11 @@ body.nav-open .cookie-bar{display:none !important}
 /* 14 Nov 2026: form_embed.js lifts the iframe out of the page (position:absolute; left:-9999px)
    while it initialises, so content under the form jumped. Hold the form's finished phone-width
    height (~1420-1440px). The wait line overlays the form so hiding it moves nothing. */
-@media (max-width:900px){.ghl-frame{position:relative; min-height:1440px}}
+/* 20 Nov 2026: measured form height 1231px (desktop column) and 1329px (phone); the reserve
+   is dropped as soon as form_embed.js sizes the iframe, so the form ends flush with its content. */
+.ghl-frame{position:relative; min-height:1235px}
+@media (max-width:560px){.ghl-frame{min-height:1335px}}
+@media (max-width:900px){.ghl-wrap{padding:0}}
 .ghl-wrap iframe{display:block; width:100%; border:0; border-radius:8px; min-height:520px}
 .final-form .ghl-wrap{background:var(--card)}
 /* 9 Nov 2026: shown above the GHL form until its iframe has loaded */
