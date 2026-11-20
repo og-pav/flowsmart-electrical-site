@@ -482,6 +482,9 @@ if(document.readyState==="complete")setTimeout(g,1);else window.addEventListener
     return out
 
 # ------------------------------------------------- GHL form / native form ---
+LAZY_JS = 'if("IntersectionObserver" in window){var io=new IntersectionObserver(function(x){if(x[0].isIntersecting){io.disconnect();go();}},{rootMargin:"1500px 0px"});io.observe(f);document.addEventListener("click",function(ev){var l=ev.target.closest&&ev.target.closest("a[href$=\'#quote\']");if(l)go();});}else go();'
+
+
 def quote_form(variant="landing"):
     """Inline GHL embed when a form id is set; styled native form otherwise.
     The native form validates client-side and redirects to /thank-you,
@@ -508,7 +511,7 @@ def quote_form(variant="landing"):
         return f'''<div class="ghl-wrap" id="quote-form">
 <p class="ghl-wait" id="ghl-wait-{fid}" role="status"><span class="ghl-spin" aria-hidden="true"></span>Please wait while the form loads.</p>
 <div class="ghl-frame" id="inline-{fid}-wrapper"><iframe
-    style="width:100%;height:1164px;border:none;border-radius:8px"
+    style="width:100%;height:100%;border:none;border-radius:8px"
     id="inline-{fid}"
     loading="{'lazy' if lazy else 'eager'}"
     {'' if lazy else 'fetchpriority="high"'}
@@ -520,7 +523,7 @@ def quote_form(variant="landing"):
     data-deactivation-type="neverDeactivate"
     data-deactivation-value=""
     data-form-name="Flowsmart Electrical EMBED Form"
-    data-height="1164"
+    data-height="1515"
     data-layout-iframe-id="inline-{fid}"
     data-form-id="{fid}"
     data-cookie-consent="true"
@@ -532,8 +535,9 @@ try{{a=JSON.parse(sessionStorage.getItem('fs_attr')||'{{}}')}}catch(e){{}}
 K.forEach(function(k){{var v=q.get(k);if(v)a[k]=v}});try{{sessionStorage.setItem('fs_attr',JSON.stringify(a))}}catch(e){{}}
 var f=document.getElementById('inline-{fid}'),w=document.getElementById('ghl-wait-{fid}'),u=new URL('{base}');K.forEach(function(k){{if(a[k])u.searchParams.set(k,a[k])}});
 f.addEventListener('load',function(){{if(f.getAttribute('src'))setTimeout(function(){{w.className+=' is-done'}},300)}});
+if(window.MutationObserver)new MutationObserver(function(){{if(/^[0-9]{{3,}}px$/.test(f.style.height))f.parentNode.style.minHeight='0'}}).observe(f,{{attributes:true,attributeFilter:['style']}});
 function go(){{if(f.getAttribute('src'))return;f.src=u.toString();var e=document.createElement('script');e.async=true;e.src='https://link.msgsndr.com/js/form_embed.js';document.body.appendChild(e);}}
-{'if("IntersectionObserver" in window){var io=new IntersectionObserver(function(x){if(x[0].isIntersecting){io.disconnect();go();}},{rootMargin:"1500px 0px"});io.observe(f);document.addEventListener("click",function(ev){var l=ev.target.closest&&ev.target.closest("a[href$=\'#quote\']");if(l)go();});}else go();' if lazy else 'go();'}}})();</script></div>
+{LAZY_JS if lazy else 'go();'}}})();</script></div>
 <noscript><iframe src="{base}" style="width:100%;height:1164px;border:none" title="Flowsmart Electrical EMBED Form"></iframe></noscript>
 </div>'''
     return f'''<form class="quote-form" novalidate data-redirect="/thank-you" aria-label="Request a free quote">
